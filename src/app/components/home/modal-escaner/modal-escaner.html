@@ -1,0 +1,92 @@
+<!-- modal-escaner.html -->
+<!-- Converting to modal with overlay and close button -->
+<div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center p-4 z-50">
+  <!-- Modal Container -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <!-- Close Button -->
+    <div
+      class="sticky top-0 flex justify-end p-4 border-b border-[#dbe6e0] dark:border-gray-700 bg-white dark:bg-gray-800">
+      <button (click)="closeEscanerModal()"
+        class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[#111814] dark:text-white">close</span>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="p-6 md:p-8">
+      <!-- Header Section -->
+      <div class="flex flex-col gap-2 mb-8">
+        <h1 class="text-[#111814] dark:text-white text-4xl font-black leading-tight">Escanear Código de Producto</h1>
+        <p class="text-[#618972] dark:text-gray-300 text-base font-normal leading-normal">Haga clic en 'Activar Cámara'
+          y conceda los permisos necesarios para escanear el código QR de su producto.</p>
+      </div>
+
+      <!-- Scanner Container -->
+      <div
+        class="flex flex-col items-center gap-6 p-6 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600">
+        <!-- Camera View Area -->
+        <div
+          class="relative bg-black aspect-video rounded-lg w-full max-w-2xl overflow-hidden border-2 border-dashed border-white/30 dark:border-white/20">
+          <video #video class="w-full h-full object-cover"
+            style="transform: scaleX(-1); display: block; width: 100%; height: 100%;" autoplay playsinline muted>
+          </video>
+
+          <!-- QR Scanning Frame -->
+          @if(!scanning) {
+          <img class="absolute inset-0 w-full h-full object-cover opacity-20" alt="Camera view placeholder"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_8420dCS9g0poqTw8o0EPgR8AGO_nMTJwWLWCsge24-K1IIe37H1gqkJAiQcOV5ycNg-5KcXkAdXiyTAZ3uCS3ImJr1JU_-_dgetDOwU-qZoNEcZPqt9XRhlNvIGtCtwthkLG96w6rjEJ1spv_rupaQlm8CxUpxZLMTI2Y12RIP5oZreQdnlj1Uho75G1ij_4g4DyB2xjW2F5Yui4KogN3mLoNOIeM_iu-7jCI0hqc8UpYBehdUeXZVRWMLfaBoEOjwIUuV9eIqva" />
+          }
+
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-48 h-48 border-4 border-dashed border-[#39E079]/70 rounded-lg"
+              [class.animate-pulse]="scanning"></div>
+          </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="flex max-w-lg flex-col items-center gap-2 text-center">
+          <p class="text-lg font-bold tracking-tight text-[#111814] dark:text-white">Apunte al código QR</p>
+          <p class="text-sm font-normal text-[#618972] dark:text-gray-400">Centre el código QR del producto dentro del
+            recuadro para obtener la información.</p>
+        </div>
+
+        @if(error) {
+        <div class="bg-red-100 dark:bg-red-900/30 p-3 rounded-lg w-full max-w-lg">
+          <p class="text-red-600 dark:text-red-400 text-sm">{{ error }}</p>
+        </div>
+        }
+
+        @if(scannedResult) {
+        <div class="bg-green-100 dark:bg-green-900/30 p-3 rounded-lg w-full max-w-lg">
+          <p class="text-green-700 dark:text-green-400 text-sm">
+            <strong>QR Escaneado:</strong> {{ scannedResult }}
+          </p>
+        </div>
+        }
+
+        <!-- Camera Selection and Activation Controls -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-lg">
+          <!-- Camera Selector -->
+          <div class="flex-1 w-full">
+            <label class="sr-only" for="camera-select">Seleccionar Cámara</label>
+            <select (change)="onCameraChange()" [(ngModel)]="selectedCamera"
+              class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111814] dark:text-white focus:outline-0 focus:ring-2 focus:ring-[#39E079]/50 border border-[#dbe6e0] dark:border-gray-600 bg-white dark:bg-gray-600 h-12 px-4 text-base font-normal transition-colors"
+              id="camera-select">
+              <option value="front">Cámara Frontal</option>
+              <option value="back">Cámara Trasera</option>
+            </select>
+          </div>
+
+          <!-- Activate Camera Button -->
+          <button
+            class="flex min-w-[84px] w-full sm:w-auto cursor-pointer items-center justify-center rounded-lg h-12 px-6 gap-2 text-base font-bold leading-normal tracking-[0.015em] transition-colors"
+            style="background-color: #39E079; color: #111814;" onmouseover="this.style.opacity='0.9'"
+            onmouseout="this.style.opacity='1'" (click)="startScanning()" [disabled]="scanning">
+            <span class="material-symbols-outlined">qr_code_scanner</span>
+            <span class="truncate">{{ scanning ? 'Escaneando...' : 'Activar Cámara' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

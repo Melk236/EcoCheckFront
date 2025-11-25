@@ -1,0 +1,67 @@
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+}
+/* catalog.component.css - Variables CSS personalizadas */
+
+:host {
+  --primary: #39E079;
+  --text-primary: #111814;
+  --text-secondary: #618972;
+  --border-light: #dbe6e0;
+  --border-dark: #2a3c32;
+  --bg-card-dark: #182c21;
+}
+
+/* Aplicar variables a las clases de Tailwind */
+.text-primary {
+  color: var(--primary);
+}
+
+.text-text-primary {
+  color: var(--text-primary);
+}
+
+.text-text-secondary {
+  color: var(--text-secondary);
+}
+
+.border-border-light {
+  border-color: var(--border-light);
+}
+
+.border-border-dark {
+  border-color: var(--border-dark);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.dark .bg-bg-card-dark {
+  background-color: var(--bg-card-dark);
+}
+
+.dark .border-border-dark {
+  border-color: var(--border-dark);
+}
+
+/* Hover states */
+.focus:ring-primary {
+  outline: none;
+}
+
+.focus:ring-primary\/50:focus {
+  --tw-ring-color: rgba(57, 224, 121, 0.5);
+}
+
+.focus:border-primary:focus {
+  border-color: var(--primary);
+}
+
+.hover:bg-primary\/90:hover {
+  background-color: rgba(57, 224, 121, 0.9);
+}
