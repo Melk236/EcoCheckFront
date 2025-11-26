@@ -18,8 +18,8 @@ export class HomeComponent implements OnInit {
   producto: Product | undefined;
   scoreAmbiental: number = 0;//Variable para el score
   materiales: { material: string, reciclable: boolean }[] = [];
-  reglaMateriales: any = {
-    pael: [75, 5, -10],     // base, bonus, penalty
+  reglaMateriales: any = {//Variable que contiene el score base del material,bonus reciclabilidad y penalización por no reciclabilidad
+    papel: [75, 5, -10],     // base, bonus, penalty
     vidrio: [70, 10, -15],
     carton: [80, 5, -10],
     plasticoPP: [45, 2, -20],
@@ -33,6 +33,22 @@ export class HomeComponent implements OnInit {
     cartonPAP: [65, 5, -10],
     other: [50, 0, -10]
   };
+  materialesImpacto = new Map<string, number>([
+    ['papel', 0.9],
+    ['vidrio', 1.2],
+    ['carton', 0.8],
+    ['plasticoPP', 2],
+    ['plasticoPET', 2.5],
+    ['plasticoPVC', 3],
+    ['plasticoLDPE', 2],
+    ['plasticoHDPE', 1.8],
+    ['aluminio', 8],
+    ['acero', 2],
+    ['tetrapak', 3],
+    ['cartonPAP', 1],
+    ['other', 2]
+  ]);
+
 
   private destroy$ = new Subject<void>();//Para desuscribirse a los Observables
 
@@ -60,7 +76,7 @@ export class HomeComponent implements OnInit {
       (data) => {
 
         this.producto = data.product;
-        console.log(this.producto);
+        console.log(this.producto.packaging_materials_tags);
         this.calcularEcoScore();
       },
       (error) => {
@@ -71,15 +87,26 @@ export class HomeComponent implements OnInit {
   }
 
   calcularEcoScore() {//cálculo del ecoScore
-    let suma: number = 0;
+    let sumaMaterial: number = 0;
+    let sumaCarbono: number = 0;
+    let mediaMateriales: number = 0;
+    let ImpactoCarbono: number = 0;
+
     this.producto?.packaging_materials_tags.forEach((material) => {//Rellenamos el array materiales.
       this.cleanMaterial(material);
     });
 
     this.materiales.forEach((valor) => {
-      suma = this.calcularValorProducto(valor);
-    })
+      sumaMaterial += this.calcularValorProducto(valor);
+      sumaCarbono += this.calcularValorCarbono(valor);
+    });
 
+
+    mediaMateriales = sumaMaterial / this.producto!.packaging_materials_tags.length;
+    ImpactoCarbono = sumaCarbono / this.producto!.packaging_materials_tags.length;
+    const mediaCarbono = this.calculoMediaCarbono(ImpactoCarbono);
+    const mediaTransporte = this.calculoTransporte();
+    const scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3);
   }
 
   //Funciones para limpiar los datos.
@@ -180,14 +207,40 @@ export class HomeComponent implements OnInit {
 
   calcularValorProducto(material: { material: string, reciclable: boolean }): number {
 
-    let valor = this.reglaMateriales[material.material];
+    let valor = this.reglaMateriales[material.material] ?? this.reglaMateriales['other'];
 
     if (material.reciclable) {
+
       return valor[0] + valor[1];
     }
     else {
+
       return valor[0] + valor[2];
     }
+  }
+
+  calcularValorCarbono(material: { material: string, reciclable: boolean }): number {
+
+    const impacto = this.materialesImpacto.get(material.material) ?? 2;
+    if (material.reciclable) {
+
+      return impacto * 0.8;
+    }
+    else {
+
+      return impacto;
+    }
+  }
+
+  calculoMediaCarbono(imapctoCarbono: number): number {
+    const maxCO2 = 8; // kg CO2 máximo que daría 0 puntos
+    const score = Math.max(0, 100 - (imapctoCarbono / maxCO2) * 100);
+
+    return score;
+  }
+
+  calculoTransporte(){
+    
   }
 
 
