@@ -1,6 +1,7 @@
-export interface Producto {
+export interface ProductoResponse {
     product:Product;
 }
+
 export interface Product{
     product_name:string;
     brands:string;
@@ -11,5 +12,17 @@ export interface Product{
     packaging_materials_tags:string[];
     packaging_recycling_tags:string[];
     carbon_footprint_percent_of_known_ingredients:number;
+    manufacturing_places:string;
+}
 
+export interface Producto{
+    id:number;
+    nombre:string;
+    marcaId:number;
+    categoria:string;
+    paisOrigen:string;
+    descripcion:string;
+    ecoScore:number;
+    imagenUrl:string;
+    fechaActualizacion:Date;
 }

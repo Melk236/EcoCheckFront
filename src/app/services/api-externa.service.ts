@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environment/environment';
-import {  Producto } from '../types/producto';
+import {  Producto, ProductoResponse } from '../types/producto';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,8 +13,8 @@ export class ApiExternaService {
   constructor(private http:HttpClient){}
 
 
-  getOpenFood(idProducto:string):Observable<Producto>{
+  getOpenFood(idProducto:string):Observable<ProductoResponse>{
     
-    return this.http.get<Producto>(this.apiOpenFood+idProducto);
+    return this.http.get<ProductoResponse>(this.apiOpenFood+idProducto);
   }
 }
