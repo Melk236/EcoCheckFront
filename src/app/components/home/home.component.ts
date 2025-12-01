@@ -10,6 +10,8 @@ import { EmpresaService } from '../../services/empresa.service';
 import { ProductoService } from '../../services/producto.service';
 import { TraducirService } from '../../services/traducir.service';
 import { CommonModule } from '@angular/common';
+import { MaterialService } from '../../services/material.service';
+import { Material } from '../../types/material';
 
 
 
@@ -28,7 +30,7 @@ export class HomeComponent implements OnInit {
   descripcionTraducida: string = '';
   // Score ambiental
   scoreAmbiental: number = 0;
-  materiales: { material: string; reciclable: boolean }[] = [];
+  materiales: { material: string; reciclable: boolean;impactoCarbono:number }[] = [];
 
   // Reglas de materiales: [score_base, bonus_reciclable, penalización_no_reciclable]
   reglaMateriales: Record<string, [number, number, number]> = {
@@ -77,7 +79,7 @@ export class HomeComponent implements OnInit {
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService) {
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService,private materialService:MaterialService) {
 
   }
 
@@ -135,8 +137,10 @@ export class HomeComponent implements OnInit {
         this.producto = data.product;
         console.log(this.producto.brands);
 
-        this.obtenerIdEmpresa();//Obtenemos los datos necesarios para la empresa
-
+        if(this.productos.some(item=>item.nombre?.trim().toLowerCase()!==this.producto?.product_name.trim().toLowerCase())){
+          
+          this.obtenerIdEmpresa();//Obtenemos los datos necesarios para la empresa
+        }
       },
       error: (error) => {
         console.log(error);
@@ -157,11 +161,10 @@ export class HomeComponent implements OnInit {
     this.materiales.forEach((valor) => {//Iteramos por cada material y sumamos segun su base y si es reciclable
       sumaMaterial += this.calcularValorProducto(valor);
       sumaCarbono += this.calcularValorCarbono(valor);
+
     });
-
+    console.log(this.materiales);
     //Cálculo final de medias
-
-
     const ImpactoCarbono = sumaCarbono / this.producto!.packaging_materials_tags.length;
 
     const mediaMateriales = sumaMaterial / this.producto!.packaging_materials_tags.length;
@@ -169,7 +172,7 @@ export class HomeComponent implements OnInit {
     const mediaTransporte = this.calculoTransporte(this.producto!.manufacturing_places);
 
     const scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
-    //this.traducir(scoreAmbiental);
+    this.traducir(scoreAmbiental);//Traducimos la descripcion del product escaneado
 
   }
 
@@ -266,7 +269,8 @@ export class HomeComponent implements OnInit {
 
     this.materiales.push({
       material: map[tag],
-      reciclable: reciclable
+      reciclable: reciclable,
+      impactoCarbono:0
     });
   }
 
@@ -284,15 +288,17 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  calcularValorCarbono(material: { material: string, reciclable: boolean }): number {
+  calcularValorCarbono(material: { material: string, reciclable: boolean,impactoCarbono:number }): number {
 
     const impacto = this.materialesImpacto.get(material.material) ?? 2;
     if (material.reciclable) {
+      const dosDecimales=(impacto*0.8).toFixed(2);//Insertamos en this.materiales el imapcto de carbono de cada material
+      material.impactoCarbono=Number(dosDecimales);
 
       return impacto * 0.8;
     }
     else {
-
+      material.impactoCarbono=impacto;
       return impacto;
     }
   }
@@ -487,7 +493,8 @@ export class HomeComponent implements OnInit {
     this.ProductoService.post(body).subscribe({
       next: (data) => {
         this.productos.push(data);
-        this.crearMateriales();//Cuando se cree el producto creamos sus materiales.
+        console.log(data.id)
+        this.crearMateriales(data.id);//Cuando se cree el producto creamos sus materiales.
       },
       error: (error) => {
         console.log(error);
@@ -518,7 +525,7 @@ export class HomeComponent implements OnInit {
         next: (data) => {
           this.descripcionTraducida = data.texto;
           //Cuando traduzcamos llamamos a craerProducto
-          //this.crearProducto(scoreAmbiental);
+          this.crearProducto(scoreAmbiental);
         },
         error: (error) => {
           console.log(error);
@@ -529,8 +536,28 @@ export class HomeComponent implements OnInit {
   }
 
   //Creación de materiales
-  crearMateriales(){
+  crearMateriales(productoId:number){
     
+    //Rellenamos el body con los materiales que tenemos y sus parámetros.
+    const body:Material[]=[]
+    this.materiales.forEach((valor)=>{
+      body.push({
+        id: 0,
+        productoId:productoId,
+        nombre: valor.material,
+        impactoCarbono: valor.impactoCarbono,
+        reciclable: valor.reciclable
+      })
+    })
+
+    this.materialService.post(body).subscribe({
+      next:(data)=>{
+        console.log(data);
+      },
+      error:(error)=>{
+        console.log(error);
+      }
+    })
   }
 
 
