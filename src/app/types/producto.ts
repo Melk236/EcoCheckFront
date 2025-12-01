@@ -13,16 +13,22 @@ export interface Product{
     packaging_recycling_tags:string[];
     carbon_footprint_percent_of_known_ingredients:number;
     manufacturing_places:string;
+     generic_name:string;
+    generic_name_de:string;
+    generic_name_en: string;
+    generic_name_es:string;
+    generic_name_fr:string;
+    generic_name_zh:string;
 }
 
 export interface Producto{
     id:number;
-    nombre:string;
+    nombre?:string;
     marcaId:number;
     categoria:string;
-    paisOrigen:string;
+    paisOrigen?:string;
     descripcion:string;
     ecoScore:number;
-    imagenUrl:string;
+    imagenUrl?:string;
     fechaActualizacion:Date;
 }

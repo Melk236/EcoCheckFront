@@ -3,7 +3,6 @@
   <main
     class="flex-1 w-full  sm:px-6 md:px-8 py-6 md:py-8 bg-[#f6f8f7] dark:bg-gray-800 h-screen md:h-auto overflow-y-auto">
     <div class="w-full max-w-8xl mx-auto pt-15">
-
       <div class="flex flex-col sm:flex-row gap-4 mb-8">
         <div class="relative grow">
           <span
@@ -27,96 +26,32 @@
       <div
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
         <!-- Updated all dark mode backgrounds from dark:bg-[#182c21] to dark:bg-gray-700 to match sidebar -->
+
+        @for (producto of productos; track producto.id) {
         <div
           class="flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-lg hover:-translate-y-1 transition-all">
           <div class="w-full h-40 bg-cover bg-center rounded-lg"
             style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3ORf-FnudDaA1NzV5UvdmmzQpCofGyUeOmYqp59ZNzqs1Q0RlfF8qKyHUGrT-qJ8sPqHw1W3pMc948xO59s3AY4HAcV0uzJTUGuRd0j4ryP79b2Ddxlj8QMyI-yz_19Owq5mFLjVy8uhsmLW5qKQagIIedD5UcDa7QxihO4CUOStI4iqITk6jTR1CEyAoZCDmve56S8lZEjHbWqF2N5A0LTTX4vZJSYO2s65GdC51X5_avEfz4KPExWa-wKb_VqxqS9-lC0GX8wn3');">
           </div>
           <div class="flex flex-col grow">
-            <p class="text-sm text-[#618972] dark:text-gray-400">Green Valley</p>
-            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">Yogur de Fresa Orgánico</h3>
+            <p class="text-sm text-[#618972] dark:text-gray-400">{{producto.nombre}}</p>
+            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">{{producto.descripcion}}</h3>
           </div>
           <div class="flex items-center justify-between mt-2">
             <p class="text-xs text-[#618972] dark:text-gray-400">EcoScore</p>
-            <div class="flex items-center gap-1 text-lg font-bold text-green-600 dark:text-green-400">
+            <div class="flex items-center gap-1 text-lg font-bold text-green-600 dark:text-green-400" [ngClass]="{'text-green-600 dark:text-green-400':producto.ecoScore>80,
+              'text-yellow-500 dark:text-yellow-400':producto.ecoScore>50,
+              'text-orange-500 dark:text-orange-400':producto.ecoScore>0
+            }">
               <span class="material-symbols-outlined text-base"
                 style="font-variation-settings: 'FILL' 1, 'wght' 600;">eco</span>
-              <span>9.1</span>
+              <span>{{formatNumber(producto.ecoScore)}}</span>
             </div>
           </div>
         </div>
-        <div
-          class="flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-lg hover:-translate-y-1 transition-all">
-          <div class="w-full h-40 bg-cover bg-center rounded-lg"
-            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD4bq5Y4Q2mtVS7xWVfXiEOMY2avvbss25CPyBIDm_4LREfYP14xuKr2ktGa7_lxKjXPZA2e3wHqOrfWJmBX0VERku7-DaoTK_qZcfXy0B7U2iXEnml5tHAd2NDCk6MiQoJE4227f1Of-0xtKR3EDgBcvqGxsxK9NfAeC8P3-A06K_eLHrdDd0epVfbnY4SGOXmwN56vkQgMdJes4SKSt7tmF7oendZehwaA7lv67v-nIezLNJThOBy3qVKToLpncxDG964NBcVQ7uM');">
-          </div>
-          <div class="flex flex-col grow">
-            <p class="text-sm text-[#618972] dark:text-gray-400">Café Montaña</p>
-            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">Café de Comercio Justo</h3>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <p class="text-xs text-[#618972] dark:text-gray-400">EcoScore</p>
-            <div class="flex items-center gap-1 text-lg font-bold text-green-600 dark:text-green-400">
-              <span class="material-symbols-outlined text-base"
-                style="font-variation-settings: 'FILL' 1, 'wght' 600;">eco</span>
-              <span>8.8</span>
-            </div>
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-lg hover:-translate-y-1 transition-all">
-          <div class="w-full h-40 bg-cover bg-center rounded-lg"
-            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCkJrS3yWr7pcAuMnTA8DabepajxD3bA3gGKmQFLtyMh6bQz-yZmtfPQKf0LoUesQUeLZh4elBkX7sar-RumtuF6-yIPYV-jNeTTSJEVsaDbYNnJlrinp-8xHuhpTClkjR9pfc90tVhvPgQl3nUe03Ql_s9-gyIU0NqEn0Pw0kGMsKucCDatNIZGDX-bIOWfh3dqw9kK6iPWGbUw9H7O7WhugyTwc0SSC1HXWpih3d9fc52zzSQyNVHBgaPnD8X_OEYHTfZPjiuOnxP');">
-          </div>
-          <div class="flex flex-col grow">
-            <p class="text-sm text-[#618972] dark:text-gray-400">ChocoPure</p>
-            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">Chocolate Negro 70%</h3>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <p class="text-xs text-[#618972] dark:text-gray-400">EcoScore</p>
-            <div class="flex items-center gap-1 text-lg font-bold text-orange-500 dark:text-orange-400">
-              <span class="material-symbols-outlined text-base"
-                style="font-variation-settings: 'FILL' 1, 'wght' 600;">eco</span>
-              <span>6.5</span>
-            </div>
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-lg hover:-translate-y-1 transition-all">
-          <div class="w-full h-40 bg-cover bg-center rounded-lg"
-            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAjCNJtQoH8Zy7NvcnR3FJl2122c55ldZAyXul-Pn-8p05cX98wYYPBn6hL3Yga-EYhK4f_ydIFphFwjAv69xsgiOTTR_-0qWVhT7F9MPYFclNrUM04NnQlJph-byAXJe8fBXHdOJOSvA_r3mkUiKdnWi_nDVrT4GAx5esscdxehAtUGLW3kZACS_-yBNGiYCZv0tr1LzSyj9tJ0UPI_sxlq0QtLTLHv5mTmw6hYsxFQ-tnQYHzs2OrfZ8DMI3Ui7U0luyaJlxakmsH');">
-          </div>
-          <div class="flex flex-col grow">
-            <p class="text-sm text-[#618972] dark:text-gray-400">AvenaVita</p>
-            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">Leche de Avena Orgánica</h3>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <p class="text-xs text-[#618972] dark:text-gray-400">EcoScore</p>
-            <div class="flex items-center gap-1 text-lg font-bold text-green-600 dark:text-green-400">
-              <span class="material-symbols-outlined text-base"
-                style="font-variation-settings: 'FILL' 1, 'wght' 600;">eco</span>
-              <span>9.5</span>
-            </div>
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-lg hover:-translate-y-1 transition-all">
-          <div class="w-full h-40 bg-cover bg-center rounded-lg"
-            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATP2DyMvXVFfGovgqPHXrlyrfX3VoYXI9jvyBTcPg-PG9g73vAFpH6j3MEB3tXgn4CDuvHlcdFrqnUhPU7MzupvhU57eRT0r1jWNmnadcCcCDcRqrb8W_7Is_LWtfxLUHdYC0sQJ8fVZw8BuTfxivHm8qSFvD2VEO5fAPFJ3El_Ai326UwRCVbiXT0q41y_KM3mxlrH51oev1YqX4r3dqsD7YQh2qtsFDLxhIcgBj_ff8HN_jweg2h3bbs0Et5IUXQuLey-XNurqkC');">
-          </div>
-          <div class="flex flex-col grow">
-            <p class="text-sm text-[#618972] dark:text-gray-400">NaturaSoap</p>
-            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">Jabón Artesanal de Lavanda</h3>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <p class="text-xs text-[#618972] dark:text-gray-400">EcoScore</p>
-            <div class="flex items-center gap-1 text-lg font-bold text-yellow-500 dark:text-yellow-400">
-              <span class="material-symbols-outlined text-base"
-                style="font-variation-settings: 'FILL' 1, 'wght' 600;">eco</span>
-              <span>7.8</span>
-            </div>
-          </div>
-        </div>
+        }
+
+
       </div>
     </div>
 

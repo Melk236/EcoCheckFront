@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
 import { ApiExternaService } from '../../services/api-externa.service';
-import { Product } from '../../types/producto';
+import { Product, Producto } from '../../types/producto';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { ObtenerEmpresaService } from '../../services/obtener-empresa.service';
 import { CompanyInfo, Empresa } from '../../types/empresa';
 import { EmpresaService } from '../../services/empresa.service';
+import { ProductoService } from '../../services/producto.service';
+import { TraducirService } from '../../services/traducir.service';
+import { CommonModule } from '@angular/common';
+
 
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner],
+  imports: [ModalEscaner, CommonModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -21,7 +25,7 @@ export class HomeComponent implements OnInit {
   modalEscanerOpen: boolean = false;
   codigoEscaneado: string = '';
   producto: Product | undefined;
-
+  descripcionTraducida: string = '';
   // Score ambiental
   scoreAmbiental: number = 0;
   materiales: { material: string; reciclable: boolean }[] = [];
@@ -68,26 +72,46 @@ export class HomeComponent implements OnInit {
   empresaInfo: CompanyInfo = { nombre: '' };
   empresas: Empresa[] = [];
 
+  //Datos del producto
+  productos: Producto[] = [];
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService) { }
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService) {
+
+  }
 
   ngOnInit(): void {
+
     this.obtenerQr('3017620425035.json');
-    this.obtenerEmpresas();//Llámada al metodo para obtener las empresas de la DB
+    this.obtenerEmpresas();
+    this.obtenerProductos();
   }
 
 
   obtenerEmpresas() {
-    this.EmpreService.get().pipe(takeUntil(this.destroy$)).subscribe(
-      (data) => {
+    this.EmpreService.get().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data) => {
         this.empresas = data;
       },
-      (error) => {
+      error: (error) => {
         console.log(error);
       }
-    );
+    });
+  }
+
+  obtenerProductos() {
+
+
+    this.ProductoService.get().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data) => {
+
+        this.productos = data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 
   //Modales
@@ -105,18 +129,19 @@ export class HomeComponent implements OnInit {
   obtenerQr(qrEscaneado: string) {
     this.codigoEscaneado = qrEscaneado;//Obtenemos el código escaneado del padre
 
-    this.apiExterna.getOpenFood(this.codigoEscaneado).pipe(takeUntil(this.destroy$)).subscribe(
-      (data) => {
+    this.apiExterna.getOpenFood(this.codigoEscaneado).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data) => {
 
         this.producto = data.product;
         console.log(this.producto.brands);
+
         this.obtenerIdEmpresa();//Obtenemos los datos necesarios para la empresa
-        
+
       },
-      (error) => {
+      error: (error) => {
         console.log(error);
       }
-    );
+    });
 
   }
 
@@ -144,7 +169,7 @@ export class HomeComponent implements OnInit {
     const mediaTransporte = this.calculoTransporte(this.producto!.manufacturing_places);
 
     const scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
-
+    //this.traducir(scoreAmbiental);
 
   }
 
@@ -175,7 +200,8 @@ export class HomeComponent implements OnInit {
       "en:ldpe-4-low-density-polyethylene": "plasticoLDPE",
       "en:other-plastics": "plastico",
 
-      "en:tetrapak": "tetrapak"
+      "en:tetrapak": "tetrapak",
+      
     };
 
 
@@ -279,8 +305,9 @@ export class HomeComponent implements OnInit {
   }
 
   calculoTransporte(pais: string): number {
-    const paisNormalizado = pais.toLowerCase().trim();
 
+    const paisNormalizado = pais.toLowerCase().trim();
+    console.log(paisNormalizado);
     // España
     if (paisNormalizado === 'españa' || paisNormalizado === 'spain') {
       return 100;
@@ -352,6 +379,7 @@ export class HomeComponent implements OnInit {
           this.calcularEcoScore()//Calculamos el ecoScore.
           return;
         }
+
 
         const sedeId = (claims['P17']?.[0]?.mainsnak?.datavalue?.value as { id: string })?.id;
         const matrizId = (claims['P749']?.[0]?.mainsnak?.datavalue?.value as { id: string })?.id;
@@ -435,9 +463,85 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  crearProducto(scoreAmbiental: number) {
+    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.empresaInfo.
+      nombre.toLowerCase().trim())?.id
+
+    if (idCompania == undefined) {//No creamos el recurso si el idCompania es undefined
+      return;
+    }
+
+
+    const body = {
+      id: 0,
+      nombre: this.producto?.product_name,
+      marcaId: idCompania,
+      categoria: 'product',
+      paisOrigen: this.producto?.manufacturing_places,
+      descripcion: this.descripcionTraducida,
+      ecoScore: scoreAmbiental,
+      imagenUrl: this.producto?.image_front_url,
+      fechaActualizacion: new Date()
+    }
+
+    this.ProductoService.post(body).subscribe({
+      next: (data) => {
+        this.productos.push(data);
+        this.crearMateriales();//Cuando se cree el producto creamos sus materiales.
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  traducir(scoreAmbiental: number) {//Método auxiliar para traducir
+    this.descripcionTraducida = '';
+    const posiblesNombres = [
+      this.producto?.generic_name_es,
+      this.producto?.generic_name,
+      this.producto?.generic_name_en,
+      this.producto?.generic_name_fr,
+      this.producto?.generic_name_de,
+      this.producto?.generic_name_zh
+    ];
+
+    //Si no cogemos el idioma en el que la descripción no está vacío y lo traducimos
+    const descripcion = posiblesNombres.find(item => item?.trim() !== '');
+
+    if ((this.producto?.generic_name_es && this.producto.generic_name_es.trim() !== '') || descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
+      return;
+    }
+
+    this.traducirService.post(descripcion).pipe(takeUntil(this.destroy$)).subscribe(
+      {
+        next: (data) => {
+          this.descripcionTraducida = data.texto;
+          //Cuando traduzcamos llamamos a craerProducto
+          //this.crearProducto(scoreAmbiental);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      }
+    );
+
+  }
+
+  //Creación de materiales
+  crearMateriales(){
+    
+  }
+
+
+  formatNumber(ecoScore: number): string {
+    const numero = ecoScore / 10;
+    return numero.toFixed(1);
+  }
+
   ngOnDestroy() {
     this.destroy$.next()//Emitimos un valor por lo que nos desuscribimos del Observable.
-    this.destroy$.complete()//Completamos el Subject para que no se quede de fondo al salirnos del compoenene
+    this.destroy$.complete()//Completamos el Subject para que no se quede de fondo al salirnos del componente
   }
 
 
