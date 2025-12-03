@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
 import { ApiExternaService } from '../../services/api-externa.service';
 import { Product, Producto } from '../../types/producto';
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   descripcionTraducida: string = '';
   // Score ambiental
   scoreAmbiental: number = 0;
-  materiales: { material: string; reciclable: boolean;impactoCarbono:number }[] = [];
+  materiales: { material: string; reciclable: boolean; impactoCarbono: number }[] = [];
 
   // Reglas de materiales: [score_base, bonus_reciclable, penalización_no_reciclable]
   reglaMateriales: Record<string, [number, number, number]> = {
@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService,private materialService:MaterialService) {
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService) {
 
   }
 
@@ -137,9 +137,12 @@ export class HomeComponent implements OnInit {
         this.producto = data.product;
         console.log(this.producto.brands);
 
-        if(this.productos.some(item=>item.nombre?.trim().toLowerCase()!==this.producto?.product_name.trim().toLowerCase())){
-          
-          this.obtenerIdEmpresa();//Obtenemos los datos necesarios para la empresa
+      const nombreEncontrado=this.productos.find(item => item.nombre?.trim().toLowerCase() === this.producto?.product_name.trim().toLowerCase());
+        
+
+        if (nombreEncontrado===undefined) {
+          alert('h');
+          this.obtenerIdEmpresa();
         }
       },
       error: (error) => {
@@ -204,7 +207,7 @@ export class HomeComponent implements OnInit {
       "en:other-plastics": "plastico",
 
       "en:tetrapak": "tetrapak",
-      
+
     };
 
 
@@ -270,7 +273,7 @@ export class HomeComponent implements OnInit {
     this.materiales.push({
       material: map[tag],
       reciclable: reciclable,
-      impactoCarbono:0
+      impactoCarbono: 0
     });
   }
 
@@ -288,17 +291,17 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  calcularValorCarbono(material: { material: string, reciclable: boolean,impactoCarbono:number }): number {
+  calcularValorCarbono(material: { material: string, reciclable: boolean, impactoCarbono: number }): number {
 
     const impacto = this.materialesImpacto.get(material.material) ?? 2;
     if (material.reciclable) {
-      const dosDecimales=(impacto*0.8).toFixed(2);//Insertamos en this.materiales el imapcto de carbono de cada material
-      material.impactoCarbono=Number(dosDecimales);
+      const dosDecimales = (impacto * 0.8).toFixed(2);//Insertamos en this.materiales el imapcto de carbono de cada material
+      material.impactoCarbono = Number(dosDecimales);
 
       return impacto * 0.8;
     }
     else {
-      material.impactoCarbono=impacto;
+      material.impactoCarbono = impacto;
       return impacto;
     }
   }
@@ -360,6 +363,8 @@ export class HomeComponent implements OnInit {
         }
 
         const id = empresa.id;
+        this.empresaInfo.descripcion=empresa.description;
+        console.log();
         this.extraerDatosEmpresa(id);
       },
       (error) => console.log(error)
@@ -382,7 +387,7 @@ export class HomeComponent implements OnInit {
         };
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
         if (this.empresas.some(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())) {
-          this.calcularEcoScore()//Calculamos el ecoScore.
+          this.calcularEcoScore();//Calculamos el ecoScore.
           return;
         }
 
@@ -457,7 +462,7 @@ export class HomeComponent implements OnInit {
       puntuacionGobernanza: 0
 
     }
-
+    console.log(body);
     this.EmpreService.post(body).subscribe(
       (data) => {
         console.log(data);
@@ -536,14 +541,14 @@ export class HomeComponent implements OnInit {
   }
 
   //Creación de materiales
-  crearMateriales(productoId:number){
-    
+  crearMateriales(productoId: number) {
+
     //Rellenamos el body con los materiales que tenemos y sus parámetros.
-    const body:Material[]=[]
-    this.materiales.forEach((valor)=>{
+    const body: Material[] = []
+    this.materiales.forEach((valor) => {
       body.push({
         id: 0,
-        productoId:productoId,
+        productoId: productoId,
         nombre: valor.material,
         impactoCarbono: valor.impactoCarbono,
         reciclable: valor.reciclable
@@ -551,10 +556,10 @@ export class HomeComponent implements OnInit {
     })
 
     this.materialService.post(body).subscribe({
-      next:(data)=>{
+      next: (data) => {
         console.log(data);
       },
-      error:(error)=>{
+      error: (error) => {
         console.log(error);
       }
     })

@@ -20,11 +20,12 @@ export class EmpresaService {
     return this.http.get<Empresa>(this.url+'/'+id)
   }
 
-  post(empresa:Empresa):Observable<Empresa>{
+  post(empresa:Empresa):Observable<Empresa>{ 
     const body={
       nombre:empresa.nombre,
       empresaMatriz:empresa.empresaMatriz,
       paisSede:empresa.paisSede,
+      sitioWeb:empresa.sitioWeb,
       certificaciones:empresa.certificaciones,
       puntuacionAmbiental:empresa.puntuacionAmbiental,
       puntuacionSocial:empresa.puntuacionSocial,

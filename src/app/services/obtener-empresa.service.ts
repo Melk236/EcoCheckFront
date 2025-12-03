@@ -31,7 +31,7 @@ export class ObtenerEmpresaService {
           (i.description ?? "").toLowerCase().includes("chocolate") ||
           (i.description ?? "").toLowerCase().includes("confectionery")
         );
-
+        console.log(empresa)
         // 2. Si no encontró, buscar por nombre exacto "Ferrero SpA"
         if (!empresa) {
           empresa = items.find((i: any) =>

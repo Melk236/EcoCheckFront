@@ -23,6 +23,7 @@ export interface CompanyInfo {
   paisSede?: string;
   sitioWeb?: string;
   certificaciones?: string;
+  descripcion?:string;
 }
 
 // Estructura de la respuesta de Wikidata
@@ -47,4 +48,12 @@ export interface WikidataResponse {
       };
     };
   };
+}
+
+export interface DescripcionResponse{
+  display:Description;
+}
+
+export interface Description{
+  value:string;
 }
