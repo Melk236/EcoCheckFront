@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit {
   descripcionTraducida: string = '';
   // Score ambiental
   scoreAmbiental: number = 0;
+  scoreSocial:number=0;
+  mediaScore:number=0;
   materiales: { material: string; reciclable: boolean; impactoCarbono: number }[] = [];
 
   // Reglas de materiales: [score_base, bonus_reciclable, penalización_no_reciclable]
@@ -95,6 +97,7 @@ export class HomeComponent implements OnInit {
     this.EmpreService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.empresas = data;
+        console.log(this.empresas);
       },
       error: (error) => {
         console.log(error);
@@ -135,13 +138,12 @@ export class HomeComponent implements OnInit {
       next: (data) => {
 
         this.producto = data.product;
-        console.log(this.producto.brands);
+        console.log(this.producto.labels_tags);
 
-      const nombreEncontrado=this.productos.find(item => item.nombre?.trim().toLowerCase() === this.producto?.product_name.trim().toLowerCase());
-        
+        const nombreEncontrado = this.productos.find(item => item.nombre?.trim().toLowerCase() === this.producto?.product_name.trim().toLowerCase());
 
-        if (nombreEncontrado===undefined) {
-          alert('h');
+
+        if (nombreEncontrado === undefined) {
           this.obtenerIdEmpresa();
         }
       },
@@ -174,8 +176,11 @@ export class HomeComponent implements OnInit {
     const mediaCarbono = this.calculoMediaCarbono(ImpactoCarbono);
     const mediaTransporte = this.calculoTransporte(this.producto!.manufacturing_places);
 
-    const scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
-    this.traducir(scoreAmbiental);//Traducimos la descripcion del product escaneado
+    this.scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
+    console.log(this.scoreAmbiental);
+    console.log(this.scoreSocial);
+    this.mediaScore=(this.scoreAmbiental+this.scoreSocial)/2;
+    this.traducir(2);//Traducimos la descripcion del product escaneado
 
   }
 
@@ -363,8 +368,8 @@ export class HomeComponent implements OnInit {
         }
 
         const id = empresa.id;
-        this.empresaInfo.descripcion=empresa.description;
-        console.log();
+        this.empresaInfo.descripcion = empresa.description;
+
         this.extraerDatosEmpresa(id);
       },
       (error) => console.log(error)
@@ -378,15 +383,14 @@ export class HomeComponent implements OnInit {
         const entity = data.entities[id];
         const claims = entity.claims;
 
-        this.empresaInfo = {
-          nombre: entity.labels?.['es']?.value || entity.labels?.['en']?.value || '',
-          sitioWeb: claims['P856']?.[0]?.mainsnak?.datavalue?.value as string,
-          paisSede: undefined,
-          empresaMatriz: undefined,
-          certificaciones: undefined
-        };
+        this.empresaInfo.nombre = entity.labels?.['es']?.value || entity.labels?.['en']?.value || '';
+        this.empresaInfo.sitioWeb = claims['P856']?.[0]?.mainsnak?.datavalue?.value as string;
+
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
-        if (this.empresas.some(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())) {
+        const empresa=this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
+        if (empresa!==undefined) {
+          console.log(empresa.puntuacionSocial);
+          this.scoreSocial=empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
           this.calcularEcoScore();//Calculamos el ecoScore.
           return;
         }
@@ -419,7 +423,7 @@ export class HomeComponent implements OnInit {
             }
 
 
-            this.crearEmpresa(); //ahora sí, cuando todo terminó
+            this.traducir(1); //ahora sí, cuando todo terminó traducimos la descripción
           }
         );
       },
@@ -450,22 +454,25 @@ export class HomeComponent implements OnInit {
   }
 
   crearEmpresa() {
+
+    this.obtenerCertificaciones();//Rellenamos la propiedad this.empresa.certifcaciones si las hay.
+
     const body = {
       id: 0,
       nombre: this.empresaInfo.nombre,
       empresaMatriz: this.empresaInfo.empresaMatriz,
       paisSede: this.empresaInfo.paisSede,
       sitioWeb: this.empresaInfo.sitioWeb,
+      descripcion: this.descripcionTraducida,
       certificaciones: this.empresaInfo.certificaciones,
-      puntuacionSocial: 0,
-      puntuacionAmbiental: 0,
-      puntuacionGobernanza: 0
+      puntuacionSocial: this.scoreSocial
 
     }
-    console.log(body);
+
     this.EmpreService.post(body).subscribe(
       (data) => {
         console.log(data);
+        this.empresas.push(data);
         this.calcularEcoScore();
       },
       (error) => {
@@ -474,7 +481,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  crearProducto(scoreAmbiental: number) {
+  crearProducto() {
     const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.empresaInfo.
       nombre.toLowerCase().trim())?.id
 
@@ -488,9 +495,9 @@ export class HomeComponent implements OnInit {
       nombre: this.producto?.product_name,
       marcaId: idCompania,
       categoria: 'product',
-      paisOrigen: this.producto?.manufacturing_places,
+      paisOrigen: this.formatPais(this.producto?.manufacturing_places ?? 'No especificado'),
       descripcion: this.descripcionTraducida,
-      ecoScore: scoreAmbiental,
+      ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
       fechaActualizacion: new Date()
     }
@@ -498,7 +505,7 @@ export class HomeComponent implements OnInit {
     this.ProductoService.post(body).subscribe({
       next: (data) => {
         this.productos.push(data);
-        console.log(data.id)
+
         this.crearMateriales(data.id);//Cuando se cree el producto creamos sus materiales.
       },
       error: (error) => {
@@ -507,30 +514,43 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  traducir(scoreAmbiental: number) {//Método auxiliar para traducir
+  traducir(opcion: number) {//Método auxiliar para traducir, opcion 1=>traduccion desc del producto y opcion2=>desc de la empresa
+
+    let descripcion: string | undefined = '';
     this.descripcionTraducida = '';
-    const posiblesNombres = [
-      this.producto?.generic_name_es,
-      this.producto?.generic_name,
-      this.producto?.generic_name_en,
-      this.producto?.generic_name_fr,
-      this.producto?.generic_name_de,
-      this.producto?.generic_name_zh
-    ];
 
-    //Si no cogemos el idioma en el que la descripción no está vacío y lo traducimos
-    const descripcion = posiblesNombres.find(item => item?.trim() !== '');
+    switch (opcion) {
+      case 1:
+        descripcion = this.empresaInfo.descripcion;
+        break;
 
-    if ((this.producto?.generic_name_es && this.producto.generic_name_es.trim() !== '') || descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
-      return;
+      case 2:
+        const posiblesNombres = [
+          this.producto?.generic_name_es,
+          this.producto?.generic_name,
+          this.producto?.generic_name_en,
+          this.producto?.generic_name_fr,
+          this.producto?.generic_name_de,
+          this.producto?.generic_name_zh
+        ];
+
+        //Si no cogemos el idioma en el que la descripción no está vacío y lo traducimos
+        descripcion = posiblesNombres.find(item => item?.trim() !== '');
+
+        if ((this.producto?.generic_name_es && this.producto.generic_name_es.trim() !== '') || descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
+
+          return;
+        }
+        break;
     }
 
-    this.traducirService.post(descripcion).pipe(takeUntil(this.destroy$)).subscribe(
+
+    this.traducirService.post(descripcion!).pipe(takeUntil(this.destroy$)).subscribe(
       {
         next: (data) => {
           this.descripcionTraducida = data.texto;
           //Cuando traduzcamos llamamos a craerProducto
-          this.crearProducto(scoreAmbiental);
+          opcion == 1 ? this.crearEmpresa() : this.crearProducto();
         },
         error: (error) => {
           console.log(error);
@@ -565,11 +585,110 @@ export class HomeComponent implements OnInit {
     })
   }
 
+  formatPais(pais: string): string {//Pasamos el nombre del país del inglés al español
+    const countries = new Map([
+      ["Spain", "españa"],
+      ["France", "francia"],
+      ["Germany", "alemania"],
+      ["Italy", "italia"],
+      ["Portugal", "portugal"],
+      ["United kingdom", "reino unido"],
+      ["Ireland", "irlanda"],
+      ["Netherlands", "países bajos"],
+      ["Belgium", "bélgica"],
+      ["Switzerland", "suiza"],
+      ["Austria", "austria"],
+      ["Norway", "noruega"],
+      ["Sweden", "suecia"],
+      ["Finland", "finlandia"],
+      ["Denmark", "dinamarca"],
+      ["Poland", "polonia"],
+      ["Czech republic", "república checa"],
+      ["Hungary", "hungría"],
+      ["Greece", "grecia"],
+      ["Turkey", "turquía"],
+      ["United states", "estados unidos"],
+      ["Canada", "canadá"],
+      ["Mexico", "méxico"],
+      ["Argentina", "argentina"],
+      ["Brazil", "brasil"],
+      ["Chile", "chile"],
+      ["Colombia", "colombia"],
+      ["Morocco", "marruecos"],
+      ["Algeria", "argelia"],
+      ["Egypt", "egipto"],
+      ["South africa", "sudáfrica"],
+      ["China", "china"],
+      ["Japan", "japón"],
+      ["South korea", "corea del sur"],
+      ["India", "india"],
+      ["Australia", "australia"],
+      ["New zealand", "nueva zelanda"],
+      ["Saudi arabia", "arabia saudí"],
+      ["No especificado", "No especificado"]
+    ]);
+    return countries.get(pais) ?? '';
+  }
 
   formatNumber(ecoScore: number): string {
     const numero = ecoScore / 10;
     return numero.toFixed(1);
   }
+
+  obtenerCertificaciones() {
+    let score: number = 50;//La puntuacíon por defectos es 50
+
+    const certifaciones = new Map([
+      ["en:fair-trade", 20],
+      ["en:fairtrade", 20],
+      ["en:organic", 15],
+      ["en:bio", 15],
+      ["en:b-corp", 25],
+      ["en:rainforest-alliance", 12],
+      ["en:msc", 12],
+      ["en:utz-certified", 10],
+      ["en:sa8000", 18],
+      ["en:fsc", 10],
+      ["en:vegetarian", 5],
+      ["en:vegan", 8],
+      ["en:no-preservatives", 5],
+      ["en:no-colorings", 5],
+      ["en:no-gluten", 3]
+    ]);
+
+
+    this.producto?.labels_tags.forEach((valor, index) => {
+      if (valor.trim().includes('en:fair-trade')
+        || valor.trim().toLowerCase().includes('en:fairtrade')
+        || valor.trim().toLowerCase().includes('en:organic')
+        || valor.trim().toLowerCase().includes('en:organic')
+        || valor.trim().toLowerCase().includes('en:b-corp')
+        || valor.trim().toLowerCase().includes('en:bio')
+        || valor.trim().toLowerCase().includes('en:rainforest-alliance')
+        || valor.trim().toLowerCase().includes('en:msc')
+        || valor.trim().toLowerCase().includes('en:utz-certified')
+        || valor.trim().toLowerCase().includes('en:sa8000')
+        || valor.trim().toLowerCase().includes('en:fsc')
+      ) {
+        if (index !== this.producto?.labels_tags.length! - 1) {
+          this.empresaInfo.certificaciones += valor.split(':')[1] + ',';
+        }
+        else {
+          this.empresaInfo.certificaciones += valor.split(':')[1] + ',';
+        }
+
+      }
+
+      if (certifaciones.get(valor) !== undefined) {
+        score += certifaciones.get(valor)!;
+      }
+
+    });
+    this.scoreSocial = score;
+    return score;
+  }
+
+
 
   ngOnDestroy() {
     this.destroy$.next()//Emitimos un valor por lo que nos desuscribimos del Observable.

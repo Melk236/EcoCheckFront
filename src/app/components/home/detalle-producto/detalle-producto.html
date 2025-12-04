@@ -1,0 +1,124 @@
+<div class="flex-1 p-6 lg:p-10 bg-gray-50 dark:bg-gray-800 min-h-screen">
+  <div class="flex flex-col w-full max-w-7xl mx-auto pt-15" >
+  
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column: Product Info & EcoScore -->
+      <div class="lg:col-span-2 flex flex-col gap-8">
+        <!-- Product Card -->
+        <div class="p-6 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+          <div class="flex flex-col items-stretch justify-start lg:flex-row lg:items-start gap-6">
+            <div class="w-full lg:w-1/3 bg-center bg-no-repeat aspect-square bg-cover rounded-lg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2qGRMApGe5SZtrPynQxmbO9I4rV8Y0JKC6-bDc6xgAIeQ9wHXVQo04O74-imQ5wuk5u5Vjkhg3YcHKRFIpybKGqmw-xgwgXn5PWxCgWPLncZCCk60J8SafqfJ4Zpih_hM6e3D8JNU-83Xv0nyejnzPFtLNfYVuFYR5yiAqcS1YSLszbTcNXWbJ0rM2kKUO0bL5slkTtnUrqbLWBIQRyBf3YKBJkqOkmsjCoYYBgspBL7yH82-hAinQm9TzhJkYyeTS5Hxrexpn7GT');"></div>
+            <div class="flex w-full grow flex-col items-stretch justify-center gap-2">
+              <p class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal">AquaPure</p>
+              <p class="text-gray-700 dark:text-white text-2xl font-bold leading-tight tracking-tight">Botella de Agua Reciclada</p>
+              <p class="text-gray-500 dark:text-gray-400 mt-2 text-base font-normal leading-normal">Botella de 500ml fabricada con un 50% de plástico PET reciclado. Diseñada para ser completamente reciclable.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score Breakdown Section -->
+        <div>
+          <h2 class="text-gray-700 dark:text-white text-xl font-bold leading-tight tracking-tight pb-4">Desglose de Puntuación</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Environmental Card -->
+            <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-green-100 dark:bg-green-900/50 rounded-full">
+                  <span class="material-symbols-outlined text-green-600 dark:text-green-400">eco</span>
+                </div>
+                <p class="text-gray-700 dark:text-white text-base font-semibold leading-normal">Ambiental</p>
+              </div>
+              <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
+                <div class="h-2 rounded-full bg-green-500" style="width: 92%;"></div>
+              </div>
+              <p class="text-gray-500 dark:text-gray-400 text-right text-sm font-medium leading-normal">92/100</p>
+            </div>
+
+            <!-- Social Card -->
+            <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-yellow-100 dark:bg-yellow-900/50 rounded-full">
+                  <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400">groups</span>
+                </div>
+                <p class="text-gray-700 dark:text-white text-base font-semibold leading-normal">Social</p>
+              </div>
+              <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
+                <div class="h-2 rounded-full bg-yellow-500" style="width: 75%;"></div>
+              </div>
+              <p class="text-gray-500 dark:text-gray-400 text-right text-sm font-medium leading-normal">75/100</p>
+            </div>
+
+            <!-- Governance Card -->
+            <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-green-100 dark:bg-green-900/50 rounded-full">
+                  <span class="material-symbols-outlined text-green-600 dark:text-green-400">gavel</span>
+                </div>
+                <p class="text-gray-700 dark:text-white text-base font-semibold leading-normal">Gobernanza</p>
+              </div>
+              <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
+                <div class="h-2 rounded-full bg-green-500" style="width: 88%;"></div>
+              </div>
+              <p class="text-gray-700 dark:text-gray-400 text-right text-sm font-medium leading-normal">88/100</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: EcoScore & Materials -->
+      <div class="lg:col-span-1 flex flex-col gap-8">
+        <!-- EcoScore Total Card -->
+        <div class="bg-white dark:bg-gray-700 rounded-xl shadow-sm p-6 flex flex-col items-center gap-4">
+          <p class="text-gray-700 dark:text-white text-lg font-bold leading-normal">EcoScore Total</p>
+          <div class="relative size-40">
+            <svg class="size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+              <circle class="stroke-current text-gray-200 dark:text-gray-700" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+              <circle class="stroke-current text-green-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100.53" stroke-dashoffset="15.08" stroke-linecap="round" stroke-width="3"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="text-4xl font-extrabold text-gray-700 dark:text-white">85</span>
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400">/ 100</span>
+            </div>
+          </div>
+          <div class="px-3 py-1 bg-green-500/10 dark:bg-green-500/20 rounded-full">
+            <p class="text-green-600 dark:text-green-400 text-sm font-semibold">Bueno</p>
+          </div>
+        </div>
+
+        <!-- Materials Card -->
+        <div class="bg-white dark:bg-gray-700 rounded-xl shadow-sm p-6 flex flex-col gap-4">
+          <h3 class="text-gray-700 dark:text-white text-lg font-bold leading-normal">Materiales y Reciclabilidad</h3>
+          <div class="flex flex-col gap-3">
+            <div class="flex justify-between items-center">
+              <p class="text-gray-700 dark:text-gray-300">Plástico (PET)</p>
+              <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                <span class="material-symbols-outlined text-lg">recycling</span>
+                <span class="text-sm font-medium">Reciclable</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <p class="text-gray-700 dark:text-gray-300">Etiqueta (Papel)</p>
+              <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                <span class="material-symbols-outlined text-lg">recycling</span>
+                <span class="text-sm font-medium">Reciclable</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <p class="text-gray-700 dark:text-gray-300">Tapa (HDPE)</p>
+              <div class="flex items-center gap-2 text-yellow-600 dark:text-yellow-400">
+                <span class="material-symbols-outlined text-lg">recycling</span>
+                <span class="text-sm font-medium">Parcialmente</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button class="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors" style="background-color: #28A745;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          Ver detalles
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

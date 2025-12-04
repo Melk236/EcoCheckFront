@@ -27,10 +27,11 @@ export class EmpresaService {
       paisSede:empresa.paisSede,
       sitioWeb:empresa.sitioWeb,
       certificaciones:empresa.certificaciones,
-      puntuacionAmbiental:empresa.puntuacionAmbiental,
       puntuacionSocial:empresa.puntuacionSocial,
-      puntuacionGobernanza:empresa.puntuacionGobernanza
+      descripcion:empresa.descripcion
+
     }
+    console.log(body)
     return this.http.post<Empresa>(this.url,body);
     
   }

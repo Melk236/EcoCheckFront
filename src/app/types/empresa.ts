@@ -6,8 +6,7 @@ export interface Empresa {
   sitioWeb?: string;
   certificaciones?: string;
   puntuacionSocial:number;
-  puntuacionAmbiental:number;
-  puntuacionGobernanza:number; 
+  descripcion:string;
 }
 
 export interface BusquedaEmpresaId {
@@ -48,12 +47,4 @@ export interface WikidataResponse {
       };
     };
   };
-}
-
-export interface DescripcionResponse{
-  display:Description;
-}
-
-export interface Description{
-  value:string;
 }
