@@ -20,6 +20,7 @@ export interface Product {
     generic_name_fr: string;
     generic_name_zh: string;
     labels_tags:string[];
+    
 }
 
 export interface Producto {
@@ -31,5 +32,6 @@ export interface Producto {
     descripcion: string;
     ecoScore: number;
     imagenUrl?: string;
+    ingredientes?:string;
     fechaActualizacion: Date;
 }

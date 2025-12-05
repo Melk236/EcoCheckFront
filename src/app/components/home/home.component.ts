@@ -12,6 +12,7 @@ import { TraducirService } from '../../services/traducir.service';
 import { CommonModule } from '@angular/common';
 import { MaterialService } from '../../services/material.service';
 import { Material } from '../../types/material';
+import { Router } from '@angular/router';
 
 
 
@@ -28,10 +29,12 @@ export class HomeComponent implements OnInit {
   codigoEscaneado: string = '';
   producto: Product | undefined;
   descripcionTraducida: string = '';
+  ingredientesTraducidos:string='';
+  
   // Score ambiental
   scoreAmbiental: number = 0;
-  scoreSocial:number=0;
-  mediaScore:number=0;
+  scoreSocial: number = 0;
+  mediaScore: number = 0;
   materiales: { material: string; reciclable: boolean; impactoCarbono: number }[] = [];
 
   // Reglas de materiales: [score_base, bonus_reciclable, penalización_no_reciclable]
@@ -81,9 +84,7 @@ export class HomeComponent implements OnInit {
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService) {
-
-  }
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private route: Router) {}
 
   ngOnInit(): void {
 
@@ -138,7 +139,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
 
         this.producto = data.product;
-        console.log(this.producto.labels_tags);
+        console.log(this.producto.ingredients_text);
 
         const nombreEncontrado = this.productos.find(item => item.nombre?.trim().toLowerCase() === this.producto?.product_name.trim().toLowerCase());
 
@@ -179,7 +180,7 @@ export class HomeComponent implements OnInit {
     this.scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
     console.log(this.scoreAmbiental);
     console.log(this.scoreSocial);
-    this.mediaScore=(this.scoreAmbiental+this.scoreSocial)/2;
+    this.mediaScore = (this.scoreAmbiental + this.scoreSocial) / 2;
     this.traducir(2);//Traducimos la descripcion del product escaneado
 
   }
@@ -387,10 +388,10 @@ export class HomeComponent implements OnInit {
         this.empresaInfo.sitioWeb = claims['P856']?.[0]?.mainsnak?.datavalue?.value as string;
 
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
-        const empresa=this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
-        if (empresa!==undefined) {
+        const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
+        if (empresa !== undefined) {
           console.log(empresa.puntuacionSocial);
-          this.scoreSocial=empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
+          this.scoreSocial = empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
           this.calcularEcoScore();//Calculamos el ecoScore.
           return;
         }
@@ -499,6 +500,7 @@ export class HomeComponent implements OnInit {
       descripcion: this.descripcionTraducida,
       ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
+      ingredientes:this.ingredientesTraducidos,
       fechaActualizacion: new Date()
     }
 
@@ -522,6 +524,19 @@ export class HomeComponent implements OnInit {
     switch (opcion) {
       case 1:
         descripcion = this.empresaInfo.descripcion;
+
+        this.traducirService.post(descripcion!).pipe(takeUntil(this.destroy$)).subscribe(
+          {
+            next: (data) => {
+              this.descripcionTraducida = data.texto;
+              //Cuando traduzcamos llamamos a craerEmpresa
+              this.crearEmpresa();
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          }
+        );
         break;
 
       case 2:
@@ -541,22 +556,27 @@ export class HomeComponent implements OnInit {
 
           return;
         }
+
+        forkJoin({
+          descripcion:this.traducirService.post(descripcion),
+          ingredientes:this.traducirService.post(this.producto?.ingredients_text!)
+        }).pipe(takeUntil(this.destroy$)).subscribe({
+          next:(data)=>{
+            this.descripcionTraducida=data.descripcion.texto;
+            this.ingredientesTraducidos=data.ingredientes.texto;
+            //Cuando terminamos llamamos a crearProducto
+            this.crearProducto();
+
+          },
+          error:(error)=>{
+            console.log(error);
+          }
+        })
         break;
     }
 
 
-    this.traducirService.post(descripcion!).pipe(takeUntil(this.destroy$)).subscribe(
-      {
-        next: (data) => {
-          this.descripcionTraducida = data.texto;
-          //Cuando traduzcamos llamamos a craerProducto
-          opcion == 1 ? this.crearEmpresa() : this.crearProducto();
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      }
-    );
+
 
   }
 
@@ -632,9 +652,10 @@ export class HomeComponent implements OnInit {
 
   formatNumber(ecoScore: number): string {
     const numero = ecoScore / 10;
+    
     return numero.toFixed(1);
   }
-
+  
   obtenerCertificaciones() {
     let score: number = 50;//La puntuacíon por defectos es 50
 
@@ -688,7 +709,9 @@ export class HomeComponent implements OnInit {
     return score;
   }
 
-
+  abrirDetalle(id: number) {
+    this.route.navigate(['home/detalle-producto', id]);
+  }
 
   ngOnDestroy() {
     this.destroy$.next()//Emitimos un valor por lo que nos desuscribimos del Observable.

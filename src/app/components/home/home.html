@@ -28,8 +28,9 @@
         <!-- Updated all dark mode backgrounds from dark:bg-[#182c21] to dark:bg-gray-700 to match sidebar -->
 
         @for (producto of productos; track producto.id) {
+        <!-- Card con efecto hover suave -->
         <div
-          class="flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-lg hover:-translate-y-1 transition-all">
+          class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer" (click)="abrirDetalle(producto.id)">
           <div class="w-full h-40 bg-cover bg-center rounded-lg"
             style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3ORf-FnudDaA1NzV5UvdmmzQpCofGyUeOmYqp59ZNzqs1Q0RlfF8qKyHUGrT-qJ8sPqHw1W3pMc948xO59s3AY4HAcV0uzJTUGuRd0j4ryP79b2Ddxlj8QMyI-yz_19Owq5mFLjVy8uhsmLW5qKQagIIedD5UcDa7QxihO4CUOStI4iqITk6jTR1CEyAoZCDmve56S8lZEjHbWqF2N5A0LTTX4vZJSYO2s65GdC51X5_avEfz4KPExWa-wKb_VqxqS9-lC0GX8wn3');">
           </div>

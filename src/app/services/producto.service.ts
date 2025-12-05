@@ -26,6 +26,7 @@ export class ProductoService {
       categoria: producto.categoria,
       paisOrigen: producto.paisOrigen,
       descripcion: producto.descripcion,
+      ingredientes:producto.ingredientes,
       ecoScore: producto.ecoScore,
       imagenUrl: producto.imagenUrl
     }
@@ -40,6 +41,7 @@ export class ProductoService {
       categoria: producto.categoria,
       paisOrigen: producto.paisOrigen,
       descripcion: producto.descripcion,
+      ingredientes:producto.ingredientes,
       ecoScore: producto.ecoScore,
       imagenUrl: producto.imagenUrl
     }

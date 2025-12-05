@@ -6,6 +6,6 @@ export const routes: Routes = [
 
     {path:'',redirectTo:'home',pathMatch:'full'},
     {path:'home', component:HomeComponent},
-    {path:'home/detalle-producto',component:DetalleProductoComponent}
+    {path:'home/detalle-producto/:id',component:DetalleProductoComponent}
     
 ];
