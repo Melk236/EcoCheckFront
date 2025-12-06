@@ -21,7 +21,7 @@ export interface CompanyInfo {
   empresaMatriz?: string;
   paisSede?: string;
   sitioWeb?: string;
-  certificaciones?: string;
+ 
   descripcion?:string;
 }
 

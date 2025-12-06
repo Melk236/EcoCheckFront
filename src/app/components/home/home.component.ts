@@ -29,8 +29,8 @@ export class HomeComponent implements OnInit {
   codigoEscaneado: string = '';
   producto: Product | undefined;
   descripcionTraducida: string = '';
-  ingredientesTraducidos:string='';
-  
+  ingredientesTraducidos: string = '';
+
   // Score ambiental
   scoreAmbiental: number = 0;
   scoreSocial: number = 0;
@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private route: Router) {}
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private route: Router) { }
 
   ngOnInit(): void {
 
@@ -465,7 +465,6 @@ export class HomeComponent implements OnInit {
       paisSede: this.empresaInfo.paisSede,
       sitioWeb: this.empresaInfo.sitioWeb,
       descripcion: this.descripcionTraducida,
-      certificaciones: this.empresaInfo.certificaciones,
       puntuacionSocial: this.scoreSocial
 
     }
@@ -500,7 +499,7 @@ export class HomeComponent implements OnInit {
       descripcion: this.descripcionTraducida,
       ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
-      ingredientes:this.ingredientesTraducidos,
+      ingredientes: this.ingredientesTraducidos,
       fechaActualizacion: new Date()
     }
 
@@ -558,17 +557,17 @@ export class HomeComponent implements OnInit {
         }
 
         forkJoin({
-          descripcion:this.traducirService.post(descripcion),
-          ingredientes:this.traducirService.post(this.producto?.ingredients_text!)
+          descripcion: this.traducirService.post(descripcion),
+          ingredientes: this.traducirService.post(this.producto?.ingredients_text!)
         }).pipe(takeUntil(this.destroy$)).subscribe({
-          next:(data)=>{
-            this.descripcionTraducida=data.descripcion.texto;
-            this.ingredientesTraducidos=data.ingredientes.texto;
+          next: (data) => {
+            this.descripcionTraducida = data.descripcion.texto;
+            this.ingredientesTraducidos = data.ingredientes.texto;
             //Cuando terminamos llamamos a crearProducto
             this.crearProducto();
 
           },
-          error:(error)=>{
+          error: (error) => {
             console.log(error);
           }
         })
@@ -652,13 +651,13 @@ export class HomeComponent implements OnInit {
 
   formatNumber(ecoScore: number): string {
     const numero = ecoScore / 10;
-    
+
     return numero.toFixed(1);
   }
-  
+
   obtenerCertificaciones() {
     let score: number = 50;//La puntuacíon por defectos es 50
-
+    const certificacionesLimpias: string[] = [];
     const certifaciones = new Map([
       ["en:fair-trade", 20],
       ["en:fairtrade", 20],
@@ -678,35 +677,36 @@ export class HomeComponent implements OnInit {
     ]);
 
 
-    this.producto?.labels_tags.forEach((valor, index) => {
+    this.producto?.labels_tags.forEach((valor) => {
       if (valor.trim().includes('en:fair-trade')
         || valor.trim().toLowerCase().includes('en:fairtrade')
-        || valor.trim().toLowerCase().includes('en:organic')
-        || valor.trim().toLowerCase().includes('en:organic')
         || valor.trim().toLowerCase().includes('en:b-corp')
-        || valor.trim().toLowerCase().includes('en:bio')
         || valor.trim().toLowerCase().includes('en:rainforest-alliance')
         || valor.trim().toLowerCase().includes('en:msc')
         || valor.trim().toLowerCase().includes('en:utz-certified')
         || valor.trim().toLowerCase().includes('en:sa8000')
         || valor.trim().toLowerCase().includes('en:fsc')
       ) {
-        if (index !== this.producto?.labels_tags.length! - 1) {
-          this.empresaInfo.certificaciones += valor.split(':')[1] + ',';
-        }
-        else {
-          this.empresaInfo.certificaciones += valor.split(':')[1] + ',';
-        }
+
+        certificacionesLimpias.push(valor.split(':')[1]);
 
       }
 
-      if (certifaciones.get(valor) !== undefined) {
+      if (certifaciones.get(valor) !== undefined) {//Le sumaos al score social si contien alguno de estos certificados adicionales
         score += certifaciones.get(valor)!;
       }
 
     });
     this.scoreSocial = score;
+    this.asociarCertificacionesEmpresa(certificacionesLimpias);
     return score;
+  }
+
+  asociarCertificacionesEmpresa(certificaciones:string[]){
+    certificaciones.forEach((valor)=>{
+      
+
+    });
   }
 
   abrirDetalle(id: number) {

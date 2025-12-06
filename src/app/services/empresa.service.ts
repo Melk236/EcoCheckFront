@@ -26,7 +26,6 @@ export class EmpresaService {
       empresaMatriz:empresa.empresaMatriz,
       paisSede:empresa.paisSede,
       sitioWeb:empresa.sitioWeb,
-      certificaciones:empresa.certificaciones,
       puntuacionSocial:empresa.puntuacionSocial,
       descripcion:empresa.descripcion
 
