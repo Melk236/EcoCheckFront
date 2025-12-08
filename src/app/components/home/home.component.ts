@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
 import { ApiExternaService } from '../../services/api-externa.service';
 import { Product, Producto } from '../../types/producto';
-import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { forkJoin, Subject, take, takeUntil } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { ObtenerEmpresaService } from '../../services/obtener-empresa.service';
 import { CompanyInfo, Empresa } from '../../types/empresa';
@@ -13,6 +13,10 @@ import { CommonModule } from '@angular/common';
 import { MaterialService } from '../../services/material.service';
 import { Material } from '../../types/material';
 import { Router } from '@angular/router';
+import { CertificacionesService } from '../../services/certificaciones.service';
+import { EmpresaCertificacionService } from '../../services/empresa-certificacion.service';
+import { Certificaciones } from '../../types/certificaciones';
+import { EmpresaCertificacion } from '../../types/empresa-certificacion';
 
 
 
@@ -81,16 +85,22 @@ export class HomeComponent implements OnInit {
 
   //Datos del producto
   productos: Producto[] = [];
+  //Datos de las certificaciones
+  certificaciones: Certificaciones[] = [];
+  certificacionesLimpias: string[] = [];
+  
+
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private route: Router) { }
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private route: Router) { }
 
   ngOnInit(): void {
 
     this.obtenerQr('3017620425035.json');
     this.obtenerEmpresas();
     this.obtenerProductos();
+    this.obtenerCertificaciones();
   }
 
 
@@ -118,6 +128,17 @@ export class HomeComponent implements OnInit {
         console.log(error);
       }
     });
+  }
+
+  obtenerCertificaciones() {
+    this.certificacionesService.get().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data) => {
+        this.certificaciones = data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   //Modales
@@ -159,6 +180,7 @@ export class HomeComponent implements OnInit {
     let sumaMaterial: number = 0;
     let sumaCarbono: number = 0;
 
+    
 
     this.producto?.packaging_materials_tags.forEach((material) => {//Rellenamos el array materiales.
       this.cleanMaterial(material);
@@ -456,7 +478,7 @@ export class HomeComponent implements OnInit {
 
   crearEmpresa() {
 
-    this.obtenerCertificaciones();//Rellenamos la propiedad this.empresa.certifcaciones si las hay.
+    this.rellenarCertificaciones();//Rellenamos la propiedad this.empresa.certifcaciones si las hay.
 
     const body = {
       id: 0,
@@ -473,6 +495,7 @@ export class HomeComponent implements OnInit {
       (data) => {
         console.log(data);
         this.empresas.push(data);
+        this.asociarCertificacionesEmpresa()//Se crean las asociaciones entre la nueva empresa y las certificaciones si las tiene
         this.calcularEcoScore();
       },
       (error) => {
@@ -655,9 +678,10 @@ export class HomeComponent implements OnInit {
     return numero.toFixed(1);
   }
 
-  obtenerCertificaciones() {
-    let score: number = 50;//La puntuacíon por defectos es 50
-    const certificacionesLimpias: string[] = [];
+  rellenarCertificaciones() {
+    this.certificacionesLimpias = []//Limpiamos el array.
+    let score: number = 50;//La puntuacíon por defectos es 50.
+
     const certifaciones = new Map([
       ["en:fair-trade", 20],
       ["en:fairtrade", 20],
@@ -688,7 +712,7 @@ export class HomeComponent implements OnInit {
         || valor.trim().toLowerCase().includes('en:fsc')
       ) {
 
-        certificacionesLimpias.push(valor.split(':')[1]);
+        this.certificacionesLimpias.push(valor.split(':')[1]);
 
       }
 
@@ -698,14 +722,48 @@ export class HomeComponent implements OnInit {
 
     });
     this.scoreSocial = score;
-    this.asociarCertificacionesEmpresa(certificacionesLimpias);
+
     return score;
   }
 
-  asociarCertificacionesEmpresa(certificaciones:string[]){
-    certificaciones.forEach((valor)=>{
-      
+  asociarCertificacionesEmpresa() {
+    const idsEmpresaCertificacion: EmpresaCertificacion[] = [];
 
+    const certificacionesBd = new Map([
+      ['fair-trade', 'Fair Trade'],
+      ['fairtrade', 'Fair Trade'],
+      ['b-corp', 'B Corp Certified'],
+      ['rainforest-alliance', 'Rainforest Alliance'],
+      ['sa800', 'SA800'],
+      ['utz-certified', 'Utz Certified'],
+      ['msc', 'MSC Marine Stewardship Council'],
+      ['fsc', 'FSC/PEFC']
+
+    ]);
+
+    this.certificacionesLimpias.forEach((valor) => {
+      const encontrado = this.certificaciones.find(item => item.nombre == certificacionesBd.get(valor));
+
+      if (encontrado !== undefined) {
+        idsEmpresaCertificacion.push({
+          id: 0,
+          marcaId: this.empresas[this.empresas.length - 1].id,
+          certificacionId: encontrado.id
+        });
+      }
+
+    });
+
+    this.crearCertificaciones(idsEmpresaCertificacion);
+
+  }
+
+  crearCertificaciones(idsEmpresaCertificacion: EmpresaCertificacion[]) {
+    this.empresaCertificacionService.post(idsEmpresaCertificacion).subscribe({
+     
+      error: (error) => {
+        console.log(error);
+      }
     });
   }
 

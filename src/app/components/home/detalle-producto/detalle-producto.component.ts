@@ -27,6 +27,7 @@ export class DetalleProductoComponent implements OnInit{
     fechaActualizacion:new Date()
   }
   materiales:Material[]=[];
+  materialesFormateados:string[]=[];
   marca:Empresa={
     id: 0,
     nombre: '',
@@ -92,6 +93,18 @@ export class DetalleProductoComponent implements OnInit{
 
   }
 
+  formatMateriales(){
+    
+    const materialesDb=new Map([//Como vienen los materiales de la  DB
+      
+      ['cartonPAP','carton (PAP)'],
+      ['plasticoPET','Plástico (PET)'],
+      ['plasticoPVC','Plástico (PVC)'],
+      ['plasticoHDPE','Plástico (HDPE)'],
+      ['plasticoLDPE','Plástico (LDPE)'],
+      
+    ])
+  }
   ngOnDestroy(){
     this.destroy$.next();//Nos desuscribimos de los observables del componente
     this.destroy$.complete();//Completamos este para que tambien ya no exista
