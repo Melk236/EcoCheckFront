@@ -93,17 +93,20 @@ export class DetalleProductoComponent implements OnInit{
 
   }
 
-  formatMateriales(){
-    
+  formatMateriales(material:string){
+    const letras=material.split('');
+    letras[0]=letras[0].toUpperCase();
+    material=letras.join('');
     const materialesDb=new Map([//Como vienen los materiales de la  DB
       
-      ['cartonPAP','carton (PAP)'],
-      ['plasticoPET','Plástico (PET)'],
-      ['plasticoPVC','Plástico (PVC)'],
-      ['plasticoHDPE','Plástico (HDPE)'],
-      ['plasticoLDPE','Plástico (LDPE)'],
-      
-    ])
+      ['CartonPAP','Carton (PAP)'],
+      ['PlasticoPET','Plástico (PET)'],
+      ['PlasticoPVC','Plástico (PVC)'],
+      ['PlasticoHDPE','Plástico (HDPE)'],
+      ['PlasticoLDPE','Plástico (LDPE)'],
+      ['PlasticoPP','Plástico (PP)']
+    ]);
+    return materialesDb.get(material) ?? material;
   }
   ngOnDestroy(){
     this.destroy$.next();//Nos desuscribimos de los observables del componente

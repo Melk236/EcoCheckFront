@@ -17,6 +17,8 @@ import { CertificacionesService } from '../../services/certificaciones.service';
 import { EmpresaCertificacionService } from '../../services/empresa-certificacion.service';
 import { Certificaciones } from '../../types/certificaciones';
 import { EmpresaCertificacion } from '../../types/empresa-certificacion';
+import { PuntuacionService } from '../../services/puntuacion.service';
+import { Puntuacion } from '../../types/puntuacion';
 
 
 
@@ -88,12 +90,12 @@ export class HomeComponent implements OnInit {
   //Datos de las certificaciones
   certificaciones: Certificaciones[] = [];
   certificacionesLimpias: string[] = [];
-  
+
 
   // Gestión de observables
   private destroy$ = new Subject<void>();
 
-  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private route: Router) { }
+  constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private puntuacionService: PuntuacionService, private route: Router) { }
 
   ngOnInit(): void {
 
@@ -180,7 +182,7 @@ export class HomeComponent implements OnInit {
     let sumaMaterial: number = 0;
     let sumaCarbono: number = 0;
 
-    
+
 
     this.producto?.packaging_materials_tags.forEach((material) => {//Rellenamos el array materiales.
       this.cleanMaterial(material);
@@ -227,7 +229,7 @@ export class HomeComponent implements OnInit {
       "en:steel": "acero",
       "en:tinplate": "acero",
 
-      "en:pet-1-polyethylene-terephthalate": "plastico-pet",
+      "en:pet-1-polyethylene-terephthalate": "plasticoPET",
       "en:pp-5-polypropylene": "plasticoPP",
       "en:pvc-3-polyvinyl-chloride": "plasticoPVC",
       "en:hdpe-2-high-density-polyethylene": "plasticoHDPE",
@@ -620,6 +622,7 @@ export class HomeComponent implements OnInit {
     this.materialService.post(body).subscribe({
       next: (data) => {
         console.log(data);
+        this.crearPuntuacion();
       },
       error: (error) => {
         console.log(error);
@@ -760,12 +763,30 @@ export class HomeComponent implements OnInit {
 
   crearCertificaciones(idsEmpresaCertificacion: EmpresaCertificacion[]) {
     this.empresaCertificacionService.post(idsEmpresaCertificacion).subscribe({
-     
+
       error: (error) => {
         console.log(error);
       }
     });
   }
+
+  crearPuntuacion() {
+    const body:Puntuacion={
+      id: 0,
+      productoId: this.productos[this.productos.length-1].id,
+      fecha: new Date(),
+      valor: this.mediaScore,
+      valorAmbiental: this.scoreAmbiental,
+      valorSocial: this.scoreSocial
+    }
+
+    this.puntuacionService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
+     error:(error)=>{
+      console.log(error);
+     }
+    });
+  }
+
 
   abrirDetalle(id: number) {
     this.route.navigate(['home/detalle-producto', id]);
