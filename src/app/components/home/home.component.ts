@@ -771,9 +771,9 @@ export class HomeComponent implements OnInit {
   }
 
   crearPuntuacion() {
-    const body:Puntuacion={
+    const body: Puntuacion = {
       id: 0,
-      productoId: this.productos[this.productos.length-1].id,
+      productoId: this.productos[this.productos.length - 1].id,
       fecha: new Date(),
       valor: this.mediaScore,
       valorAmbiental: this.scoreAmbiental,
@@ -781,9 +781,12 @@ export class HomeComponent implements OnInit {
     }
 
     this.puntuacionService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
-     error:(error)=>{
-      console.log(error);
-     }
+      next: (data) => {
+
+      },
+      error: (error) => {
+        console.log(error);
+      }
     });
   }
 
