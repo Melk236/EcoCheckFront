@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Puntuacion } from '../../../types/puntuacion';
 import { Material } from '../../../types/material';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-modal-detalle',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './modal-detalle.html',
   styleUrl: './modal-detalle.css',
 })
@@ -29,5 +31,10 @@ export class ModalDetalleComponent implements OnInit {
   /*Emitimos el evento al padre para que se cierre el modal */
   cerrarModal(){
     this.closeModal.emit();
+  }
+
+  /*Formateo de los valores */
+  formatNumber(ecoScore:number):string{
+    return ecoScore.toFixed(0);
   }
 }
