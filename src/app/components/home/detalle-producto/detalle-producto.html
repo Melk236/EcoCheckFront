@@ -137,10 +137,14 @@
           <!-- Action Button -->
           <button class="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors"
             style="background-color: #28A745;" onmouseover="this.style.opacity='0.9'"
-            onmouseout="this.style.opacity='1'">
+            onmouseout="this.style.opacity='1'" (click)="abrirModal()">
             Ver detalles
           </button>
         </div>
       </div>
     </div>
   </div>
+
+  @if(modal){
+    <app-modal-detalle [puntuacion]="puntuacion" [materiales]="materiales" (closeModal)="cerrarModal()"></app-modal-detalle>
+  }

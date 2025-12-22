@@ -10,10 +10,11 @@ import { EmpresaService } from '../../../services/empresa.service';
 import { Empresa } from '../../../types/empresa';
 import { PuntuacionService } from '../../../services/puntuacion.service';
 import { Puntuacion } from '../../../types/puntuacion';
+import { ModalDetalleComponent } from "../../modales/modal-detalle/modal-detalle.component";
 
 @Component({
   selector: 'app-detalle-producto',
-  imports: [CommonModule],
+  imports: [CommonModule, ModalDetalleComponent],
   templateUrl: './detalle-producto.html',
   styleUrl: './detalle-producto.css',
 })
@@ -44,6 +45,7 @@ export class DetalleProductoComponent implements OnInit {
     puntuacionSocial: 0,
     descripcion: ''
   }
+  modal:boolean=false;
   //Creamos un Observable de tipos subject para desuscribir de los observables cuando este emita algo.
   destroy$ = new Subject<void>();
 
@@ -135,6 +137,18 @@ export class DetalleProductoComponent implements OnInit {
     ]);
     return materialesDb.get(material) ?? material;
   }
+
+  /*
+  Manejo del modal de los detalles del producto(abrir,cerrar)
+  */
+  abrirModal(){
+    this.modal=true;
+  }
+
+  cerrarModal(){
+    this.modal=false;
+  }
+
   ngOnDestroy() {
     this.destroy$.next();//Nos desuscribimos de los observables del componente
     this.destroy$.complete();//Completamos este para que tambien ya no exista
