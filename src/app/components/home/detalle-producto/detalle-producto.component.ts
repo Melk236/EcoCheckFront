@@ -11,10 +11,11 @@ import { Empresa } from '../../../types/empresa';
 import { PuntuacionService } from '../../../services/puntuacion.service';
 import { Puntuacion } from '../../../types/puntuacion';
 import { ModalDetalleComponent } from "../../modales/modal-detalle/modal-detalle.component";
+import { NombreMaterialPipe } from '../../../shared/nombre-material-pipe';
 
 @Component({
   selector: 'app-detalle-producto',
-  imports: [CommonModule, ModalDetalleComponent],
+  imports: [CommonModule, ModalDetalleComponent,NombreMaterialPipe],
   templateUrl: './detalle-producto.html',
   styleUrl: './detalle-producto.css',
 })
@@ -120,22 +121,6 @@ export class DetalleProductoComponent implements OnInit {
 
     return totalLength - (totalLength * ecoScore / 100);
 
-  }
-
-  formatMateriales(material: string) {
-    const letras = material.split('');
-    letras[0] = letras[0].toUpperCase();
-    material = letras.join('');
-    const materialesDb = new Map([//Como vienen los materiales de la  DB
-
-      ['CartonPAP', 'Carton (PAP)'],
-      ['PlasticoPET', 'Plástico (PET)'],
-      ['PlasticoPVC', 'Plástico (PVC)'],
-      ['PlasticoHDPE', 'Plástico (HDPE)'],
-      ['PlasticoLDPE', 'Plástico (LDPE)'],
-      ['PlasticoPP', 'Plástico (PP)']
-    ]);
-    return materialesDb.get(material) ?? material;
   }
 
   /*

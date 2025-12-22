@@ -129,7 +129,7 @@
                   class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
                   <div class="flex justify-between items-start mb-2">
                     <div>
-                      <p class="font-bold text-[#333333] dark:text-white">{{material.nombre}}</p>
+                      <p class="font-bold text-[#333333] dark:text-white">{{material.nombre | nombreMaterial}}</p>
                       <p class="text-xs text-gray-500">Cuerpo de la botella</p>
                     </div>
                     <span
@@ -166,7 +166,7 @@
                   <span class="material-symbols-outlined">flag</span>
                 </div>
                 <div>
-                  <p class="font-bold text-[#333333] dark:text-white">España</p>
+                  <p class="font-bold text-[#333333] dark:text-white">{{producto.nombre}}</p>
                   <p class="text-sm text-gray-500">País de producción principal</p>
                 </div>
               </div>

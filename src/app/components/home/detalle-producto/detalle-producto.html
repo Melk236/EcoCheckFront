@@ -121,7 +121,7 @@
           <div class="flex flex-col gap-3 ">
             @for(material of materiales;track material.id){
             <div class="flex justify-between items-center">
-              <p class="text-gray-700 dark:text-gray-300">{{formatMateriales(material.nombre)}}</p>
+              <p class="text-gray-700 dark:text-gray-300">{{material.nombre |nombreMaterial}}</p>
               <div class="flex items-center gap-2" [ngClass]="{'text-green-600 dark:text-green-400':material.reciclable,
               'text-yellow-600 dark:text-yellow-400':!material.reciclable
 
@@ -146,5 +146,5 @@
   </div>
 
   @if(modal){
-    <app-modal-detalle [puntuacion]="puntuacion" [materiales]="materiales" (closeModal)="cerrarModal()"></app-modal-detalle>
+    <app-modal-detalle [producto]="producto" [puntuacion]="puntuacion" [materiales]="materiales" (closeModal)="cerrarModal()"></app-modal-detalle>
   }
