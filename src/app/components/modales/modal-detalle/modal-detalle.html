@@ -144,7 +144,16 @@
                     class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg mt-2">
                     <span class="material-symbols-outlined text-[18px]">co2</span>
                     <span class="font-medium">{{material.impactoCarbono}} kg CO2e</span>
-                    <span class="text-xs text-gray-400 ml-auto">Bajo Impacto</span>
+                    @if(material.impactoCarbono>=0 && material.impactoCarbono<2){
+                      <span class="text-xs text-gray-400 ml-auto">Bajo Impacto</span>
+                    }
+                    @if(material.impactoCarbono>=2 && material.impactoCarbono<5){
+                      <span class="text-xs text-gray-400 ml-auto">Medio Impacto</span>
+                    }
+                    @if(material.impactoCarbono>=5) {
+                      <span class="text-xs text-gray-400 ml-auto">Alto Impacto</span>
+                    }
+                    
                   </div>
                 </div>
                 }
@@ -166,7 +175,7 @@
                   <span class="material-symbols-outlined">flag</span>
                 </div>
                 <div>
-                  <p class="font-bold text-[#333333] dark:text-white">{{producto.nombre}}</p>
+                  <p class="font-bold text-[#333333] dark:text-white">{{nombrePais}}</p>
                   <p class="text-sm text-gray-500">País de producción principal</p>
                 </div>
               </div>
@@ -215,7 +224,8 @@
                 <span class="material-symbols-outlined text-sm">workspace_premium</span>
                 Certificaciones de la Empresa
               </h4>
-              <div
+              @for (certificacion of certificaciones; track certificacion.id) {
+                <div
                 class="group p-5 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-yellow-200 dark:hover:border-yellow-700 transition-all hover:shadow-md bg-white dark:bg-gray-800">
                 <div class="flex items-center gap-3 mb-3">
                   <div
@@ -229,20 +239,9 @@
                   transparencia pública y responsabilidad legal para equilibrar las ganancias y el propósito.
                 </p>
               </div>
-              <div
-                class="group p-5 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-yellow-200 dark:hover:border-yellow-700 transition-all hover:shadow-md bg-white dark:bg-gray-800">
-                <div class="flex items-center gap-3 mb-3">
-                  <div
-                    class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600">
-                    <span class="material-symbols-outlined text-lg">handshake</span>
-                  </div>
-                  <h5 class="font-bold text-[#333333] dark:text-white text-lg">Fair Trade</h5>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed pl-11">
-                  Garantiza que los productos se fabrican de acuerdo con rigurosos estándares sociales, ambientales y
-                  económicos, promoviendo condiciones de trabajo seguras y medios de vida sostenibles.
-                </p>
-              </div>
+              }
+              
+              
             </div>
           </div>
         </div>
