@@ -6,6 +6,7 @@ export interface Empresa {
   sitioWeb?: string;
   certificaciones?: string;
   puntuacionSocial:number;
+  controversias:string;
   descripcion:string;
 }
 

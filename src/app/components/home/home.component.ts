@@ -489,7 +489,8 @@ export class HomeComponent implements OnInit {
       paisSede: this.empresaInfo.paisSede,
       sitioWeb: this.empresaInfo.sitioWeb,
       descripcion: this.descripcionTraducida,
-      puntuacionSocial: this.scoreSocial
+      puntuacionSocial: this.scoreSocial,
+      controversias:''
 
     }
 

@@ -259,9 +259,8 @@
                   disponibles</p>
               </div>
               }
-
-
             </div>
+
             <div class="mt-8 space-y-4">
               <h4
                 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
@@ -270,16 +269,16 @@
               </h4>
               <div
                 class="group p-5 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-700 transition-all hover:shadow-md bg-white dark:bg-gray-800">
+                
                 <div class="flex items-center gap-3 mb-3">
                   <div
                     class="shrink-0 size-8 flex items-center justify-center rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600">
                     <span class="material-symbols-outlined text-lg font-variation-settings-fill">error</span>
                   </div>
-                  <h5 class="font-bold text-[#333333] dark:text-white text-lg">Impacto Hídrico Local (2021)</h5>
+                  <h5 class="font-bold text-[#333333] dark:text-white text-lg">{{empresa.nombre}}</h5>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed pl-[44px]">
-                  La empresa enfrentó críticas por el alto consumo de agua en una zona de sequía. Se ha implementado un
-                  plan de reducción del 30% desde entonces.
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed pl-11">
+                 {{empresa.controversias}}
                 </p>
               </div>
             </div>

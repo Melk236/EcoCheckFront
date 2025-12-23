@@ -44,7 +44,8 @@ export class DetalleProductoComponent implements OnInit {
     id: 0,
     nombre: '',
     puntuacionSocial: 0,
-    descripcion: ''
+    descripcion: '',
+    controversias: ''
   }
   modal:boolean=false;
   //Creamos un Observable de tipos subject para desuscribir de los observables cuando este emita algo.

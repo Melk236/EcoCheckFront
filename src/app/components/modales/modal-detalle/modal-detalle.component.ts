@@ -42,7 +42,8 @@ export class ModalDetalleComponent implements OnInit,OnDestroy {
     id: 0,
     nombre: '',
     puntuacionSocial: 0,
-    descripcion: ''
+    descripcion: '',
+    controversias: ''
   }
   certificaciones:Certificaciones[]=[];
   empresaCertificacion:EmpresaCertificacion[]=[];
