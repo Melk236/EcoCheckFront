@@ -144,17 +144,27 @@
                     class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg mt-2">
                     <span class="material-symbols-outlined text-[18px]">co2</span>
                     <span class="font-medium">{{material.impactoCarbono}} kg CO2e</span>
-                    @if(material.impactoCarbono>=0 && material.impactoCarbono<2){
-                      <span class="text-xs text-gray-400 ml-auto">Bajo Impacto</span>
-                    }
-                    @if(material.impactoCarbono>=2 && material.impactoCarbono<5){
-                      <span class="text-xs text-gray-400 ml-auto">Medio Impacto</span>
-                    }
-                    @if(material.impactoCarbono>=5) {
-                      <span class="text-xs text-gray-400 ml-auto">Alto Impacto</span>
-                    }
-                    
+                    @if(material.impactoCarbono>=0 && material.impactoCarbono<2){ <span
+                      class="text-xs text-gray-400 ml-auto">Bajo Impacto</span>
+                      }
+                      @if(material.impactoCarbono>=2 && material.impactoCarbono<5){ <span
+                        class="text-xs text-gray-400 ml-auto">Medio Impacto</span>
+                        }
+                        @if(material.impactoCarbono>=5) {
+                        <span class="text-xs text-gray-400 ml-auto">Alto Impacto</span>
+                        }
+
                   </div>
+                </div>
+                } @empty {
+                <div
+                  class="flex flex-col items-center justify-center p-8 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+                  <span
+                    class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-5xl mb-3">inventory_2</span>
+                  <p class="text-gray-600 dark:text-gray-400 font-medium">No hay información de materiales disponible
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Los datos de composición aún no están
+                    cargados</p>
                 </div>
                 }
 
@@ -224,8 +234,8 @@
                 <span class="material-symbols-outlined text-sm">workspace_premium</span>
                 Certificaciones de la Empresa
               </h4>
-              @for (certificacion of certificaciones; track certificacion.id) {
-                <div
+              @for (certificacion of certificacionesEmpresa; track certificacion.id) {
+              <div
                 class="group p-5 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-yellow-200 dark:hover:border-yellow-700 transition-all hover:shadow-md bg-white dark:bg-gray-800">
                 <div class="flex items-center gap-3 mb-3">
                   <div
@@ -239,9 +249,39 @@
                   transparencia pública y responsabilidad legal para equilibrar las ganancias y el propósito.
                 </p>
               </div>
+              } @empty {
+              <div
+                class="flex flex-col items-center justify-center p-8 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+                <span
+                  class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-5xl mb-3">workspace_premium</span>
+                <p class="text-gray-600 dark:text-gray-400 font-medium">No hay certificaciones registradas</p>
+                <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Esta empresa aún no tiene certificaciones
+                  disponibles</p>
+              </div>
               }
-              
-              
+
+
+            </div>
+            <div class="mt-8 space-y-4">
+              <h4
+                class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">warning</span>
+                Controversias de la Empresa
+              </h4>
+              <div
+                class="group p-5 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-700 transition-all hover:shadow-md bg-white dark:bg-gray-800">
+                <div class="flex items-center gap-3 mb-3">
+                  <div
+                    class="shrink-0 size-8 flex items-center justify-center rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600">
+                    <span class="material-symbols-outlined text-lg font-variation-settings-fill">error</span>
+                  </div>
+                  <h5 class="font-bold text-[#333333] dark:text-white text-lg">Impacto Hídrico Local (2021)</h5>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed pl-[44px]">
+                  La empresa enfrentó críticas por el alto consumo de agua en una zona de sequía. Se ha implementado un
+                  plan de reducción del 30% desde entonces.
+                </p>
+              </div>
             </div>
           </div>
         </div>

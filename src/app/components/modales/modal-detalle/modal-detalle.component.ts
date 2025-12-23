@@ -101,7 +101,7 @@ export class ModalDetalleComponent implements OnInit,OnDestroy {
         }
       });
     }
-
+    console.table(this.certificacionesEmpresa);
   }
 
   /*Formateo de los valores */
