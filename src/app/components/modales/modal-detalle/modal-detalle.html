@@ -42,7 +42,16 @@
               </div>
               <div>
                 <h3 class="text-lg md:text-xl font-bold text-[#333333] dark:text-white">Puntuación EcoScore Total</h3>
-                <p class="text-sm text-[#6c757d] dark:text-gray-400">Excelente nivel de sostenibilidad global</p>
+                @if(puntuacion.valor>=80){
+                   <p class="text-sm text-[#6c757d] dark:text-gray-400">Alto nivel de sostenibilidad global</p>
+                }
+                @if(puntuacion.valor<=70 && puntuacion.valor>=50){
+                   <p class="text-sm text-[#6c757d] dark:text-gray-400">Medio nivel de sostenibilidad global</p>
+                }
+                @if(puntuacion.valor<50){
+                   <p class="text-sm text-[#6c757d] dark:text-gray-400">Bajo nivel de sostenibilidad global</p>
+                }
+                
               </div>
             </div>
             <div

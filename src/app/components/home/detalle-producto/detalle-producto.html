@@ -71,7 +71,8 @@
             <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
               <div class="flex items-center gap-3">
                 <div class="p-2 rounded-full" [ngClass]="{'bg-green-100 dark:bg-green-900/50':puntuacion.valorSocial>=80,
-                   'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80
+                   'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
+                   'bg-red-100 dark:bg-red-900/50':puntuacion.valorSocial<50
                 }">
                   <span class="material-symbols-outlined" [ngClass]="{'text-green-600 dark:text-green-400':puntuacion.valorSocial>=80,
                   'text-yellow-600 dark:text-yellow-400':puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
