@@ -7,11 +7,9 @@
         <!-- Product Card -->
         <div class="p-6 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
           <div class="flex flex-col items-stretch justify-start lg:flex-row lg:items-start gap-6">
-            <div class="w-48 h-48 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-  <img [src]="producto.imagenUrl" 
-       alt="{{ producto.nombre }}"
-       class="w-full h-full object-contain">
-</div>
+            <div class="w-48 h-48 shrink-0 rounded-lg overflow-hidden bg-gray-100">
+              <img [src]="producto.imagenUrl" alt="{{ producto.nombre }}" class="w-full h-full object-contain">
+            </div>
             <div class="flex w-full grow flex-col items-stretch justify-center gap-2">
               <div class="flex justify-between items-center gap-2">
                 <p class="text-gray-700 dark:text-white text-2xl font-bold leading-tight tracking-tight">
@@ -46,11 +44,13 @@
             <!-- Environmental Card -->
             <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
               <div class="flex items-center gap-3">
-                <div class="p-2 rounded-full" [ngClass]="{'bg-green-100 dark:bg-green-900/50':puntuacion.valorAmbiental>70,
-                   'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental <= 70
+                <div class="p-2 rounded-full" [ngClass]="{'bg-green-100 dark:bg-green-900/50':puntuacion.valorAmbiental>=80,
+                   'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
+                   'bg-red-100 dark:bg-red-900/50':puntuacion.valorAmbiental<50
                 }">
-                  <span class="material-symbols-outlined" [ngClass]="{'text-green-600 dark:text-green-400':puntuacion.valorAmbiental>70,
-                  'text-yellow-600 dark:text-yellow-400':puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental <= 70
+                  <span class="material-symbols-outlined" [ngClass]="{'text-green-600 dark:text-green-400':puntuacion.valorAmbiental>=80,
+                  'text-yellow-600 dark:text-yellow-400':puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
+                    'text-red-600 dark:text-red-400':puntuacion.valorAmbiental<50
 
                   }">eco</span>
                 </div>
@@ -58,8 +58,8 @@
               </div>
               <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
                 <div class="h-2 rounded-full" [style]="'width:'+puntuacion.valorAmbiental+'%;'" [ngClass]="{
-    'bg-green-500': puntuacion.valorAmbiental > 70,
-    'bg-yellow-500': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental <= 70,
+    'bg-green-500': puntuacion.valorAmbiental >= 80,
+    'bg-yellow-500': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
     'bg-red-500': puntuacion.valorAmbiental < 50
   }"></div>
               </div>
@@ -70,11 +70,12 @@
             <!-- Social Card -->
             <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
               <div class="flex items-center gap-3">
-                <div class="p-2 rounded-full" [ngClass]="{'bg-green-100 dark:bg-green-900/50':puntuacion.valorSocial>70,
-                   'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorSocial >= 50 && puntuacion.valorSocial <= 70
+                <div class="p-2 rounded-full" [ngClass]="{'bg-green-100 dark:bg-green-900/50':puntuacion.valorSocial>=80,
+                   'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80
                 }">
-                  <span class="material-symbols-outlined" [ngClass]="{'text-green-600 dark:text-green-400':puntuacion.valorSocial>70,
-                  'text-yellow-600 dark:text-yellow-400':puntuacion.valorSocial >= 50 && puntuacion.valorSocial <= 70
+                  <span class="material-symbols-outlined" [ngClass]="{'text-green-600 dark:text-green-400':puntuacion.valorSocial>=80,
+                  'text-yellow-600 dark:text-yellow-400':puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
+                  'text-red-600 dark:text-red-400':puntuacion.valorSocial<50
 
                   }">groups</span>
                 </div>
@@ -82,8 +83,8 @@
               </div>
               <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
                 <div class="h-2 rounded-full" [style]="'width:'+puntuacion.valorSocial+'%;'" [ngClass]="{
-    'bg-green-500': puntuacion.valorSocial > 70,
-    'bg-yellow-500': puntuacion.valorAmbiental >= 50 && puntuacion.valorSocial<= 70,
+    'bg-green-500': puntuacion.valorSocial >= 80,
+    'bg-yellow-500': puntuacion.valorSocial>= 50 && puntuacion.valorSocial< 80,
     'bg-red-500': puntuacion.valorSocial < 50
   }"></div>
               </div>
@@ -103,8 +104,12 @@
             <svg class="size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
               <circle class="stroke-current text-gray-200 dark:text-gray-700" cx="18" cy="18" fill="none" r="16"
                 stroke-width="3"></circle>
-              <circle class="stroke-current text-green-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100.53"
-                [attr.stroke-dashoffset]="calcularOffset(producto.ecoScore)" stroke-linecap="round" stroke-width="3">
+              <circle class="stroke-current" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100.53"
+                [attr.stroke-dashoffset]="calcularOffset(producto.ecoScore)" stroke-linecap="round" stroke-width="3" [ngClass]="{'text-green-500':puntuacion.valor>=80,
+                  'text-yellow-500':puntuacion.valor<80 && puntuacion.valor>=50,
+                  'text-red-500':puntuacion.valor<50
+                }">
+                
               </circle>
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -113,8 +118,19 @@
               <span class="text-sm font-medium text-gray-500 dark:text-gray-400">/ 100</span>
             </div>
           </div>
-          <div class="px-3 py-1 bg-green-500/10 dark:bg-green-500/20 rounded-full">
-            <p class="text-green-600 dark:text-green-400 text-sm font-semibold">Bueno</p>
+          <div class="px-3 py-1 bg-green-500/10 dark:bg-green-500/20 rounded-full" [ngClass]="{'bg-green-500/10 dark:bg-green-500/20': puntuacion.valor>=80,
+            'bg-yellow-500/10 dark:bg-yellow-500/20':puntuacion.valor>=50 && puntuacion.valor<80,
+            'bg-red-500/10 dark:bg-red-500/20':puntuacion.valor<50
+          }">
+            @if(puntuacion.valor>=80){
+            <p class="text-green-600 dark:text-green-400 text-sm font-semibold">Score Alto</p>
+            }
+            @if(puntuacion.valor>=50 && puntuacion.valor<80){ <p
+              class="text-yellow-600 dark:text-yellow-400 text-sm font-semibold">Score Intermedio</p>
+              }
+              @if(puntuacion.valor<50){
+              <p class="text-red-600 dark:text-red-400 text-sm font-semibold">Score Bajo</p>
+              }
           </div>
         </div>
 
@@ -124,7 +140,7 @@
           <div class="flex flex-col gap-3 ">
             @for(material of materiales;track material.id){
             <div class="flex justify-between items-center">
-              <p class="text-gray-700 dark:text-gray-300">{{material.nombre |nombreMaterial}}</p>
+              <p class="text-gray-700 dark:text-gray-300">{{material.nombre | nombreMaterial}}</p>
               <div class="flex items-center gap-2" [ngClass]="{'text-green-600 dark:text-green-400':material.reciclable,
               'text-yellow-600 dark:text-yellow-400':!material.reciclable
 

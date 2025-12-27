@@ -30,7 +30,10 @@
                   <circle class="stroke-gray-200 dark:stroke-gray-700" cx="18" cy="18" fill="none" r="16"
                     stroke-width="3"></circle>
                   <circle class="stroke-green-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100"
-                    stroke-dashoffset="15" stroke-linecap="round" stroke-width="3"></circle>
+                    [attr.stroke-dashoffset]="calcularOffset(producto.ecoScore)" stroke-linecap="round" stroke-width="3" [ngClass]="{'stroke-green-500':puntuacion.valor>=80,
+                  'stroke-yellow-500':puntuacion.valor<80 && puntuacion.valor>=50,
+                  'stroke-red-500':puntuacion.valor<50
+                }"></circle>
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
                   <span

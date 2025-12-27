@@ -116,7 +116,14 @@ export class ModalDetalleComponent implements OnInit,OnDestroy {
 
     this.nombrePais = nombre;
   }
+  /*Calculae el offset del círculo de el ecoscore */
+  calcularOffset(ecoScore: number) {
+    const totalLength: number = 100.53;
 
+    return totalLength - (totalLength * ecoScore / 100);
+
+  }
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
