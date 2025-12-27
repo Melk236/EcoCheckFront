@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
 import { ApiExternaService } from '../../services/api-externa.service';
 import { Product, Producto } from '../../types/producto';
-import { forkJoin, Subject, take, takeUntil } from 'rxjs';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { ObtenerEmpresaService } from '../../services/obtener-empresa.service';
 import { CompanyInfo, Empresa } from '../../types/empresa';
@@ -98,8 +98,10 @@ export class HomeComponent implements OnInit {
   constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private puntuacionService: PuntuacionService, private route: Router) { }
 
   ngOnInit(): void {
-
-    this.obtenerQr('3017620425035.json');
+setTimeout(() => {
+    this.obtenerQr('8480000040411.json');
+}, 5000);
+    
     this.obtenerEmpresas();
     this.obtenerProductos();
     this.obtenerCertificaciones();
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
     this.EmpreService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.empresas = data;
-        console.log(this.empresas);
+
       },
       error: (error) => {
         console.log(error);
@@ -123,7 +125,6 @@ export class HomeComponent implements OnInit {
 
     this.ProductoService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
-
         this.productos = data;
       },
       error: (error) => {
@@ -140,20 +141,20 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         console.log(error);
       }
-    })
+    });
   }
 
   //Modales
   openModalEscaner() {
     this.modalEscanerOpen = true;
-    console.log(this.modalEscanerOpen)
+
   }
 
   closeModalEscaner() {
     this.modalEscanerOpen = false;
   }
 
-  //Con el qr obtenido del modal hijo hacemos calculamos los porcentajes
+  //Con el qr obtenido del modal hijo calculamos los porcentajes
 
   obtenerQr(qrEscaneado: string) {
     this.codigoEscaneado = qrEscaneado;//Obtenemos el código escaneado del padre
@@ -162,7 +163,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
 
         this.producto = data.product;
-        console.log(this.producto.ingredients_text);
+        console.log(this.producto);
 
         const nombreEncontrado = this.productos.find(item => item.nombre?.trim().toLowerCase() === this.producto?.product_name.trim().toLowerCase());
 
@@ -193,17 +194,22 @@ export class HomeComponent implements OnInit {
       sumaCarbono += this.calcularValorCarbono(valor);
 
     });
+    console.log(sumaCarbono)
     console.log(this.materiales);
-    //Cálculo final de medias
-    const ImpactoCarbono = sumaCarbono / this.producto!.packaging_materials_tags.length;
+    //Cálculo final de medias, si la longitud de los materiales es 0, el impacto de carbono sera igual a 0
+    const ImpactoCarbono = this.producto?.packaging_materials_tags.length == 0 ? 4 : sumaCarbono / this.producto!.packaging_materials_tags.length;
 
-    const mediaMateriales = sumaMaterial / this.producto!.packaging_materials_tags.length;
+    const mediaMateriales = this.producto?.packaging_materials_tags.length == 0 ? 0 : sumaMaterial / this.producto!.packaging_materials_tags.length;
+
     const mediaCarbono = this.calculoMediaCarbono(ImpactoCarbono);
-    const mediaTransporte = this.calculoTransporte(this.producto!.manufacturing_places);
 
+    //Escogemos entre el manufacturing places o el primer countrie tag para calcular la media de transporte
+    const pais = this.producto?.manufacturing_places ? this.producto.manufacturing_places : this.producto?.countries_tags[0].split(':')[1]
+
+    const mediaTransporte = this.calculoTransporte(pais!);
+    console.log(mediaCarbono + ' y' + mediaMateriales + ' y' + mediaTransporte);
     this.scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
-    console.log(this.scoreAmbiental);
-    console.log(this.scoreSocial);
+
     this.mediaScore = (this.scoreAmbiental + this.scoreSocial) / 2;
     this.traducir(2);//Traducimos la descripcion del product escaneado
 
@@ -241,7 +247,7 @@ export class HomeComponent implements OnInit {
     };
 
 
-    this.producto?.packaging_recycling_tags.forEach((rec) => {//Recorremos los tgas reciclables y cambiamos la variable reciclable si es reciclable el materia en concreto
+    this.producto?.packaging_recycling_tags.forEach((rec) => {//Recorremos los tags reciclables y cambiamos la variable reciclable si es reciclable el materia en concreto
       switch (rec) {
         case 'en:recycle':
           if (tag.includes('paper') ||
@@ -325,7 +331,7 @@ export class HomeComponent implements OnInit {
 
     const impacto = this.materialesImpacto.get(material.material) ?? 2;
     if (material.reciclable) {
-      const dosDecimales = (impacto * 0.8).toFixed(2);//Insertamos en this.materiales el imapcto de carbono de cada material
+      const dosDecimales = (impacto * 0.8).toFixed(2);//Insertamos en this.materiales el impacto de carbono de cada material
       material.impactoCarbono = Number(dosDecimales);
 
       return impacto * 0.8;
@@ -344,7 +350,7 @@ export class HomeComponent implements OnInit {
   }
 
   calculoTransporte(pais: string): number {
-
+    console.log(pais)
     const paisNormalizado = pais.toLowerCase().trim();
     console.log(paisNormalizado);
     // España
@@ -385,8 +391,21 @@ export class HomeComponent implements OnInit {
 
 
   obtenerIdEmpresa() {
+
+    //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
+    const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.producto?.brands.toLowerCase());
+    console.log(this.producto?.brands);
+    console.table(this.empresas)
+    if (empresa !== undefined) {
+      console.log(empresa.puntuacionSocial);
+      this.scoreSocial = empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
+      this.calcularEcoScore();//Calculamos el ecoScore.
+      return;
+    }
+
     this.obtenerEmpresaService.searchCompanyId(this.producto!.brands).pipe(takeUntil(this.destroy$)).subscribe(
       (empresa) => {
+        console.log(empresa)
         if (!empresa) {
           console.log("No se encontró la empresa en Wikidata");
           return;
@@ -490,7 +509,7 @@ export class HomeComponent implements OnInit {
       sitioWeb: this.empresaInfo.sitioWeb,
       descripcion: this.descripcionTraducida,
       puntuacionSocial: this.scoreSocial,
-      controversias:''
+      controversias: ''
 
     }
 
@@ -508,27 +527,27 @@ export class HomeComponent implements OnInit {
   }
 
   crearProducto() {
-    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.empresaInfo.
-      nombre.toLowerCase().trim())?.id
-
+    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.producto?.brands.toLowerCase().trim())?.id
+    console.log(idCompania)
     if (idCompania == undefined) {//No creamos el recurso si el idCompania es undefined
       return;
     }
 
+    const pais = this.producto?.manufacturing_places ? this.producto.manufacturing_places : this.producto?.countries_tags[0].split(':')[1];
 
     const body = {
       id: 0,
       nombre: this.producto?.product_name,
       marcaId: idCompania,
       categoria: 'product',
-      paisOrigen: this.formatPais(this.producto?.manufacturing_places ?? 'No especificado'),
-      descripcion: this.descripcionTraducida,
+      paisOrigen: this.formatPais(pais ?? 'No especificado'),
+      descripcion: this.descripcionTraducida || 'Producto alimenticio',
       ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
       ingredientes: this.ingredientesTraducidos,
       fechaActualizacion: new Date()
     }
-
+    console.table(body)
     this.ProductoService.post(body).subscribe({
       next: (data) => {
         this.productos.push(data);
@@ -542,7 +561,7 @@ export class HomeComponent implements OnInit {
   }
 
   traducir(opcion: number) {//Método auxiliar para traducir, opcion 1=>traduccion desc del producto y opcion2=>desc de la empresa
-
+    console.log(opcion)
     let descripcion: string | undefined = '';
     this.descripcionTraducida = '';
 
@@ -577,8 +596,9 @@ export class HomeComponent implements OnInit {
         //Si no cogemos el idioma en el que la descripción no está vacío y lo traducimos
         descripcion = posiblesNombres.find(item => item?.trim() !== '');
 
-        if ((this.producto?.generic_name_es && this.producto.generic_name_es.trim() !== '') || descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
-
+        if (descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
+          this.ingredientesTraducidos = this.producto?.ingredients_text_es!;
+          this.crearProducto();
           return;
         }
 
@@ -590,6 +610,7 @@ export class HomeComponent implements OnInit {
             this.descripcionTraducida = data.descripcion.texto;
             this.ingredientesTraducidos = data.ingredientes.texto;
             //Cuando terminamos llamamos a crearProducto
+            console.log('Hola mudno');
             this.crearProducto();
 
           },
@@ -608,6 +629,11 @@ export class HomeComponent implements OnInit {
   //Creación de materiales
   crearMateriales(productoId: number) {
 
+    //No creamos los materiales si estos no existen en la api de OpenFood y creamos la puntuación del producto directamente
+    if (this.materiales.length == 0) {
+      this.crearPuntuacion();
+      return
+    }
     //Rellenamos el body con los materiales que tenemos y sus parámetros.
     const body: Material[] = []
     this.materiales.forEach((valor) => {
@@ -632,6 +658,7 @@ export class HomeComponent implements OnInit {
   }
 
   formatPais(pais: string): string {//Pasamos el nombre del país del inglés al español
+    pais = pais[0].toUpperCase() + pais.substring(1);
     const countries = new Map([
       ["Spain", "españa"],
       ["France", "francia"],
