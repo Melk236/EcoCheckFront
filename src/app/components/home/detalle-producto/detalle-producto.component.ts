@@ -15,7 +15,7 @@ import { NombreMaterialPipe } from '../../../shared/nombre-material-pipe';
 
 @Component({
   selector: 'app-detalle-producto',
-  imports: [CommonModule, ModalDetalleComponent,NombreMaterialPipe],
+  imports: [CommonModule, ModalDetalleComponent, NombreMaterialPipe],
   templateUrl: './detalle-producto.html',
   styleUrl: './detalle-producto.css',
 })
@@ -32,7 +32,7 @@ export class DetalleProductoComponent implements OnInit {
   }
   materiales: Material[] = [];
   materialesFormateados: string[] = [];
-  puntuacion:Puntuacion={
+  puntuacion: Puntuacion = {
     id: 0,
     productoId: 0,
     fecha: new Date,
@@ -47,7 +47,11 @@ export class DetalleProductoComponent implements OnInit {
     descripcion: '',
     controversias: ''
   }
-  modal:boolean=false;
+
+  //Manejo modales
+  modal: boolean = false;
+  modalInfoAmbiental: boolean = false;
+  modalInfoSocial: boolean = false;
   //Creamos un Observable de tipos subject para desuscribir de los observables cuando este emita algo.
   destroy$ = new Subject<void>();
 
@@ -96,13 +100,13 @@ export class DetalleProductoComponent implements OnInit {
     });
   }
 
-  obtenerPuntuaciones(id:number) {
+  obtenerPuntuaciones(id: number) {
     this.puntuacionService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
-        const puntuacion=data.find(item=>item.productoId==id);
+        const puntuacion = data.find(item => item.productoId == id);
 
-        if(puntuacion!==undefined){
-          this.puntuacion=puntuacion;
+        if (puntuacion !== undefined) {
+          this.puntuacion = puntuacion;
         }
       },
       error: (error) => {
@@ -127,12 +131,30 @@ export class DetalleProductoComponent implements OnInit {
   /*
   Manejo del modal de los detalles del producto(abrir,cerrar)
   */
-  abrirModal(){
-    this.modal=true;
+  abrirModal() {
+    this.modal = true;
   }
 
-  cerrarModal(){
-    this.modal=false;
+  cerrarModal() {
+    this.modal = false;
+  }
+
+  /*Lógica para manejo del mouseover y mouseout para la info de los ecoscores*/
+  mostrarInfoAmbiental() {
+    this.modalInfoAmbiental = true;
+  }
+
+  cerrarInfoAmbiental() {
+    this.modalInfoAmbiental = false;
+
+  }
+  
+  mostrarInfoSocial() {
+    this.modalInfoSocial=true;
+  }
+
+  cerrarInfoSocial() {
+    this.modalInfoSocial=false;
   }
 
   ngOnDestroy() {

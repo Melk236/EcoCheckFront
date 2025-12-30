@@ -55,6 +55,21 @@
                   }">eco</span>
                 </div>
                 <p class="text-gray-700 dark:text-white text-base font-semibold leading-normal">Ambiental</p>
+                <div class="relative group cursor-pointer" (mouseover)="mostrarInfoAmbiental()"
+                  (mouseout)="cerrarInfoAmbiental()">
+                  <span
+                    class="material-symbols-outlined text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-lg">info</span>
+                  @if(modalInfoAmbiental){
+
+                  <div
+                    class="absolute -left-25 top-full sm:left-0 sm:translate-x-0 md:left-0 md:top-auto md:bottom-7 bg-gray-900 dark:bg-gray-950 text-white text-sm rounded-lg p-3 w-70 shadow-lg z-10 pointer-events-none">
+                    Evalúa el impacto del envase del producto, teniendo en cuenta los materiales, su reciclabilidad, el
+                    impacto de carbono y el origen. Cuanto menor es el impacto ambiental, mayor es la puntuación
+                    (0–100).
+                  </div>
+
+                  }
+                </div>
               </div>
               <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
                 <div class="h-2 rounded-full" [style]="'width:'+puntuacion.valorAmbiental+'%;'" [ngClass]="{
@@ -69,7 +84,8 @@
 
             <!-- Social Card -->
             <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
-              <div class="flex items-center gap-3">
+              <div class="flex  items-center gap-3">
+
                 <div class="p-2 rounded-full" [ngClass]="{'bg-green-100 dark:bg-green-900/50':puntuacion.valorSocial>=80,
                    'bg-yellow-100 dark:bg-yellow-900/50':puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
                    'bg-red-100 dark:bg-red-900/50':puntuacion.valorSocial<50
@@ -81,7 +97,24 @@
                   }">groups</span>
                 </div>
                 <p class="text-gray-700 dark:text-white text-base font-semibold leading-normal">Social</p>
+                <div class="relative group cursor-pointer" (mouseover)="mostrarInfoSocial()"
+                  (mouseout)="cerrarInfoSocial()">
+                  <span
+                    class="material-symbols-outlined text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-lg">info</span>
+
+                  @if(modalInfoSocial){
+
+                  <div
+                    class="absolute -left-25 top-full sm:left-0 sm:translate-x-0 md:left-0 md:top-auto md:bottom-7 bg-gray-900 dark:bg-gray-950 text-white text-sm rounded-lg p-3 w-70 shadow-lg z-10 pointer-events-none">
+                    Mide el compromiso social de la empresa fabricante, basándose en sus prácticas laborales, ética
+                    empresarial y responsabilidad social.
+                    La puntuación se obtiene de una base de datos de marcas (0–100).
+                  </div>
+
+                  }
+                </div>
               </div>
+
               <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-2">
                 <div class="h-2 rounded-full" [style]="'width:'+puntuacion.valorSocial+'%;'" [ngClass]="{
     'bg-green-500': puntuacion.valorSocial >= 80,
@@ -106,11 +139,12 @@
               <circle class="stroke-current text-gray-200 dark:text-gray-700" cx="18" cy="18" fill="none" r="16"
                 stroke-width="3"></circle>
               <circle class="stroke-current" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100.53"
-                [attr.stroke-dashoffset]="calcularOffset(producto.ecoScore)" stroke-linecap="round" stroke-width="3" [ngClass]="{'text-green-500':puntuacion.valor>=80,
+                [attr.stroke-dashoffset]="calcularOffset(producto.ecoScore)" stroke-linecap="round" stroke-width="3"
+                [ngClass]="{'text-green-500':puntuacion.valor>=80,
                   'text-yellow-500':puntuacion.valor<80 && puntuacion.valor>=50,
                   'text-red-500':puntuacion.valor<50
                 }">
-                
+
               </circle>
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -129,9 +163,8 @@
             @if(puntuacion.valor>=50 && puntuacion.valor<80){ <p
               class="text-yellow-600 dark:text-yellow-400 text-sm font-semibold">Score Intermedio</p>
               }
-              @if(puntuacion.valor<50){
-              <p class="text-red-600 dark:text-red-400 text-sm font-semibold">Score Bajo</p>
-              }
+              @if(puntuacion.valor<50){ <p class="text-red-600 dark:text-red-400 text-sm font-semibold">Score Bajo</p>
+                }
           </div>
         </div>
 
