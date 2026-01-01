@@ -1,0 +1,396 @@
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+    <div class="flex flex-col max-w-[1200px] flex-1">
+        <!-- Hero / Search Section -->
+        <div class="mb-8">
+            <div class="flex min-h-80 flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden"
+                [style.backgroundImage]="'linear-gradient(rgba(16, 34, 24, 0.7) 0%, rgba(16, 34, 24, 0.5) 100%), url(https://lh3.googleusercontent.com/aida-public/AB6AXuBt14aTykHKd_GnAwCfQVbnXHdsAEp3UlUYVHa7SuF_DYSVs9uom61vt4MWwny2My7cfCQ92rxqIYd98Pn1gytzj-WJLRwc_qBDlnCWQ8ol4YDlFu9QdsYINlZmIuVXiZQ4pu7IHzh4Zfg24kQlfbT51XUruzbblVd8qlDUe6TgRNrNq73UMB0vkBX6CiTzN6QUmNPilBQTPjI43XJYZAHaXejwgzQ-eCAO7_7xuJ3Vdiw9_VmNo5IRjoI-lQHYyyi5cTJ1Y0d5gF7I)'">
+                <div class="flex flex-col gap-3 text-center z-10 max-w-2xl">
+                    <h1 class="text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
+                        Directorio de Empresas Sostenibles
+                    </h1>
+                    <p class="text-gray-200 text-base md:text-lg font-normal leading-normal">
+                        Encuentra organizaciones comprometidas con el impacto ambiental y social positivo.
+                    </p>
+                </div>
+                <label class="flex flex-col w-full max-w-[600px] z-10">
+                    <div
+                        class="flex w-full flex-1 items-stretch rounded-xl h-14 bg-white shadow-lg overflow-hidden focus-within:ring-2 focus-within:ring-[#13ec6d]/50 transition-all">
+                        <div class="text-[#618972] flex items-center justify-center pl-4 pr-2">
+                            <span class="material-symbols-outlined">search</span>
+                        </div>
+                        <input
+                            class="flex w-full min-w-0 flex-1 resize-none bg-transparent text-[#111814] placeholder:text-[#618972] focus:outline-0 text-base font-normal leading-normal px-2"
+                            placeholder="Buscar por nombre, sector o etiqueta (ej. Textil, Carbono Neutral)..."
+                            value="" />
+                        <div class="flex items-center justify-center pr-2">
+                            <button
+                                class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-[#13ec6d] text-[#111814] text-sm font-bold hover:bg-[#10d460] transition-colors">
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Filters & Stats Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <!-- Chips / Filters -->
+            <div class="flex gap-2 flex-wrap items-center">
+                <span class="text-[#111814] dark:text-gray-300 font-bold text-sm mr-2">Filtrar por:</span>
+                <button
+                    class="group flex h-9 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#1c2e24] border border-[#dbe6e0] dark:border-white/10 hover:border-[#13ec6d]/50 transition-all pl-3 pr-2">
+                    <p class="text-[#111814] dark:text-gray-200 text-sm font-medium">Sector</p>
+                    <span
+                        class="material-symbols-outlined text-[#618972] group-hover:text-[#13ec6d]">keyboard_arrow_down</span>
+                </button>
+                <button
+                    class="group flex h-9 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#1c2e24] border border-[#dbe6e0] dark:border-white/10 hover:border-[#13ec6d]/50 transition-all pl-3 pr-2">
+                    <p class="text-[#111814] dark:text-white text-sm font-medium">Puntuación</p>
+                    <span
+                        class="material-symbols-outlined text-[#618972] group-hover:text-[#13ec6d]">keyboard_arrow_down</span>
+                </button>
+                <button
+                    class="group flex h-9 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#1c2e24] border border-[#dbe6e0] dark:border-white/10 hover:border-[#13ec6d]/50 transition-all pl-3 pr-2">
+                    <p class="text-[#111814] dark:text-gray-200 text-sm font-medium">Certificaciones</p>
+                    <span
+                        class="material-symbols-outlined text-[#618972] group-hover:text-[#13ec6d]">keyboard_arrow_down</span>
+                </button>
+                <button
+                    class="flex h-9 items-center justify-center gap-x-2 text-[#13ec6d] hover:underline pl-2 text-sm font-medium">
+                    Limpiar filtros
+                </button>
+            </div>
+            <!-- Result Count -->
+            <p class="text-[#618972] text-sm font-normal">Mostrando 12 de 145 empresas</p>
+        </div>
+
+        <!-- Company Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
+            <!-- Card 1 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuA7uNzCRgCIt9vYicp75L4NUL-MHvCApCCmxvH7gLhm0YKv1gKSuHg9IsnesEU8y-LksNLCdm0HPro-UyNhrPGWevMnA4c-TAcpRilftQlkaUJRIJACPyLxx2AnxKnBxlB6DmLS5olVoi0Qwq6Yl9ifleu_nLKfaDmLTJYSb7bCbqOWfxNJStE2RVUS4e4YD6Pdqs9G4PQrqdmMFAJ6bu67Wan5wecP6tte8600oh-2GanIea09_hdFyu--glZJx2d96FcUXmNdrpyR)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">98/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Textil</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                EcoTextiles S.A.</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCP2ClvLPEWzaBq4r8UFkG-qtv2k3K0Q-Xhku6mEHSu51jFIGkmuof0qYCZfRyi8rJPGNWEoteLqyxqgDb0snloRGHRWnR5Imy1FUYN_ODqdOEUYVcJEkLgaTTjhdVBU3W-pl5Dlcka1dhtL2TqAEz1EJB8mZVN9nsKEXFptAUmcPKIoO9p_ngNmXclJlBQNvXzEFMitl-DPiRC5AX4ulnfDw5J8mVTYJfHj6UEEPOHl5oJGLn1w3LQn9EqttPwOBO9T0gwCbF7ICu" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Líderes en la producción de
+                        fibras regeneradas y comercio justo en Latinoamérica.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">B-Corp</span>
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Carbon
+                            Neutral</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuBZZGVQPBA48TEKP2coa0EgjlSrwFHQt6y5AgTMbsfxLir-DSAg2PNLGe-fV4gh9Jv_Ise59wyf9HZ28nGSOaEeMQHN8K80MCtOXW_SG7QS58zC_fflMLdy8Iskmo8Lm2gomFJEXkJmtk2l1LmP6pLeySYuSYCIMLKKsB-7ZWxDh4WP6ZpPlHzPByS0ZsWy0dn8icnJ6dLL8zVad04QCtLRihnBeRFebApwBhbTBJUFuTF1kDGQJMA7QLDhDVYZg_AQ_tD6xAKBLw6R)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">95/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Energía</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                GreenTech Sol</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD5doClz6BseZkfaBgPj-S5yXInOu7UaC0o0k22o9dRReuOY8janP8h3t7gQZ39-guHw0wkPhzinpTqHRinmCKWW_paXPAvtA3NUIa8mv0IVzh_QIa6clUXFBaY4G2m9b4XRJVxRvOYUZf0b7obqcOobomGUnPKr7nI86KOLzNw_8yeg_Q0DMrpk-LILtXZCHkG8J8-1cl1pRkhqHc3qHq4fSzaODU7BxrM9lKhR8q-ONAVRAWvLkFkKUnLSonzEIMgyvsn11Sb17w" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Soluciones fotovoltaicas para
+                        comunidades rurales y empresas agrícolas.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">ISO
+                            14001</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuCZDYYqMWWAJ8sgcNVM_XeP26t0QXAYw2Za7ulPro8FTKR-9T5nN2ctiyLndNceGy6fb53D-kddAM8fVO5hXkG3avZhgzrNDnzCXKS4Z5WCEFTkF5N-Zoj4fO3zUGLNPDtQIJVmu7SAo64QDZGYszwWsI57fymNt_F15po6H32sZxIUtzkY7KJ5SmVgKdngGl7xcBN5tjef4zPb7f-vliJRDBia1KykgGXOH7pXaLTBeFj0gpRC8rPDeDIp7NtrdnH4AQZKaEhXsfMk)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#e6c213] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">88/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Alimentación</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                BioFoods Corp</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwAzJy0gHCY6byR5zXW_1RnXXp8SJwjm2NF7MGEifUReY5TRhp32-qIVL_MvDbJafaMmlVvdu_Rt9KawVcfNj4dmxt15I8YtmE9CD00QnZvjtAUMp8IjD9CLMUIdF3XNmwwOjm5L2cW7yYHsdNsvUWNoGkM30jJ1FKsHUy2L2Bcu1_zDmiFSkSxScP0roeyaAsdM7Y1Zt8FtGZBNWktA32QkBroBe7LG91c84Ugu3xKME5WeK-zoccnOiFO5Z4MlPKP8Xwla3s36xU" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Distribución de productos
+                        orgánicos directo del agricultor a tu mesa.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Orgánico</span>
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Zero
+                            Waste</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuCZDYYqMWWAJ8sgcNVM_XeP26t0QXAYw2Za7ulPro8FTKR-9T5nN2ctiyLndNceGy6fb53D-kddAM8fVO5hXkG3avZhgzrNDnzCXKS4Z5WCEFTkF5N-Zoj4fO3zUGLNPDtQIJVmu7SAo64QDZGYszwWsI57fymNt_F15po6H32sZxIUtzkY7KJ5SmVgKdngGl7xcBN5tjef4zPb7f-vliJRDBia1KykgGXOH7pXaLTBeFj0gpRC8rPDeDIp7NtrdnH4AQZKaEhXsfMk)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">92/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Residuos</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                RecycleNow</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuACr2UFwhxIXxwKyb1HD7k9jg4gPLMaNAfgxgAgTCQlp9-Z1Lan2enmJkK3ez1-Da7urEi2-SK0bQrLv08QHFldXCqJeiq7wHjIFaaCKEHq-uf7ikRTdOnFxry7XJ5WEDsXGE7X_axECU-xnkoiHMwxutQ2JrYCzcW-NupgyIQApHWONkEfoKpI1DgDFFujNTimECSgveTt3f9iS9yNx_JO0wtGARXV0xGPXU3mbaQ_pYkEhoW58vt5nOI3cCou3l5siR8Lupme8tnp" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Gestión integral de residuos
+                        electrónicos y plásticos.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Circular</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuCZDYYqMWWAJ8sgcNVM_XeP26t0QXAYw2Za7ulPro8FTKR-9T5nN2ctiyLndNceGy6fb53D-kddAM8fVO5hXkG3avZhgzrNDnzCXKS4Z5WCEFTkF5N-Zoj4fO3zUGLNPDtQIJVmu7SAo64QDZGYszwWsI57fymNt_F15po6H32sZxIUtzkY7KJ5SmVgKdngGl7xcBN5tjef4zPb7f-vliJRDBia1KykgGXOH7pXaLTBeFj0gpRC8rPDeDIp7NtrdnH4AQZKaEhXsfMk)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">96/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Agua</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                PureWater Ltd</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuXgtLZzXn5Xob002c_RwkwTeu2ejzyg_TtE4RWbtwOUV61JiJi3E3L9JEYbPH7WoRvoba2R_76dkqW6aCwBlljDwQIogqcrsPBcqj7AfulIjcrG2Fs5VXrIBX2PNzrQDBQnEV-XbfCDzN3oIHGNwzjRWctiIAcPA3muz1aDRniSEn1np_HjjpDOCEIdHAfhUXirz19ZrRq6dgwy9ErWzKCV2DQGKeuK-UD7MLIGTrfo-ZQ8W20jhDSfgQXqhyHjuOkfo3VL3n7TSA" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Tecnología de purificación de
+                        agua accesible y de bajo impacto.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">B-Corp</span>
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Social</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuCZDYYqMWWAJ8sgcNVM_XeP26t0QXAYw2Za7ulPro8FTKR-9T5nN2ctiyLndNceGy6fb53D-kddAM8fVO5hXkG3avZhgzrNDnzCXKS4Z5WCEFTkF5N-Zoj4fO3zUGLNPDtQIJVmu7SAo64QDZGYszwWsI57fymNt_F15po6H32sZxIUtzkY7KJ5SmVgKdngGl7xcBN5tjef4zPb7f-vliJRDBia1KykgGXOH7pXaLTBeFj0gpRC8rPDeDIp7NtrdnH4AQZKaEhXsfMk)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#e6c213] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">85/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Textil</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                FairThreads</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqShvNi6C2UlOWO6K8h5BaJH5u_Zv8BnNiK3br0DnLQmG54CAE2zxRFlKTPQH3x9M3vXA3M0iZBB689Du3AsWHkART1uyCVj-CqcFHD7HJ3MBUS9a-KsebVmHFA9gVxbl4dbWpkgdYBjwqJAZ6Ov6aAodBbN9X09Eojk0ALCBvF_sVXFS3nxWKQlPlxlDi-9QAQVcwg9roI29GATL8qsSoc-_NR3uOrLFeBT3EsEmqmZR9p_b7xTroK22-hWjOQIS8ylsnlMHaf86Z" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Cooperativa de moda sostenible
+                        apoyando a artesanos locales.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Fair
+                            Trade</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuCZDYYqMWWAJ8sgcNVM_XeP26t0QXAYw2Za7ulPro8FTKR-9T5nN2ctiyLndNceGy6fb53D-kddAM8fVO5hXkG3avZhgzrNDnzCXKS4Z5WCEFTkF5N-Zoj4fO3zUGLNPDtQIJVmu7SAo64QDZGYszwWsI57fymNt_F15po6H32sZxIUtzkY7KJ5SmVgKdngGl7xcBN5tjef4zPb7f-vliJRDBia1KykgGXOH7pXaLTBeFj0gpRC8rPDeDIp7NtrdnH4AQZKaEhXsfMk)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">94/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Transporte</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                EcoMove</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPJvXDSnDfPrnjI_ALSw4wYuR04BZ_BW6kTIPVV3Gmcy-_s21wZHuw_HbP-B_vBo7b3qjr66tacJzzXzJHvUJImM1YeJ7RurrehR0XaKhuLtwkmEe24UG6ix3N8KeaUzVM2LQq3MirJXnrI5UqANzhNr7cCt18j8JWrb6kekWHLEvcIWi1JrWN-NbxyIl1kTuLmpvwfqX01DiVhYaMa7Gemo9fWm2a1Eny9QN0T0fIO1FE--RFjGR6bs6XNTBFQXdqdw-5WmjES40-" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Logística y transporte de
+                        última milla con flota 100% eléctrica.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Net
+                            Zero</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/10 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div
+                class="group flex flex-col bg-white dark:bg-[#1c2e24] rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:shadow-lg dark:hover:shadow-[#13ec6d]/5 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center"
+                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuCZDYYqMWWAJ8sgcNVM_XeP26t0QXAYw2Za7ulPro8FTKR-9T5nN2ctiyLndNceGy6fb53D-kddAM8fVO5hXkG3avZhgzrNDnzCXKS4Z5WCEFTkF5N-Zoj4fO3zUGLNPDtQIJVmu7SAo64QDZGYszwWsI57fymNt_F15po6H32sZxIUtzkY7KJ5SmVgKdngGl7xcBN5tjef4zPb7f-vliJRDBia1KykgGXOH7pXaLTBeFj0gpRC8rPDeDIp7NtrdnH4AQZKaEhXsfMk)'">
+                    <div
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]">eco</span>
+                        <span class="text-[#111814] text-xs font-bold">99/100</span>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[#618972] text-xs font-bold uppercase tracking-wider mb-1">Conservación</p>
+                            <h3
+                                class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
+                                ForestGuard</h3>
+                        </div>
+                        <div
+                            class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
+                            <img alt="Company Logo" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW1JbAUNuV5iwfCsT5oWpwG0R5q0X_sjEFLsWn24nAXkn1vYBK9CulcZolKu7e_Ch5of-AJ5UuuYEC21b_qSDCwVafSmjgvswNcJLi7c-ab8LEd8CAlK-WLs_5bMnaNYIpp16Rryi8nrScuzYkGPqBn8ARfbm1WL7rR1BF-ov-g7tHALmz5mWumU-U19go1wsoGvWvigLX-P6C5tJhLES-VmSff914hTwltxMvhEYu9GNjYtklXWYGlPF-Wu9yZNvxcsuGqQKRSCTl" />
+                        </div>
+                    </div>
+                    <p class="text-[#111814]/70 dark:text-gray-400 text-sm line-clamp-2">Proyectos de reforestación
+                        masiva y protección de biodiversidad.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">ONG</span>
+                        <span
+                            class="bg-[#f0f4f2] dark:bg-white/5 text-[#111814] dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Biodiversidad</span>
+                    </div>
+                    <button
+                        class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-white/ text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Ver Perfil
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination / Load More -->
+        <div class="flex justify-center pb-12">
+            <button
+                class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 border border-[#dbe6e0] dark:border-white/10 bg-white dark:bg-[#1c2e24] text-[#111814] dark:text-white text-sm font-bold leading-normal hover:border-[#13ec6d] transition-colors">
+                Cargar más empresas
+            </button>
+        </div>
+    </div>
+</div>
