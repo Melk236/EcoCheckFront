@@ -22,14 +22,7 @@ export class ListaEmpresas implements OnInit, OnDestroy {
   empresaCertificacion: EmpresaCertificacion[] = [];
 
   /*Array de objetos con la empresa y sus certificaciones correspondientes */
-  listaEmpresas: {id: number,nombre: string,empresaMatriz?: string,paisSede?: string,sitioWeb?:string,certificaciones?: string,puntuacionSocial: number,ontroversias: string,descripcion: string,certificacion:string[]}={
-    id: 0,
-    nombre: '',
-    puntuacionSocial: 0,
-    ontroversias: '',
-    descripcion: '',
-    certificacion: []
-  }
+  listaEmpresas: {id: number,nombre: string,empresaMatriz?: string,paisSede?: string,sitioWeb?:string,certificaciones?: string,puntuacionSocial: number,controversias: string,descripcion: string,certificacion:string[]}[]=[];
 
   /*Para desuscribirnos de los observables al destruirse el componente*/
   destroy$ = new Subject<void>();
@@ -55,6 +48,10 @@ export class ListaEmpresas implements OnInit, OnDestroy {
           this.empresas = data.empresas;
           this.certificaciones = data.certificaciones;
           this.empresaCertificacion = data.empresaCertificacion;
+
+          //Cuando todos los datos estén listos asociamos las empresas con sus certificaciones
+          this.asociarCertificacionEmpresa();
+
         },
         error: (error) => {
           console.log(error);
@@ -62,6 +59,43 @@ export class ListaEmpresas implements OnInit, OnDestroy {
       }
     );
   }
+
+  /*Asociamos la empresa con sus certificaciones*/
+  asociarCertificacionEmpresa(){
+
+    this.empresas.forEach((valor,index)=>{
+
+      this.listaEmpresas[index]={
+        id:valor.id,
+        nombre:valor.nombre,
+        empresaMatriz:valor.empresaMatriz,
+        paisSede:valor.paisSede,
+        sitioWeb:valor.sitioWeb,
+        certificaciones:valor.certificaciones,
+        puntuacionSocial:valor.puntuacionSocial,
+        controversias:valor.controversias,
+        descripcion:valor.descripcion,
+        certificacion:[]
+
+      };
+
+      const certificacion=this.empresaCertificacion.filter(item=>item.marcaId==valor.id);
+
+      if(certificacion!==undefined &&certificacion.length>=0){
+        certificacion.forEach((cert)=>{
+          const encontrado=this.certificaciones.find(item=>item.id==cert.certificacionId);
+          
+          if(encontrado!==undefined){
+            this.listaEmpresas[index].certificacion.push(encontrado.nombre);
+          } 
+
+        });
+      }
+
+    });
+    console.log(this.listaEmpresas)
+  }
+
 
   /*Desuscribirnos a los observables al destruirse los componentes*/
   ngOnDestroy(): void {
