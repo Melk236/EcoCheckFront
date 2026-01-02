@@ -24,7 +24,12 @@ export class ListaEmpresas implements OnInit, OnDestroy {
   empresaCertificacion: EmpresaCertificacion[] = [];
 
   /*Array de objetos con la empresa y sus certificaciones correspondientes */
-  listaEmpresas: {id: number,nombre: string,empresaMatriz?: string,paisSede?: string,sitioWeb?:string,certificaciones?: string,puntuacionSocial: number,controversias: string,descripcion: string,certificacion:string[]}[]=[];
+  listaEmpresas: { id: number, nombre: string, empresaMatriz?: string, paisSede?: string, sitioWeb?: string, certificaciones?: string, puntuacionSocial: number, controversias: string, descripcion: string, certificacion: string[] }[] = [];
+  listaEmpresasPaginacion: { id: number, nombre: string, empresaMatriz?: string, paisSede?: string, sitioWeb?: string, certificaciones?: string, puntuacionSocial: number, controversias: string, descripcion: string, certificacion: string[] }[] = [];
+  numElementos: number = 6;
+  pagActual: number = 1;
+  numPaginasTotal: number = 0;
+  paginas: number[] = [];
 
   /*Para desuscribirnos de los observables al destruirse el componente*/
   destroy$ = new Subject<void>();
@@ -63,41 +68,80 @@ export class ListaEmpresas implements OnInit, OnDestroy {
   }
 
   /*Asociamos la empresa con sus certificaciones*/
-  asociarCertificacionEmpresa(){
+  asociarCertificacionEmpresa() {
 
-    this.empresas.forEach((valor,index)=>{
+    this.empresas.forEach((valor, index) => {
 
-      this.listaEmpresas[index]={
-        id:valor.id,
-        nombre:valor.nombre,
-        empresaMatriz:valor.empresaMatriz,
-        paisSede:valor.paisSede,
-        sitioWeb:valor.sitioWeb,
-        certificaciones:valor.certificaciones,
-        puntuacionSocial:valor.puntuacionSocial,
-        controversias:valor.controversias,
-        descripcion:valor.descripcion,
-        certificacion:[]
+      this.listaEmpresas[index] = {
+        id: valor.id,
+        nombre: valor.nombre,
+        empresaMatriz: valor.empresaMatriz,
+        paisSede: valor.paisSede,
+        sitioWeb: valor.sitioWeb,
+        certificaciones: valor.certificaciones,
+        puntuacionSocial: valor.puntuacionSocial,
+        controversias: valor.controversias,
+        descripcion: valor.descripcion,
+        certificacion: []
 
       };
 
-      const certificacion=this.empresaCertificacion.filter(item=>item.marcaId==valor.id);
+      const certificacion = this.empresaCertificacion.filter(item => item.marcaId == valor.id);
 
-      if(certificacion!==undefined && certificacion.length>=0){
-        certificacion.forEach((cert)=>{
-          const encontrado=this.certificaciones.find(item=>item.id==cert.certificacionId);
-          
-          if(encontrado!==undefined){
+      if (certificacion !== undefined && certificacion.length >= 0) {
+        certificacion.forEach((cert) => {
+          const encontrado = this.certificaciones.find(item => item.id == cert.certificacionId);
+
+          if (encontrado !== undefined) {
             this.listaEmpresas[index].certificacion.push(encontrado.nombre);
-          } 
+
+          }
 
         });
       }
 
     });
-   
+
+    //Calculamos el numero total de paginacion que va a tener nuestra paginación
+    this.numPaginasTotal = Math.ceil(this.listaEmpresas.length / this.numElementos);
+    this.paginas = Array.from({ length: 5 }, (_, index) => index + 1);
+
+    this.paginar();
+  }
+  /*Métodos para manejar la navegación */
+  paginar() {
+
+    const start = (this.pagActual * this.numElementos) - (this.numElementos);
+
+    const end = start + this.numElementos;
+    console.log(start);
+    console.log(end);
+    console.log(this.numPaginasTotal);
+    this.listaEmpresasPaginacion = this.listaEmpresas.slice(start, end);
   }
 
+  siguiente(){
+    this.pagActual++;
+
+    const start = (this.pagActual * this.numElementos) - (this.numElementos);
+    const end = start + this.numElementos;
+
+    this.listaEmpresasPaginacion = this.listaEmpresas.slice(start, end);
+    this.paginas.push(this.paginas.length+1);
+    this.paginas.shift();
+  }
+
+  anterior(){
+    this.pagActual--;
+
+    const start = (this.pagActual * this.numElementos) - (this.numElementos);
+    const end = start + this.numElementos;
+
+    this.listaEmpresasPaginacion = this.listaEmpresas.slice(start, end);
+    this.paginas.pop();
+    this.paginas.unshift(this.paginas[0]-1);
+
+  }
 
   /*Desuscribirnos a los observables al destruirse los componentes*/
   ngOnDestroy(): void {

@@ -71,7 +71,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
             <!-- Card 1 -->
             <!-- Aplicada paleta gray en todas las cards -->
-            @for(empresa of listaEmpresas;track empresa.id){
+            @for(empresa of listaEmpresasPaginacion;track empresa.id){
 
             <div
                 class="group flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-gray-600 hover:shadow-lg dark:hover:shadow-[#13ec6d]/10 transition-all duration-300">
@@ -122,13 +122,33 @@
                 </div>
             </div>
             }
-
-            <!-- Pagination / Load More -->
-            <div class="flex justify-center pb-12">
-                <button
-                    class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 border border-[#dbe6e0] dark:border-gray-600 bg-white dark:bg-gray-700 text-[#111814] dark:text-white text-sm font-bold leading-normal hover:border-[#13ec6d] transition-colors">
-                    Cargar más empresas
-                </button>
-            </div>
         </div>
+
+        <!-- Pagination / Load More -->
+        <nav aria-label="Page navigation example" class="flex justify-end">
+            <ul class="flex -space-x-px text-sm">
+                <li (click)="anterior()" class="cursor-pointer">
+                    <a
+                        class="flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 box-border border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white font-medium rounded-s-lg text-sm px-3 h-10 focus:outline-none">Anterior</a>
+                </li>
+                @for(pag of paginas;track $index){
+
+                <li>
+                    @if(pag==pagActual){
+                    <a
+                       class="flex items-center justify-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 box-border border border-green-300 dark:border-green-600 hover:text-green-700 dark:hover:text-green-300 font-medium text-sm w-10 h-10 focus:outline-none cursor-pointer">{{pag}}</a>
+                    }
+                    @else {
+                     <a
+                        class="flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 box-border border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white font-medium text-sm w-10 h-10 focus:outline-none cursor-pointer">{{pag}}</a>
+                    }
+                </li>
+                }
+
+                <li (click)="siguiente()" class="cursor-pointer">
+                    <a
+                        class="flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 box-border border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white font-medium rounded-e-lg text-sm px-3 h-10 focus:outline-none">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
     </div>
