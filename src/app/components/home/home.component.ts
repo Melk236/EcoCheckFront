@@ -98,10 +98,10 @@ export class HomeComponent implements OnInit {
   constructor(private apiExterna: ApiExternaService, private obtenerEmpresaService: ObtenerEmpresaService, private EmpreService: EmpresaService, private ProductoService: ProductoService, private traducirService: TraducirService, private materialService: MaterialService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private puntuacionService: PuntuacionService, private route: Router) { }
 
   ngOnInit(): void {
-setTimeout(() => {
-    this.obtenerQr('8480000040411.json');
-}, 5000);
-    
+    setTimeout(() => {
+      this.obtenerQr('8480000040411.json');
+    }, 5000);
+
     this.obtenerEmpresas();
     this.obtenerProductos();
     this.obtenerCertificaciones();
@@ -429,7 +429,7 @@ setTimeout(() => {
 
         this.empresaInfo.nombre = entity.labels?.['es']?.value || entity.labels?.['en']?.value || '';
         this.empresaInfo.sitioWeb = claims['P856']?.[0]?.mainsnak?.datavalue?.value as string;
-
+        this.empresaInfo.logo=claims['P154']?.[0]?.mainsnak?.datavalue?.value as string;
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
         const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
         if (empresa !== undefined) {
@@ -509,7 +509,8 @@ setTimeout(() => {
       sitioWeb: this.empresaInfo.sitioWeb,
       descripcion: this.descripcionTraducida,
       puntuacionSocial: this.scoreSocial,
-      controversias: ''
+      controversias: '',
+      logo:this.empresaInfo.logo
 
     }
 

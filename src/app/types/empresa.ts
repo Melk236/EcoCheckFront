@@ -8,6 +8,7 @@ export interface Empresa {
   puntuacionSocial:number;
   controversias:string;
   descripcion:string;
+  logo?:string;
 }
 
 export interface BusquedaEmpresaId {
@@ -22,7 +23,7 @@ export interface CompanyInfo {
   empresaMatriz?: string;
   paisSede?: string;
   sitioWeb?: string;
- 
+  logo?:string;
   descripcion?:string;
 }
 

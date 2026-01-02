@@ -6,11 +6,13 @@ import { CertificacionesService } from '../../services/certificaciones.service';
 import { EmpresaCertificacionService } from '../../services/empresa-certificacion.service';
 import { Certificaciones } from '../../types/certificaciones';
 import { EmpresaCertificacion } from '../../types/empresa-certificacion';
+import { CommonModule } from '@angular/common';
+
 
 
 @Component({
   selector: 'app-lista-empresas',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './lista-empresas.html',
   styleUrl: './lista-empresas.css',
 })
@@ -81,7 +83,7 @@ export class ListaEmpresas implements OnInit, OnDestroy {
 
       const certificacion=this.empresaCertificacion.filter(item=>item.marcaId==valor.id);
 
-      if(certificacion!==undefined &&certificacion.length>=0){
+      if(certificacion!==undefined && certificacion.length>=0){
         certificacion.forEach((cert)=>{
           const encontrado=this.certificaciones.find(item=>item.id==cert.certificacionId);
           
@@ -93,7 +95,7 @@ export class ListaEmpresas implements OnInit, OnDestroy {
       }
 
     });
-    console.log(this.listaEmpresas)
+   
   }
 
 

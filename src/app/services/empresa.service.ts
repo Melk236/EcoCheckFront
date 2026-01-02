@@ -27,7 +27,8 @@ export class EmpresaService {
       paisSede:empresa.paisSede,
       sitioWeb:empresa.sitioWeb,
       puntuacionSocial:empresa.puntuacionSocial,
-      descripcion:empresa.descripcion
+      descripcion:empresa.descripcion,
+      logo:empresa.logo
 
     }
     console.log(body)
