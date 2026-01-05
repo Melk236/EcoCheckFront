@@ -5,12 +5,23 @@ export interface Empresa {
   paisSede?: string;
   sitioWeb?: string;
   certificaciones?: string;
-  puntuacionSocial:number;
-  controversias:string;
-  descripcion:string;
-  logo?:string;
+  puntuacionSocial: number;
+  controversias: string;
+  descripcion: string;
+  logo?: string;
 }
-
+export interface IListaEmpresas {
+  id: number;
+  nombre: string;
+  empresaMatriz?: string;
+  paisSede?: string;
+  sitioWeb?: string;
+  certificaciones?: string;
+  puntuacionSocial: number;
+  controversias: string;
+  descripcion: string;
+  certificacion: string[];
+}
 export interface BusquedaEmpresaId {
   search: Array<{
     id: string;
@@ -23,8 +34,8 @@ export interface CompanyInfo {
   empresaMatriz?: string;
   paisSede?: string;
   sitioWeb?: string;
-  logo?:string;
-  descripcion?:string;
+  logo?: string;
+  descripcion?: string;
 }
 
 // Estructura de la respuesta de Wikidata

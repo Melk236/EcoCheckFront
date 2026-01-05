@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Empresa } from '../../types/empresa';
+import { Empresa, IListaEmpresas } from '../../types/empresa';
 import { EmpresaService } from '../../services/empresa.service';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { CertificacionesService } from '../../services/certificaciones.service';
@@ -7,25 +7,27 @@ import { EmpresaCertificacionService } from '../../services/empresa-certificacio
 import { Certificaciones } from '../../types/certificaciones';
 import { EmpresaCertificacion } from '../../types/empresa-certificacion';
 import { CommonModule } from '@angular/common';
+import { PaginacionComponent } from "../../shared/paginacion/paginacion.component";
 
 
 
 @Component({
   selector: 'app-lista-empresas',
-  imports: [CommonModule],
+  imports: [CommonModule, PaginacionComponent],
   templateUrl: './lista-empresas.html',
   styleUrl: './lista-empresas.css',
 })
-export class ListaEmpresas implements OnInit, OnDestroy {
+export class ListaEmpresasComponent implements OnInit, OnDestroy {
 
   /*Variables para los datos provenientes de la DB*/
   empresas: Empresa[] = [];
   certificaciones: Certificaciones[] = [];
   empresaCertificacion: EmpresaCertificacion[] = [];
+  clasesEmpresa = new Map<number, string>();
 
   /*Array de objetos con la empresa y sus certificaciones correspondientes */
-  listaEmpresas: { id: number, nombre: string, empresaMatriz?: string, paisSede?: string, sitioWeb?: string, certificaciones?: string, puntuacionSocial: number, controversias: string, descripcion: string, certificacion: string[] }[] = [];
-  listaEmpresasPaginacion: { id: number, nombre: string, empresaMatriz?: string, paisSede?: string, sitioWeb?: string, certificaciones?: string, puntuacionSocial: number, controversias: string, descripcion: string, certificacion: string[] }[] = [];
+  listaEmpresas: IListaEmpresas[] = [];
+  listaEmpresasPaginacion: IListaEmpresas[] = [];
   numElementos: number = 6;
   pagActual: number = 1;
   numPaginasTotal: number = 0;
@@ -35,7 +37,7 @@ export class ListaEmpresas implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
 
   constructor(private empresaService: EmpresaService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService) { }
-
+  
 
   /*Nos treamos los datos necesarios de la DB*/
   ngOnInit(): void {
@@ -102,45 +104,33 @@ export class ListaEmpresas implements OnInit, OnDestroy {
 
     });
 
-    //Calculamos el numero total de paginacion que va a tener nuestra paginación
-    this.numPaginasTotal = Math.ceil(this.listaEmpresas.length / this.numElementos);
-    this.paginas = Array.from({ length: 5 }, (_, index) => index + 1);
+    // Creamos una nueva referencia para que se actualice el @Input() del hijo
+    this.listaEmpresas = [...this.listaEmpresas];  // Crea una NUEVA referencia
 
-    this.paginar();
+
+
   }
-  /*Métodos para manejar la navegación */
-  paginar() {
+  paginar(listaEmpresas: any) {
+   
+    
 
-    const start = (this.pagActual * this.numElementos) - (this.numElementos);
-
-    const end = start + this.numElementos;
-    console.log(start);
-    console.log(end);
-    console.log(this.numPaginasTotal);
-    this.listaEmpresasPaginacion = this.listaEmpresas.slice(start, end);
-  }
-
-  siguiente(){
-    this.pagActual++;
-
-    const start = (this.pagActual * this.numElementos) - (this.numElementos);
-    const end = start + this.numElementos;
-
-    this.listaEmpresasPaginacion = this.listaEmpresas.slice(start, end);
-    this.paginas.push(this.paginas.length+1);
-    this.paginas.shift();
+    // Ejecutar DESPUÉS del ciclo de detección de cambios
+    setTimeout(() => {
+       this.listaEmpresasPaginacion = listaEmpresas;
+      this.clasesEmpresa.clear();
+      this.listaEmpresasPaginacion.forEach((valor) => {
+        this.clasesEmpresa.set(valor.id, this.getPuntuacionClase(valor));
+      });
+    }, 0);
   }
 
-  anterior(){
-    this.pagActual--;
+  /*Colores del ngClass */
+  getPuntuacionClase(empresa: IListaEmpresas): string {
+    const score = empresa.puntuacionSocial ?? 0;
 
-    const start = (this.pagActual * this.numElementos) - (this.numElementos);
-    const end = start + this.numElementos;
-
-    this.listaEmpresasPaginacion = this.listaEmpresas.slice(start, end);
-    this.paginas.pop();
-    this.paginas.unshift(this.paginas[0]-1);
-
+    if (score >= 70) return 'text-green-600 dark:text-green-400';
+    if (score >= 50) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
   }
 
   /*Desuscribirnos a los observables al destruirse los componentes*/

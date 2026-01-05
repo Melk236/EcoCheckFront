@@ -1,3 +1,26 @@
 :host{
     --primary:#39E079
 }
+.cabecera-fondo {
+  background-image: 
+    linear-gradient(rgba(16, 34, 24, 0.7) 0%, rgba(16, 34, 24, 0.5) 100%),
+    url('https://lh3.googleusercontent.com/aida-public/AB6AXuBt14aTykHKd_GnAwCfQVbnXHdsAEp3UlUYVHa7SuF_DYSVs9uom61vt4MWwny2My7cfCQ92rxqIYd98Pn1gytzj-WJLRwc_qBDlnCWQ8ol4YDlFu9QdsYINlZmIuVXiZQ4pu7IHzh4Zfg24kQlfbT51XUruzbblVd8qlDUe6TgRNrNq73UMB0vkBX6CiTzN6QUmNPilBQTPjI43XJYZAHaXejwgzQ-eCAO7_7xuJ3Vdiw9_VmNo5IRjoI-lQHYyyi5cTJ1Y0d5gF7I');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Añade lo que necesites: height, etc. */
+}
+
+.fondo-imagen {
+  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7uNzCRgCIt9vYicp75L4NUL-MHvCApCCmxvH7gLhm0YKv1gKSuHg9IsnesEU8y-LksNLCdm0HPro-UyNhrPGWevMnA4c-TAcpRilftQlkaUJRIJACPyLxx2AnxKnBxlB6DmLS5olVoi0Qwq6Yl9ifleu_nLKfaDmLTJYSb7bCbqOWfxNJStE2RVUS4e4YD6Pdqs9G4PQrqdmMFAJ6bu67Wan5wecP6tte8600oh-2GanIea09_hdFyu--glZJx2d96FcUXmNdrpyR');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.cards{
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+.cards:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}

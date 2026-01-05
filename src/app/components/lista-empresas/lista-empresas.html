@@ -3,8 +3,8 @@
 
         <!-- Hero / Search Section -->
         <div class="mb-8">
-            <div class="flex min-h-80 flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden"
-                [style.backgroundImage]="'linear-gradient(rgba(16, 34, 24, 0.7) 0%, rgba(16, 34, 24, 0.5) 100%), url(https://lh3.googleusercontent.com/aida-public/AB6AXuBt14aTykHKd_GnAwCfQVbnXHdsAEp3UlUYVHa7SuF_DYSVs9uom61vt4MWwny2My7cfCQ92rxqIYd98Pn1gytzj-WJLRwc_qBDlnCWQ8ol4YDlFu9QdsYINlZmIuVXiZQ4pu7IHzh4Zfg24kQlfbT51XUruzbblVd8qlDUe6TgRNrNq73UMB0vkBX6CiTzN6QUmNPilBQTPjI43XJYZAHaXejwgzQ-eCAO7_7xuJ3Vdiw9_VmNo5IRjoI-lQHYyyi5cTJ1Y0d5gF7I)'">
+            <div
+                class="flex min-h-80 flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden cabecera-fondo">
                 <div class="flex flex-col gap-3 text-center z-10 max-w-2xl">
                     <h1 class="text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
                         Directorio de Empresas Sostenibles
@@ -74,16 +74,18 @@
             @for(empresa of listaEmpresasPaginacion;track empresa.id){
 
             <div
-                class="group flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-gray-600 hover:shadow-lg dark:hover:shadow-[#13ec6d]/10 transition-all duration-300">
-                <div class="relative h-40 bg-cover bg-center"
-                    [style.backgroundImage]="'url(https://lh3.googleusercontent.com/aida-public/AB6AXuA7uNzCRgCIt9vYicp75L4NUL-MHvCApCCmxvH7gLhm0YKv1gKSuHg9IsnesEU8y-LksNLCdm0HPro-UyNhrPGWevMnA4c-TAcpRilftQlkaUJRIJACPyLxx2AnxKnBxlB6DmLS5olVoi0Qwq6Yl9ifleu_nLKfaDmLTJYSb7bCbqOWfxNJStE2RVUS4e4YD6Pdqs9G4PQrqdmMFAJ6bu67Wan5wecP6tte8600oh-2GanIea09_hdFyu--glZJx2d96FcUXmNdrpyR)'">
+                class="cards group flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-gray-600 hover:shadow-lg dark:hover:shadow-[#13ec6d]/10 transition-all duration-300">
+                <div class="relative h-40 bg-cover bg-center fondo-imagen">
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
-                        <span class="material-symbols-outlined text-[#13ec6d] text-[18px]" [ngClass]="{'text-green-600 dark:text-green-400':empresa.puntuacionSocial>=70,
-                  'text-yellow-600 dark:text-yellow-400':empresa.puntuacionSocial >= 50 && empresa.puntuacionSocial < 70,
-                    'text-red-600 dark:text-red-400':empresa.puntuacionSocial<50}">eco</span>
+
+                        <span class="material-symbols-outlined text-[18px]" [ngClass]="clasesEmpresa.get(empresa.id)">
+                            eco
+                        </span>
                         <span
                             class="text-[#111814] dark:text-white text-xs font-bold">{{empresa.puntuacionSocial}}/100</span>
+
+
                     </div>
                 </div>
                 <div class="p-5 flex flex-col gap-3 flex-1">
@@ -123,32 +125,7 @@
             </div>
             }
         </div>
+        
+        <app-paginacion [lista]="listaEmpresas" (pagin)="paginar($event)"></app-paginacion>
 
-        <!-- Pagination / Load More -->
-        <nav aria-label="Page navigation example" class="flex justify-end">
-            <ul class="flex -space-x-px text-sm">
-                <li (click)="anterior()" class="cursor-pointer">
-                    <a
-                        class="flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 box-border border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white font-medium rounded-s-lg text-sm px-3 h-10 focus:outline-none">Anterior</a>
-                </li>
-                @for(pag of paginas;track $index){
-
-                <li>
-                    @if(pag==pagActual){
-                    <a
-                       class="flex items-center justify-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 box-border border border-green-300 dark:border-green-600 hover:text-green-700 dark:hover:text-green-300 font-medium text-sm w-10 h-10 focus:outline-none cursor-pointer">{{pag}}</a>
-                    }
-                    @else {
-                     <a
-                        class="flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 box-border border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white font-medium text-sm w-10 h-10 focus:outline-none cursor-pointer">{{pag}}</a>
-                    }
-                </li>
-                }
-
-                <li (click)="siguiente()" class="cursor-pointer">
-                    <a
-                        class="flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 box-border border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white font-medium rounded-e-lg text-sm px-3 h-10 focus:outline-none">Siguiente</a>
-                </li>
-            </ul>
-        </nav>
     </div>
