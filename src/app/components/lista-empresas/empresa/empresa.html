@@ -1,16 +1,8 @@
 <!-- Updated main container background for dark mode -->
-<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-white dark:bg-gray-800">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-[#f6f8f7] dark:bg-gray-800 pt-15">
     <!-- Main Content -->
-    <main class="flex-grow px-6 lg:px-40 py-8 w-full max-w-[1440px] mx-auto">
-        <!-- Breadcrumb -->
-        <!-- Changed hover color and text colors to match gray palette -->
-        <div class="flex flex-wrap gap-2 pb-6 text-sm">
-            <a class="text-gray-500 dark:text-gray-400 hover:text-green-500 transition-colors" href="#">Inicio</a>
-            <span class="text-gray-400 dark:text-gray-500">/</span>
-            <a class="text-gray-500 dark:text-gray-400 hover:text-green-500 transition-colors" href="#">Empresas</a>
-            <span class="text-gray-400 dark:text-gray-500">/</span>
-            <span class="text-gray-900 dark:text-gray-200 font-medium">EcoGoods Inc.</span>
-        </div>
+    <main class="grow px-6 lg:px-40 py-8 w-full max-w-[1440px] mx-auto">
+       
 
         <!-- Company Header -->
         <!-- Updated all backgrounds and borders to gray palette for consistency -->
@@ -18,26 +10,23 @@
             <div class="flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-2xl h-32 w-32 shadow-sm shrink-0 border border-gray-200 dark:border-gray-600">
                 <span class="material-symbols-outlined text-5xl text-gray-300 dark:text-gray-500">storefront</span>
             </div>
-            <div class="flex flex-col gap-2 flex-grow">
+            <div class="flex flex-col gap-2 grow">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">EcoGoods Inc.</h1>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm md:text-base mt-1">Electrónica de Consumo • San Francisco, CA</p>
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{empresa.nombre}}</h1>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm md:text-base mt-1">{{empresa.empresaMatriz ?? empresa.nombre}} • {{empresa.paisSede}}</p>
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-4 mt-2">
                     <div class="inline-flex items-center gap-2 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full border border-green-100 dark:border-green-900">
-                        <span class="material-symbols-outlined text-green-600 dark:text-green-400 text-[18px]">eco</span>
-                        <span class="text-xs font-bold text-green-700 dark:text-green-300">Puntuación ESG: A+</span>
+                        <span class="material-symbols-outlined text-green-600 dark:text-green-400 text-[18px]">groups</span>
+                        <span class="text-xs font-bold text-green-700 dark:text-green-300">Puntuación :{{empresa.puntuacionSocial}}</span>
                     </div>
                     <div class="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600">
                         <span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[18px]">verified</span>
-                        <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Verificado</span>
+                        <a [href]="empresa.sitioWeb" class="text-xs font-medium text-blue-600 dark:text-blue-300">{{empresa.sitioWeb}}</a>
                     </div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600">
-                        <span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[18px]">calendar_month</span>
-                        <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Fundada en 2010</span>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -46,11 +35,11 @@
         <!-- Updated border colors to gray palette -->
         <div class="border-b border-gray-200 dark:border-gray-700 mb-8 overflow-x-auto scrollbar-hide">
             <div class="flex gap-8 min-w-max">
-                <a class="flex items-center gap-2 border-b-[3px] border-green-500 text-gray-900 dark:text-white pb-3 pt-2 px-2" href="#">
+                <a class="flex items-center gap-2 text-gray-900 dark:text-white pb-3 pt-2 px-2 cursor-pointer" style="border-bottom: solid 3px; border-color: oklch(72.3% 0.219 149.579)">
                     <span class="material-symbols-outlined text-[20px]">info</span>
                     <span class="text-sm font-bold">Info General</span>
                 </a>
-                <a class="flex items-center gap-2 border-b-[3px] border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 pb-3 pt-2 px-2 transition-colors" href="#">
+                <a class="flex items-center gap-2 border-b-[3px] border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 pb-3 pt-2 px-2 transition-colors cursor-pointer">
                     <span class="material-symbols-outlined text-[20px]">inventory_2</span>
                     <span class="text-sm font-bold">Productos</span>
                 </a>
@@ -62,14 +51,12 @@
             <!-- Main Content -->
             <div class="lg:col-span-8 flex flex-col gap-10">
                 <section>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Sobre Nosotros</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                        EcoGoods Inc. es pionera en la industria de electrónica de consumo sostenible. Desde nuestra fundación, nos hemos dedicado a diseñar tecnología que no solo mejora la vida de las personas, sino que también regenera nuestro planeta. Creemos en un futuro donde la innovación y la ecología van de la mano.
-                    </p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Acerca de</h2>
+                   
                     <!-- Changed quote box background to gray-700 for proper dark mode contrast -->
-                    <div class="bg-white dark:bg-gray-700 p-6 rounded-2xl border-l-4 border-green-500 shadow-sm">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-2xl border-l-4 border-green-500 shadow-sm" style="border-left: solid 4px; border-color:oklch(72.3% 0.219 149.579) ;">
                         <p class="text-lg font-medium italic text-gray-800 dark:text-gray-200 leading-relaxed">
-                            "Nuestra misión es revolucionar el consumo global a través de una economía circular, eliminando el concepto de residuo y creando productos que duren para siempre."
+                            {{empresa.descripcion}}
                         </p>
                     </div>
                 </section>
@@ -77,20 +64,21 @@
 
             <!-- Sidebar -->
             <div class="lg:col-span-4 flex flex-col gap-6">
-                <div class="bg-green-50 dark:bg-green-900/10 rounded-2xl p-6 border border-green-100 dark:border-green-900/30">
+                <!-- Restored light mode bg-green-50 for certifications container -->
+                <div class="bg-green-50 dark:bg-gray-700 rounded-2xl p-6 border border-green-100 dark:border-gray-600">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Certificaciones</h3>
-                    <!-- Updated certification cards to gray-700 for dark mode -->
+                    <!-- Restored light mode bg-white for certification cards -->
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-white dark:bg-gray-700 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="B Corp Certification Logo">
+                        <div class="bg-white dark:bg-gray-600 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="B Corp Certification Logo">
                             <span class="font-bold text-gray-800 dark:text-gray-200 text-sm">B Corp</span>
                         </div>
-                        <div class="bg-white dark:bg-gray-700 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="Fair Trade Certified Logo">
+                        <div class="bg-white dark:bg-gray-600 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="Fair Trade Certified Logo">
                             <span class="font-bold text-gray-800 dark:text-gray-200 text-sm">Fair Trade</span>
                         </div>
-                        <div class="bg-white dark:bg-gray-700 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="LEED Platinum Logo">
+                        <div class="bg-white dark:bg-gray-600 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="LEED Platinum Logo">
                             <span class="font-bold text-gray-800 dark:text-gray-200 text-sm">LEED</span>
                         </div>
-                        <div class="bg-white dark:bg-gray-700 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="Energy Star Logo">
+                        <div class="bg-white dark:bg-gray-600 p-2 rounded-lg flex items-center justify-center aspect-video shadow-sm" data-alt="Energy Star Logo">
                             <span class="font-bold text-gray-800 dark:text-gray-200 text-sm">Energy Star</span>
                         </div>
                     </div>

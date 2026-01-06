@@ -80,7 +80,7 @@
                         class="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
 
                         <span class="material-symbols-outlined text-[18px]" [ngClass]="clasesEmpresa.get(empresa.id)">
-                            eco
+                            groups
                         </span>
                         <span
                             class="text-[#111814] dark:text-white text-xs font-bold">{{empresa.puntuacionSocial}}/100</span>
@@ -117,7 +117,7 @@
 
 
                     </div>
-                    <button
+                    <button type="button" (click)="irEmpresa(empresa.id)"
                         class="mt-2 w-full py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-[#111814] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                         Ver Perfil
                     </button>

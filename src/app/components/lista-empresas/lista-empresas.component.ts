@@ -8,6 +8,7 @@ import { Certificaciones } from '../../types/certificaciones';
 import { EmpresaCertificacion } from '../../types/empresa-certificacion';
 import { CommonModule } from '@angular/common';
 import { PaginacionComponent } from "../../shared/paginacion/paginacion.component";
+import { Router } from '@angular/router';
 
 
 
@@ -36,7 +37,7 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
   /*Para desuscribirnos de los observables al destruirse el componente*/
   destroy$ = new Subject<void>();
 
-  constructor(private empresaService: EmpresaService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService) { }
+  constructor(private empresaService: EmpresaService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService,private route:Router) { }
   
 
   /*Nos treamos los datos necesarios de la DB*/
@@ -112,8 +113,6 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
   }
   paginar(listaEmpresas: any) {
    
-    
-
     // Ejecutar DESPUÉS del ciclo de detección de cambios
     setTimeout(() => {
        this.listaEmpresasPaginacion = listaEmpresas;
@@ -131,6 +130,12 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
     if (score >= 70) return 'text-green-600 dark:text-green-400';
     if (score >= 50) return 'text-yellow-600 dark:text-yellow-400';
     return 'text-red-600 dark:text-red-400';
+  }
+
+  /*Navegación al detalle de la empresa*/
+  irEmpresa(id:number){
+    const ruta='empresas/empresa/'+id;
+    this.route.navigate([ruta]);
   }
 
   /*Desuscribirnos a los observables al destruirse los componentes*/
