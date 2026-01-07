@@ -34,7 +34,9 @@ export class PaginacionComponent implements OnChanges {
 
     //Calculamos el numero total de paginas que va a tener nuestra paginación
     this.numPaginasTotal = Math.ceil(this.lista.length / this.numElementos);
-    this.paginas = Array.from({ length: 5 }, (_, index) => index + 1);
+    const numPaginas=this.numPaginasTotal>5 ? 5:this.numPaginasTotal;
+
+    this.paginas = Array.from({ length: numPaginas }, (_, index) => index + 1);
 
     /*Emitimos al componente padre la lista paginada */
     this.paginar();
