@@ -7,11 +7,13 @@ import { Empresa, IListaEmpresas } from '../../../types/empresa';
 import { Certificaciones } from '../../../types/certificaciones';
 import { EmpresaCertificacion } from '../../../types/empresa-certificacion';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
-import { ListaEmpresasComponent } from '../lista-empresas.component';
+import { CommonModule } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-empresa',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './empresa.html',
   styleUrl: './empresa.css',
 })
@@ -27,8 +29,11 @@ export class EmpresaComponent implements OnInit {
   }
   certificaciones: Certificaciones[] = [];
   empresaCertificacion: EmpresaCertificacion[] = [];
-  certificacionEmpresa: string[] = [];
+  certificacionEmpresa: {nombre:string,descripcion:string}[] = [];
 
+  /*Modal manejo del tooltip */
+  modalInfoSocial:boolean=false;
+  elementoSeleccionado:number=0;
   /*Observable que maneja la desuscripción del componente cuando se destruye el componente*/
   destroy$ = new Subject<void>();
 
@@ -76,11 +81,25 @@ export class EmpresaComponent implements OnInit {
       const certificado = empresaCertificacion.find(item => item.certificacionId == valor.id);
      
       if (certificado !== undefined) {
-        this.certificacionEmpresa.push(valor.nombre);
+        this.certificacionEmpresa.push({
+          nombre:valor.nombre,
+          descripcion:valor.descripcion
+        });
       }
 
     });
     
 
   }
+  /*Manejo del tooltip de la descripción de las certificaciones*/
+   mostrarInfoSocial(indice:number) {
+    this.elementoSeleccionado=indice;
+    this.modalInfoSocial=true;
+    
+  }
+
+  cerrarInfoSocial() {
+    this.modalInfoSocial=false;
+  }
+
 }
