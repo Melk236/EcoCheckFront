@@ -27,7 +27,7 @@
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
         <!-- Updated all dark mode backgrounds from dark:bg-[#182c21] to dark:bg-gray-700 to match sidebar -->
 
-        @for (producto of productos; track producto.id) {
+        @for (producto of productosPaginados; track producto.id) {
         <!-- Card con efecto hover suave -->
         <div
           class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer" (click)="abrirDetalle(producto.id)">
@@ -55,9 +55,12 @@
 
       </div>
     </div>
-
+      
   </main>
+  <app-paginacion [lista]="productos" (pagin)="paginar($event)"></app-paginacion>
 </div>
+
+
 
 <!--Modal para el escáner-->
 @if(modalEscanerOpen){

@@ -19,12 +19,13 @@ import { Certificaciones } from '../../types/certificaciones';
 import { EmpresaCertificacion } from '../../types/empresa-certificacion';
 import { PuntuacionService } from '../../services/puntuacion.service';
 import { Puntuacion } from '../../types/puntuacion';
+import { PaginacionComponent } from '../../shared/paginacion/paginacion.component';
 
 
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, CommonModule],
+  imports: [ModalEscaner, CommonModule,PaginacionComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -87,6 +88,8 @@ export class HomeComponent implements OnInit {
 
   //Datos del producto
   productos: Producto[] = [];
+  productosPaginados:Producto[]=[];
+
   //Datos de las certificaciones
   certificaciones: Certificaciones[] = [];
   certificacionesLimpias: string[] = [];
@@ -822,6 +825,15 @@ export class HomeComponent implements OnInit {
 
   abrirDetalle(id: number) {
     this.route.navigate(['home/detalle-producto', id]);
+  }
+
+  /*Método para paginacón de los productos*/
+  paginar(lista:Producto[]){
+    
+    setTimeout(() => {
+      this.productosPaginados=lista;  
+    }, 0);
+    
   }
 
   ngOnDestroy() {
