@@ -1,0 +1,173 @@
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-gray-50 dark:bg-gray-900 overflow-x-hidden">
+    <div class="flex h-full grow flex-col">
+        <div class="flex flex-1 justify-center items-center py-8 px-4 sm:px-6 lg:px-8">
+            <div class="w-full max-w-4xl flex-1">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 min-h-[600px] w-full bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden">
+
+                    <!-- Imagen lateral -->
+                    <div class="w-full bg-center bg-no-repeat bg-cover hidden md:flex"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBIfcWNe6SrmMGe0nMTUR4XXmYc3Y2oYbgeWjQOX_65eV7HC4rps8n2kBzBihR29RquanZajWoKpb7YcTQKGGcRsk3nsfrfJQ2Rbagjak6_cvntjlESMoj5w7YxU5L4uBZX7X9ox-FKJA51mC1EKHOhFXZuZmerGCpwnkp4ZDJI_jOJ-4l5sq8cvWIrGobNWSqBtM6P46jzjljANF7Hrgqm6qbfL9EJLmG86BwDSB7yzfj8mM6eQQZB8PexNCJJzLlR7VfJDnOT_zEB");'>
+                    </div>
+
+                    <!-- Formulario -->
+                    <div class="flex flex-col justify-center p-6 sm:p-10 relative overflow-y-auto max-h-screen">
+                        <!-- Icono -->
+                        <div class="absolute top-6 right-6">
+                            <div
+                                class="flex items-center justify-center h-10 w-10 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+                                <span class="material-symbols-outlined text-2xl">energy_savings_leaf</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h1
+                                class="text-gray-800 dark:text-white tracking-tight text-2xl font-bold leading-tight pb-2">
+                                Crea tu cuenta</h1>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-normal pb-6">Únete a
+                                nuestra comunidad comprometida con el planeta.</p>
+
+                            <form class="w-full flex flex-col gap-4 max-h-[600px]" [formGroup]="formulario"
+                                (ngSubmit)="createUser()">
+                                <!-- Nombre de Usuario -->
+                                <div class="flex w-full flex-col gap-1.5 min-h-20">
+                                    <label class="text-gray-800 dark:text-white text-sm font-medium leading-normal"
+                                        for="username">Nombre de Usuario</label>
+                                    <div class="relative flex w-full items-center">
+                                        <div class="absolute left-3 text-gray-500 dark:text-gray-400">
+                                            <span class="material-symbols-outlined">person</span>
+                                        </div>
+                                        <input
+                                            class="form-input flex w-full min-w-0 flex-1 rounded-lg text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-green-500/50 border bg-white dark:bg-gray-700 h-12 pl-11 pr-4 py-2 text-base font-normal leading-normal transition-colors"
+                                            [ngClass]="{'border-red-500 dark:border-red-500': formulario.get('user')?.invalid && formulario.get('user')?.touched, 'border-green-200 dark:border-gray-600': !formulario.get('user')?.invalid || !formulario.get('user')?.touched}"
+                                            formControlName="user" id="username" placeholder="p. ej. juan_verde"
+                                            type="text" />
+                                    </div>
+                                    <!-- Errores Usuario -->
+                                    @if (formulario.get('user')?.invalid && formulario.get('user')?.touched) {
+                                    <div class="text-red-500 dark:text-red-400 text-sm">
+                                        @if (formulario.get('user')?.hasError('required')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Campo requerido
+                                        </p>
+                                        }
+                                        @if (formulario.get('user')?.hasError('minlength')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Mínimo 6 caracteres
+                                        </p>
+                                        }
+                                        @if (formulario.get('user')?.hasError('maxlength')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Máximo 20 caracteres
+                                        </p>
+                                        }
+                                    </div>
+                                    }
+                                </div>
+
+                                <!-- Contraseña -->
+                                <div class="flex w-full flex-col gap-1.5 min-h-20">
+                                    <label class="text-gray-800 dark:text-white text-sm font-medium leading-normal"
+                                        for="password">Contraseña</label>
+                                    <div class="relative flex w-full items-center">
+                                        <div class="absolute left-3 text-gray-500 dark:text-gray-400">
+                                            <span class="material-symbols-outlined">lock</span>
+                                        </div>
+                                        <input
+                                            class="form-input flex w-full min-w-0 flex-1 rounded-lg text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-green-500/50 border bg-white dark:bg-gray-700 h-12 pl-11 pr-4 py-2 text-base font-normal leading-normal transition-colors"
+                                            [ngClass]="{'border-red-500 dark:border-red-500': formulario.get('password')?.invalid && formulario.get('password')?.touched, 'border-green-200 dark:border-gray-600': !formulario.get('password')?.invalid || !formulario.get('password')?.touched}"
+                                            formControlName="password" id="password" placeholder="Mínimo 6 caracteres"
+                                            type="password" />
+                                    </div>
+                                    <!-- Errores Contraseña -->
+                                    @if (formulario.get('password')?.invalid && formulario.get('password')?.touched) {
+                                    <div class="text-red-500 dark:text-red-400 text-sm">
+                                        @if (formulario.get('password')?.hasError('required')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Campo requerido
+                                        </p>
+                                        }
+                                        @if (formulario.get('password')?.hasError('minlength')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Mínimo 6 caracteres
+                                        </p>
+                                        }
+                                    </div>
+                                    }
+                                </div>
+
+                                <!-- Confirmar Contraseña -->
+                                <div class="flex w-full flex-col gap-1.5 min-h-20">
+                                    <label class="text-gray-800 dark:text-white text-sm font-medium leading-normal"
+                                        for="confirm-password">Confirmar Contraseña</label>
+                                    <div class="relative flex w-full items-center">
+                                        <div class="absolute left-3 text-gray-500 dark:text-gray-400">
+                                            <span class="material-symbols-outlined">lock_reset</span>
+                                        </div>
+                                        <input
+                                            class="form-input flex w-full min-w-0 flex-1 rounded-lg text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-0 focus:ring-2 focus:ring-green-500/50 border bg-white dark:bg-gray-700 h-12 pl-11 pr-4 py-2 text-base font-normal leading-normal transition-colors"
+                                            [ngClass]="{'border-red-500 dark:border-red-500': formulario.get('confirmPassword')?.invalid && formulario.get('confirmPassword')?.touched, 'border-green-200 dark:border-gray-600': !formulario.get('confirmPassword')?.invalid || !formulario.get('confirmPassword')?.touched}"
+                                            formControlName="confirmPassword" id="confirm-password"
+                                            placeholder="Repite tu contraseña" type="password" />
+                                    </div>
+                                    <!-- Errores Confirmar Contraseña -->
+                                    @if (formulario.get('confirmPassword')?.invalid &&
+                                    formulario.get('confirmPassword')?.touched) {
+                                    <div class="text-red-500 dark:text-red-400 text-sm">
+                                        @if (formulario.get('confirmPassword')?.hasError('required')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Campo requerido
+                                        </p>
+                                        }
+                                        @if (formulario.get('confirmPassword')?.hasError('minlength')) {
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Mínimo 6 caracteres
+                                        </p>
+                                        }
+
+                                    </div>
+
+                                    }
+                                    @if(formulario.get('confirmPassword')?.touched &&
+                                    formulario.get('confirmPassword')?.value!==formulario.get('password')?.value){
+                                    <div class="text-red-500 dark:text-red-400 text-sm">
+                                        <p class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">error</span>
+                                            Las contraseñas no coinciden
+                                        </p>
+                                    </div>
+                                    }
+
+
+                                </div>
+
+                                <!-- Botón -->
+                                <button
+                                    class="flex items-center justify-center text-center font-bold text-base h-12 px-6 rounded-lg bg-green-700 dark:bg-green-600 text-white w-full mt-4 hover:bg-green-800 dark:hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    type="submit" [disabled]="formulario.invalid || formulario.get('confirmPassword')?.value!==formulario.get('password')?.value">
+                                    Registrarse
+                                </button>
+
+                                <!-- Iniciar sesión -->
+                                <div class="text-center pt-6">
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                                        ¿Ya tienes una cuenta? <a
+                                            class="font-bold text-green-700 dark:text-green-400 hover:underline"
+                                            href="#">Inicia sesión</a>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

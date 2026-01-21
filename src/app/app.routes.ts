@@ -4,6 +4,7 @@ import { DetalleProductoComponent } from './components/home/detalle-producto/det
 import { EmpresaComponent } from './components/lista-empresas/empresa/empresa.component';
 import { ListaEmpresasComponent } from './components/lista-empresas/lista-empresas.component';
 import { LoginComponent } from './components/login/login.component';
+import { RegistroComponent } from './components/registro/registro.component';
 export const routes: Routes = [
 
     {path:'',redirectTo:'login',pathMatch:'full'},
@@ -11,6 +12,7 @@ export const routes: Routes = [
     {path:'home/detalle-producto/:id',component:DetalleProductoComponent},
     {path:'empresas', component:ListaEmpresasComponent},
     {path:'empresas/empresa/:id',component:EmpresaComponent},
-    {path:'login',component:LoginComponent}
+    {path:'login',component:LoginComponent},
+    {path:'registro',component:RegistroComponent}
     
 ];

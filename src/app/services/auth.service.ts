@@ -8,13 +8,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly url=environment.apiUrl+'Auth/login';
+  private readonly url=environment.apiUrl+'Auth/';
 
   constructor(private http:HttpClient){}
 
   login(usuario:AuthUser):Observable<{token:string}>{
-    return this.http.post<{token:string}>(this.url,usuario);
+    return this.http.post<{token:string}>(this.url+'login',usuario);
   }
 
-  register(){}
+  register(usuario:AuthUser):Observable<{token:string}>{
+    return this.http.post<{token:string}>(this.url+'Register',usuario);
+  }
 }

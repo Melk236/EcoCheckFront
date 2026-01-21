@@ -21,6 +21,8 @@ export class LoginComponent implements OnDestroy {
   //Variable para el mensaje del error
   mensaje:string='';
 
+  //Variable manejo del spinner
+  cargando:boolean=false;
   //Observable para la desuscripción de los observables
   destroy$=new Subject<void>();
 
@@ -36,6 +38,9 @@ export class LoginComponent implements OnDestroy {
 
   /*Método para enviar los datos del usuario al servidor */
   onSubmit(){
+    //Activamos el spinner
+    this.cargando=true;
+
     const body:AuthUser={
       user: this.formulario.get('user')?.value,
       password: this.formulario.get('password')?.value
@@ -44,10 +49,12 @@ export class LoginComponent implements OnDestroy {
     this.authService.login(body).pipe(takeUntil(this.destroy$)).
     subscribe({
       next:(data)=>{
+        this.cargando=false;//esactivamos el spinner
         this.saveToken(data.token)//Guardamos el token en el 
         this.route.navigate(['home']);//Navegamos al componente Home
       },
       error:(error)=>{
+        this.cargando=false;
         this.mensaje=error.error.mensaje;
         this.closeAlert();
       }

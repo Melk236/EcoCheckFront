@@ -6,10 +6,8 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   templateUrl: './alerta.html',
   styleUrl: './alerta.css',
 })
-export class AlertaComponent implements OnChanges{
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.mensajeError)
-  }
+export class AlertaComponent {
+  
   @Input() mensajeError:string='';
 
 
