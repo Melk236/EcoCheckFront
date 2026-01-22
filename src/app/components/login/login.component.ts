@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl,  FormGroup,  ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthUser } from '../../types/auth-user';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertaComponent } from "../modales/alerta/alerta.component";
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { AlertaComponent } from "../modales/alerta/alerta.component";
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnInit,OnDestroy {
 
   //Variable para manejar el formulario
   formulario:FormGroup;
@@ -26,13 +27,16 @@ export class LoginComponent implements OnDestroy {
   //Observable para la desuscripción de los observables
   destroy$=new Subject<void>();
 
-  /*Inicialización del formcontrol */
-  constructor(private fb:FormBuilder,private authService:AuthService,private route:Router){
+  /*Inicialización del formGroup */
+  constructor(private fb:FormBuilder,private authService:AuthService,private route:Router,private profileService:ProfileService){
 
     this.formulario=this.fb.group({
-      user:new FormControl('',[Validators.required,Validators.minLength(6),Validators.maxLength(20),Validators.pattern(/^[a-zA-Z0-9_]*$/)]),
-      password:new FormControl('',[Validators.required,Validators.minLength(6),Validators.maxLength(20),Validators.pattern(/^[a-zA-Z0-9_]*$/)])
+      user:new FormControl('',Validators.required),
+      password:new FormControl('',Validators.required)
     });
+  }
+  ngOnInit(): void {
+   this.getUser();
   }
   
 
@@ -68,12 +72,24 @@ export class LoginComponent implements OnDestroy {
 
   }
 
-  /*Añadimos un setTimeout para que la alert desaparezca 
+  /*Añadimos un setTimeout para que la alerta desaparezca 
   en un tiempo determinado*/
   closeAlert(){
     setTimeout(() => {
       this.mensaje='';  
     }, 2500);
+  }
+
+  getUser(){
+    this.profileService.getUser().pipe(takeUntil(this.destroy$)).
+    subscribe({
+      next:(data)=>{
+        console.log(data);
+      },
+      error:(error)=>{
+        console.log(error);
+      }
+    })
   }
 
   ngOnDestroy(): void {
