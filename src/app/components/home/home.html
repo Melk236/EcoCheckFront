@@ -2,7 +2,7 @@
   <!-- Main content - responsive padding for sidebar -->
   <main
     class="flex-1 w-full  sm:px-6 md:px-8 py-6 md:py-8 bg-[#f6f8f7] dark:bg-gray-800 h-screen md:h-auto overflow-y-auto">
-    <div class="w-full max-w-8xl mx-auto pt-15">
+    <div class="w-full max-w-[1200px] mx-auto pt-15">
       <div class="flex flex-col sm:flex-row gap-4 mb-8">
         <div class="relative grow">
           <span
@@ -23,14 +23,14 @@
           <span class="truncate">Escanear</span>
         </button>
       </div>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
         <!-- Updated all dark mode backgrounds from dark:bg-[#182c21] to dark:bg-gray-700 to match sidebar -->
 
         @for (producto of productosPaginados; track producto.id) {
         <!-- Card con efecto hover suave -->
         <div
-          class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer" (click)="abrirDetalle(producto.id)">
+          class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer"
+          (click)="abrirDetalle(producto.id)">
           <div class="w-full h-40 bg-cover bg-center rounded-lg"
             style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3ORf-FnudDaA1NzV5UvdmmzQpCofGyUeOmYqp59ZNzqs1Q0RlfF8qKyHUGrT-qJ8sPqHw1W3pMc948xO59s3AY4HAcV0uzJTUGuRd0j4ryP79b2Ddxlj8QMyI-yz_19Owq5mFLjVy8uhsmLW5qKQagIIedD5UcDa7QxihO4CUOStI4iqITk6jTR1CEyAoZCDmve56S8lZEjHbWqF2N5A0LTTX4vZJSYO2s65GdC51X5_avEfz4KPExWa-wKb_VqxqS9-lC0GX8wn3');">
           </div>
@@ -54,10 +54,9 @@
 
 
       </div>
+      <app-paginacion [lista]="productos" (pagin)="paginar($event)"></app-paginacion>
     </div>
-      
   </main>
-  <app-paginacion [lista]="productos" (pagin)="paginar($event)"></app-paginacion>
 </div>
 
 
