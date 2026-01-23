@@ -14,15 +14,9 @@ export class ProfileService {
 
   getUser(): Observable<User> {
 
-    let token: string | null = this.getToken();
-  
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<User>(this.url, { headers });
+
+    return this.http.get<User>(this.url);
   }
 
-  getToken(): string | null {
-    return sessionStorage.getItem('jwt');
-  }
+
 }
