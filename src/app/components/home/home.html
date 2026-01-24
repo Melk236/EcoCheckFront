@@ -4,12 +4,13 @@
     class="flex-1 w-full  sm:px-6 md:px-8 py-6 md:py-8 bg-[#f6f8f7] dark:bg-gray-800 h-screen md:h-auto overflow-y-auto">
     <div class="w-full max-w-[1200px] mx-auto pt-15">
       <div class="flex flex-col sm:flex-row gap-4 mb-8">
-        <div class="relative grow">
-          <span
-            class="material-symbols-outlined absolute left-4 top-1/2 bottom-4 -translate-y-1/2 text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
-
+        <div
+          class="grow flex items-stretch rounded-xl h-14 bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 focus-within:ring-2 focus-within:ring-[#39E079]/50 focus-within:border-[#39E079] transition-shadow overflow-hidden">
+          <div class="flex items-center justify-center pl-4 pr-2">
+            <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
+          </div>
           <input
-            class="w-full h-14 pl-16 rounded-xl bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 placeholder:indent-8 focus:ring-2 focus:ring-[#39E079]/50 focus:border-[#39E079] outline-none transition-shadow"
+            class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 !border-none outline-none ring-0 focus:ring-0 appearance-none px-2"
             placeholder="Buscar productos por nombre, marca..." type="text">
         </div>
         <button
