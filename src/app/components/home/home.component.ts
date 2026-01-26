@@ -25,7 +25,7 @@ import { PaginacionComponent } from '../../shared/paginacion/paginacion.componen
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, CommonModule,PaginacionComponent],
+  imports: [ModalEscaner, CommonModule, PaginacionComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -78,9 +78,6 @@ export class HomeComponent implements OnInit {
     ['other', 2]
   ]);
 
-  // API Wikidata
-  idWikiEmpresa = environment.apiWikiDataIdEmpresa;
-  apiWiki = environment.apiWikiData;
 
   // Datos de la empresa
   empresaInfo: CompanyInfo = { nombre: '' };
@@ -88,7 +85,7 @@ export class HomeComponent implements OnInit {
 
   //Datos del producto
   productos: Producto[] = [];
-  productosPaginados:Producto[]=[];
+  productosPaginados: Producto[] = [];
 
   //Datos de las certificaciones
   certificaciones: Certificaciones[] = [];
@@ -432,7 +429,7 @@ export class HomeComponent implements OnInit {
 
         this.empresaInfo.nombre = entity.labels?.['es']?.value || entity.labels?.['en']?.value || '';
         this.empresaInfo.sitioWeb = claims['P856']?.[0]?.mainsnak?.datavalue?.value as string;
-        this.empresaInfo.logo=claims['P154']?.[0]?.mainsnak?.datavalue?.value as string;
+        this.empresaInfo.logo = claims['P154']?.[0]?.mainsnak?.datavalue?.value as string;
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
         const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
         if (empresa !== undefined) {
@@ -513,7 +510,7 @@ export class HomeComponent implements OnInit {
       descripcion: this.descripcionTraducida,
       puntuacionSocial: this.scoreSocial,
       controversias: '',
-      logo:this.empresaInfo.logo
+      logo: this.empresaInfo.logo
 
     }
 
@@ -828,12 +825,12 @@ export class HomeComponent implements OnInit {
   }
 
   /*Método para paginacón de los productos*/
-  paginar(lista:Producto[]){
-    
+  paginar(lista: Producto[]) {
+
     setTimeout(() => {
-      this.productosPaginados=lista;  
+      this.productosPaginados = lista;
     }, 0);
-    
+
   }
 
   ngOnDestroy() {
