@@ -10,7 +10,7 @@
             <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
           </div>
           <input
-            class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 !border-none outline-none ring-0 focus:ring-0 appearance-none px-2"
+            class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 border-none! outline-none ring-0 focus:ring-0 appearance-none px-2"
             placeholder="Buscar productos por nombre, marca..." type="text">
         </div>
         <button
@@ -18,7 +18,7 @@
           <span class="material-symbols-outlined">filter_list</span>
           <span>Filtros</span>
         </button>
-        <button (click)="openModalEscaner()" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-primary text-[#111814] gap-2 text-base font-bold leading-normal tracking-[0.015em] hover:b
+        <button (click)="openModalEscaner()" class="flex min-w-[84px] cursor-pointer items-center justify-center  rounded-xl h-14 px-5 bg-primary text-[#111814] gap-2 text-base font-bold leading-normal tracking-[0.015em] hover:b
      g-primary transition-colors">
           <span class="material-symbols-outlined">qr_code_scanner</span>
           <span class="truncate">Escanear</span>
@@ -58,6 +58,7 @@
       <app-paginacion [lista]="productos" (pagin)="paginar($event)"></app-paginacion>
     </div>
   </main>
+  
 </div>
 
 
@@ -66,3 +67,7 @@
 @if(modalEscanerOpen){
 <app-modal-escaner (closeModal)="closeModalEscaner()" (qrScanned)="obtenerQr($event)"></app-modal-escaner>
 }
+@if(modalSucces){
+<app-modal-informativo [messageError]="error" (closeModal)="closeModalSucces()"></app-modal-informativo>
+}
+

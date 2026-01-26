@@ -3,7 +3,6 @@ import { ModalEscaner } from './modal-escaner/modal-escaner.component';
 import { ApiExternaService } from '../../services/api-externa.service';
 import { Product, Producto } from '../../types/producto';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
-import { environment } from '../../environment/environment';
 import { ObtenerEmpresaService } from '../../services/obtener-empresa.service';
 import { CompanyInfo, Empresa } from '../../types/empresa';
 import { EmpresaService } from '../../services/empresa.service';
@@ -20,12 +19,13 @@ import { EmpresaCertificacion } from '../../types/empresa-certificacion';
 import { PuntuacionService } from '../../services/puntuacion.service';
 import { Puntuacion } from '../../types/puntuacion';
 import { PaginacionComponent } from '../../shared/paginacion/paginacion.component';
+import { ModalInformativo } from '../modales/modal-informativo/modal-informativo';
 
 
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, CommonModule, PaginacionComponent],
+  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -33,6 +33,8 @@ export class HomeComponent implements OnInit {
 
   // Variables del componente
   modalEscanerOpen: boolean = false;
+  modalSucces: boolean = false;
+  error: string = '';
   codigoEscaneado: string = '';
   producto: Product | undefined;
   descripcionTraducida: string = '';
@@ -99,7 +101,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.obtenerQr('8480000040411.json');
+      this.obtenerQr('8480000524058.json');
     }, 5000);
 
     this.obtenerEmpresas();
@@ -116,6 +118,7 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
+
       }
     });
   }
@@ -174,6 +177,8 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     });
 
@@ -416,7 +421,11 @@ export class HomeComponent implements OnInit {
 
         this.extraerDatosEmpresa(id);
       },
-      (error) => console.log(error)
+      (error) => {
+        console.log(error);
+        this.error = error;
+        this.modalSucces = true;
+      }
     );
   }
 
@@ -471,7 +480,11 @@ export class HomeComponent implements OnInit {
           }
         );
       },
-      (error) => console.log(error)
+      (error) => {
+        console.log(error);
+        this.error = error;
+        this.modalSucces = true;
+      }
     );
   }
 
@@ -484,6 +497,8 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     );
   }
@@ -523,6 +538,8 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     );
   }
@@ -557,6 +574,8 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     });
   }
@@ -579,6 +598,8 @@ export class HomeComponent implements OnInit {
             },
             error: (error) => {
               console.log(error);
+              this.error = error;
+              this.modalSucces = true;
             }
           }
         );
@@ -593,16 +614,16 @@ export class HomeComponent implements OnInit {
           this.producto?.generic_name_de,
           this.producto?.generic_name_zh
         ];
-
+        
         //Si no cogemos el idioma en el que la descripción no está vacío y lo traducimos
         descripcion = posiblesNombres.find(item => item?.trim() !== '');
-
+        console.log(this.producto?.ingredients_text)
         if (descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
           this.ingredientesTraducidos = this.producto?.ingredients_text_es!;
           this.crearProducto();
           return;
         }
-
+        
         forkJoin({
           descripcion: this.traducirService.post(descripcion),
           ingredientes: this.traducirService.post(this.producto?.ingredients_text!)
@@ -611,12 +632,14 @@ export class HomeComponent implements OnInit {
             this.descripcionTraducida = data.descripcion.texto;
             this.ingredientesTraducidos = data.ingredientes.texto;
             //Cuando terminamos llamamos a crearProducto
-            console.log('Hola mudno');
+
             this.crearProducto();
 
           },
           error: (error) => {
             console.log(error);
+            this.error = error.error.mensaje;
+            this.modalSucces = true;
           }
         })
         break;
@@ -654,6 +677,8 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     })
   }
@@ -795,6 +820,8 @@ export class HomeComponent implements OnInit {
 
       error: (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     });
   }
@@ -810,11 +837,11 @@ export class HomeComponent implements OnInit {
     }
 
     this.puntuacionService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data) => {
 
-      },
       error: (error) => {
         console.log(error);
+        this.error = error;
+        this.modalSucces = true;
       }
     });
   }
@@ -831,6 +858,10 @@ export class HomeComponent implements OnInit {
       this.productosPaginados = lista;
     }, 0);
 
+  }
+
+  closeModalSucces() {
+    this.modalSucces = false;
   }
 
   ngOnDestroy() {

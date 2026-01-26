@@ -1,0 +1,8 @@
+:host {
+  --primary: #39E079;
+  --text-primary: #111814;
+  --text-secondary: #618972;
+  --border-light: #dbe6e0;
+  --border-dark: #2a3c32;
+  --bg-card-dark: #182c21;
+}
