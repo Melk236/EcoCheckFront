@@ -1,7 +1,7 @@
 <!-- Modal Overlay -->
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70  p-4">
   <!-- Notification Modal -->
-  <div class="relative z-10 w-full max-w-[480px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
+  <div class="relative z-10 w-full max-w-[480px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 eco-modal-enter" [class.eco-modal-exit]="closing">
     <div class="p-8 flex flex-col items-center text-center">
       <!-- Error Icon -->
       @if(success){

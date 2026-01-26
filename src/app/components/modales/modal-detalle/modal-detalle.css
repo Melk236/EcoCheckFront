@@ -1,0 +1,22 @@
+/* Entrance animation for modal-detalle (CSS-only) */
+@keyframes ecoModalInDetalle {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ecoModalOutDetalle {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(6px) scale(0.98); }
+}
+
+.eco-modal-enter {
+  animation: ecoModalInDetalle 180ms ease-out;
+}
+
+.eco-modal-exit {
+  animation: ecoModalOutDetalle 150ms ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eco-modal-enter, .eco-modal-exit { animation: none; }
+}

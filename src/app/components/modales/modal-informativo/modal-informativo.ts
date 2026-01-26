@@ -11,10 +11,14 @@ export class ModalInformativo  {
   @Input() messageError:string='';
   @Input() success:boolean=false;
   @Output() closeModal=new EventEmitter<void>();
+  closing: boolean = false;
 
   
   /*Para cerrar el modal en el componente padre */
   cerrarModal(){
-    this.closeModal.emit();
+    this.closing = true;
+    setTimeout(() => {
+      this.closeModal.emit();
+    }, 150);
   }
 }

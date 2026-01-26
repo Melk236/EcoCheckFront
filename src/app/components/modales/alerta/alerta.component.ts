@@ -1,15 +1,16 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-alerta',
-  imports: [],
   templateUrl: './alerta.html',
-  styleUrl: './alerta.css',
+  styleUrl: './alerta.css'
 })
 export class AlertaComponent {
-  
-  @Input() mensajeError:string='';
-
-
-
+  @Input() mensajeError: string = '';
+  closing: boolean = false;
+  @Output() closeModal = new EventEmitter<void>();
+  cerrarModal() {
+    this.closing = true;
+    setTimeout(() => this.closeModal.emit(), 180);
+  }
 }

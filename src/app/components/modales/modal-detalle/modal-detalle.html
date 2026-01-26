@@ -3,7 +3,8 @@
   <!-- Modal - EcoScore Details -->
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[95vh]">
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[95vh] eco-modal-enter"
+      [class.eco-modal-exit]="closing">
       <!-- Modal Header -->
       <div class="flex items-center justify-between px-8 py-6 border-b border-gray-100 dark:border-gray-700">
         <div>

@@ -20,3 +20,25 @@ video {
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+/* Entrance animation for modal-escaner (CSS-only) */
+@keyframes ecoModalInEscaner {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ecoModalOutEscaner {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(6px) scale(0.98); }
+}
+
+.eco-modal-enter {
+  animation: ecoModalInEscaner 180ms ease-out;
+}
+
+.eco-modal-exit {
+  animation: ecoModalOutEscaner 150ms ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eco-modal-enter, .eco-modal-exit { animation: none; }
+}

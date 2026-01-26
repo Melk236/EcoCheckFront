@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
 
@@ -21,6 +22,7 @@ export class ModalEscaner implements OnInit {
   selectedCamera: string = 'back';
   cameras: any[] = [];
   camaraSeleccionada: string = '';
+  closing: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -68,8 +70,11 @@ export class ModalEscaner implements OnInit {
   }
 
   closeEscanerModal() {
+    this.closing = true;
     this.stopScanning();
-    this.closeModal.emit();
+    setTimeout(() => {
+      this.closeModal.emit();
+    }, 150);
   }
 
   onCameraChange() {

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+// Removed Angular animations; using CSS animations instead
 import { Puntuacion } from '../../../types/puntuacion';
 import { Material } from '../../../types/material';
 import { CommonModule } from '@angular/common';
@@ -17,7 +18,7 @@ import { EmpresaCertificacion } from '../../../types/empresa-certificacion';
   selector: 'app-modal-detalle',
   imports: [CommonModule, NombreMaterialPipe],
   templateUrl: './modal-detalle.html',
-  styleUrl: './modal-detalle.css',
+  styleUrl: './modal-detalle.css'
 })
 export class ModalDetalleComponent implements OnInit,OnDestroy {
   @Input() puntuacion: Puntuacion = {
@@ -38,6 +39,7 @@ export class ModalDetalleComponent implements OnInit,OnDestroy {
     fechaActualizacion: new Date()
   }
   @Output() closeModal = new EventEmitter<void>();
+  closing: boolean = false;
   empresa: Empresa = {
     id: 0,
     nombre: '',
@@ -63,7 +65,8 @@ export class ModalDetalleComponent implements OnInit,OnDestroy {
 
   /*Emitimos el evento al padre para que se cierre el modal */
   cerrarModal() {
-    this.closeModal.emit();
+    this.closing = true;
+    setTimeout(() => this.closeModal.emit(), 150);
   }
 
   /*Obtenemos la empresa del producto */
