@@ -552,7 +552,7 @@ export class HomeComponent implements OnInit {
     }
 
     const pais = this.producto?.manufacturing_places ? this.producto.manufacturing_places : this.producto?.countries_tags[0].split(':')[1];
-
+    console.log(pais)
     const body = {
       id: 0,
       nombre: this.producto?.product_name,
@@ -684,14 +684,15 @@ export class HomeComponent implements OnInit {
   }
 
   formatPais(pais: string): string {//Pasamos el nombre del país del inglés al español
+    console.log(pais)
     pais = pais[0].toUpperCase() + pais.substring(1);
+    if(pais.toLowerCase()=='españa') return pais;
     const countries = new Map([
       ["Spain", "españa"],
       ["France", "francia"],
       ["Germany", "alemania"],
       ["Italy", "italia"],
       ["Portugal", "portugal"],
-      ["United kingdom", "reino unido"],
       ["Ireland", "irlanda"],
       ["Netherlands", "países bajos"],
       ["Belgium", "bélgica"],
