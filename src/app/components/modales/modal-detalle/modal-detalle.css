@@ -1,22 +1,27 @@
-/* Entrance animation for modal-detalle (CSS-only) */
-@keyframes ecoModalInDetalle {
-  from { opacity: 0; transform: translateY(6px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+/* Enhanced modal-detalle animations - Using global modal animations */
+
+/* Modal-specific enhancements */
+.modal-detalle-content {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-@keyframes ecoModalOutDetalle {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(6px) scale(0.98); }
+/* Smooth transitions for interactive elements */
+.modal-detalle-content button {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.eco-modal-enter {
-  animation: ecoModalInDetalle 180ms ease-out;
+.modal-detalle-content .hover-scale {
+  transition: transform 200ms ease;
 }
 
-.eco-modal-exit {
-  animation: ecoModalOutDetalle 150ms ease-in;
+.modal-detalle-content .hover-scale:hover {
+  transform: scale(1.02);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .eco-modal-enter, .eco-modal-exit { animation: none; }
+  .modal-detalle-content button,
+  .modal-detalle-content .hover-scale {
+    transition: none;
+  }
 }

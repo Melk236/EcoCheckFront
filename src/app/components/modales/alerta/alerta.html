@@ -1,6 +1,8 @@
 
 @if (mensajeError!=='') {
-  <div class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 eco-modal-enter" [class.eco-modal-exit]="closing">
+  <div class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 alert-content" 
+       [class.alert-enter]="!closing"
+       [class.alert-exit]="closing">
     <span class="material-symbols-outlined">error</span>
     <span>{{mensajeError || 'Error interno del servidor'}}</span>
     

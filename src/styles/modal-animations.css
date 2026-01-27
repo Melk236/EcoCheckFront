@@ -1,8 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
-@import "tailwindcss";
-@import "flowbite";
-
-/* Enhanced Modal Animations */
+/* Enhanced animations for modals with smooth transitions */
 @keyframes modalFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -44,28 +40,6 @@
   to { opacity: 0; }
 }
 
-@keyframes alertSlideInRight {
-  from { 
-    opacity: 0;
-    transform: translateX(100px) translateY(-10px);
-  }
-  to { 
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-  }
-}
-
-@keyframes alertSlideOutRight {
-  from { 
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-  }
-  to { 
-    opacity: 0;
-    transform: translateX(100px) translateY(-5px);
-  }
-}
-
 /* Modal container animations */
 .modal-enter-backdrop {
   animation: backdropFadeIn 200ms ease-out;
@@ -83,14 +57,6 @@
 .modal-content-exit {
   animation: modalSlideDown 200ms ease-in;
   transform-origin: center;
-}
-
-.alert-enter {
-  animation: alertSlideInRight 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.alert-exit {
-  animation: alertSlideOutRight 200ms ease-in;
 }
 
 /* Staggered animations for content */
@@ -117,25 +83,12 @@
 .stagger-content > *:nth-child(4) { --stagger-delay: 3; }
 .stagger-content > *:nth-child(5) { --stagger-delay: 4; }
 
-/* Performance optimizations */
-.modal-content-enter,
-.modal-content-exit {
-  will-change: transform, opacity, filter;
-}
-
-.modal-enter-backdrop,
-.modal-exit-backdrop {
-  will-change: opacity;
-}
-
 /* Accessibility - Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .modal-enter-backdrop,
   .modal-exit-backdrop,
   .modal-content-enter,
-  .modal-content-exit,
-  .alert-enter,
-  .alert-exit {
+  .modal-content-exit {
     animation: none !important;
   }
   
@@ -146,8 +99,13 @@
   }
 }
 
-html, body {
-  padding: 0;
-  margin: 0;
-  font-family: manrope;
+/* Performance optimizations */
+.modal-content-enter,
+.modal-content-exit {
+  will-change: transform, opacity, filter;
+}
+
+.modal-enter-backdrop,
+.modal-exit-backdrop {
+  will-change: opacity;
 }

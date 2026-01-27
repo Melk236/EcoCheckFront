@@ -1,12 +1,15 @@
 <div class="flex-1 p-6 lg:p-10 bg-[#FAFAFA] dark:bg-[#102218] min-h-screen">
 
   <!-- Modal - EcoScore Details -->
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+       [class.modal-enter-backdrop]="!closing" 
+       [class.modal-exit-backdrop]="closing">
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[95vh] eco-modal-enter"
-      [class.eco-modal-exit]="closing">
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between px-8 py-6 border-b border-gray-100 dark:border-gray-700">
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[95vh] modal-detalle-content"
+      [class.modal-content-enter]="!closing"
+      [class.modal-content-exit]="closing">
+<!-- Modal Header -->
+      <div class="flex items-center justify-between px-8 py-6 border-b border-gray-100 dark:border-gray-700 stagger-content">
         <div>
           <h2 class="text-2xl font-bold text-[#333333] dark:text-white">Detalles del EcoScore</h2>
           <p class="text-sm text-[#6c757d] dark:text-gray-400 mt-1">Análisis profundo del impacto ambiental y social.
@@ -19,8 +22,8 @@
         </button>
       </div>
 
-      <!-- Modal Content -->
-      <div class="flex-1 overflow-y-auto">
+<!-- Modal Content -->
+      <div class="flex-1 overflow-y-auto stagger-content">
         <!-- Score Summary -->
         <div class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 p-6 md:px-8">
           <div
