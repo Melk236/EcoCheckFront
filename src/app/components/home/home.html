@@ -68,6 +68,6 @@
 <app-modal-escaner (closeModal)="closeModalEscaner()" (qrScanned)="obtenerQr($event)"></app-modal-escaner>
 }
 @if(modalSucces){
-<app-modal-informativo [messageError]="error" (closeModal)="closeModalSucces()"></app-modal-informativo>
+<app-modal-informativo [messageError]="error" [success]="success" (closeModal)="closeModalSucces()"></app-modal-informativo>
 }
 

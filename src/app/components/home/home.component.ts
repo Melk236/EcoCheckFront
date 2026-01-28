@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
   // Variables del componente
   modalEscanerOpen: boolean = false;
   modalSucces: boolean = false;
+  success:boolean=false;//Estado de la operacion(exito o fracaso de la operación)
   error: string = '';
   codigoEscaneado: string = '';
   producto: Product | undefined;
@@ -101,7 +102,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.obtenerQr('8480000524058.json');
+      this.obtenerQr('8480000808592.json');
     }, 5000);
 
     this.obtenerEmpresas();
@@ -193,14 +194,13 @@ export class HomeComponent implements OnInit {
     this.producto?.packaging_materials_tags.forEach((material) => {//Rellenamos el array materiales.
       this.cleanMaterial(material);
     });
-
+    
     this.materiales.forEach((valor) => {//Iteramos por cada material y sumamos segun su base y si es reciclable
       sumaMaterial += this.calcularValorProducto(valor);
       sumaCarbono += this.calcularValorCarbono(valor);
 
     });
-    console.log(sumaCarbono)
-    console.log(this.materiales);
+   
     //Cálculo final de medias, si la longitud de los materiales es 0, el impacto de carbono sera igual a 0
     const ImpactoCarbono = this.producto?.packaging_materials_tags.length == 0 ? 4 : sumaCarbono / this.producto!.packaging_materials_tags.length;
 
@@ -240,6 +240,7 @@ export class HomeComponent implements OnInit {
       "en:steel": "acero",
       "en:tinplate": "acero",
 
+      "en:plastic":"plastico",
       "en:pet-1-polyethylene-terephthalate": "plasticoPET",
       "en:pp-5-polypropylene": "plasticoPP",
       "en:pvc-3-polyvinyl-chloride": "plasticoPVC",
@@ -284,30 +285,25 @@ export class HomeComponent implements OnInit {
           if (tag.includes('polyethylene') ||
             tag.includes('polyvinyl') ||
             tag.includes('polypropylene')
-          ) {
-            reciclable = true;
-          }
+          ) reciclable = true;
+            
+          
 
           break;
         case 'en:recycle-in-glass-bin':
-          if (tag.includes('glass')
-          ) {
-
-            reciclable = true;
-          }
-
+          if (tag.includes('glass')) reciclable = true;
           break;
+
         case 'en:recycle-in-paper-bin':
           if (tag.includes('paper') ||
-            tag.includes('papel')) {
-
-            reciclable = true;
-          }
-
+            tag.includes('papel')) reciclable = true
           break;
+
+
         case 'en:non-recyclable':
           reciclable = false;
           break;
+          
       }
     });
 
@@ -545,14 +541,16 @@ export class HomeComponent implements OnInit {
   }
 
   crearProducto() {
+
     const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.producto?.brands.toLowerCase().trim())?.id
-    console.log(idCompania)
+    
     if (idCompania == undefined) {//No creamos el recurso si el idCompania es undefined
       return;
     }
 
     const pais = this.producto?.manufacturing_places ? this.producto.manufacturing_places : this.producto?.countries_tags[0].split(':')[1];
-    console.log(pais)
+
+    
     const body = {
       id: 0,
       nombre: this.producto?.product_name,
@@ -562,14 +560,14 @@ export class HomeComponent implements OnInit {
       descripcion: this.descripcionTraducida || 'Producto alimenticio',
       ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
-      ingredientes: this.ingredientesTraducidos,
+      ingredientes: this.ingredientesTraducidos.replaceAll('_',''),
       fechaActualizacion: new Date()
     }
     console.table(body)
     this.ProductoService.post(body).subscribe({
       next: (data) => {
         this.productos.push(data);
-
+        this.productos=[...this.productos];
         this.crearMateriales(data.id);//Cuando se cree el producto creamos sus materiales.
       },
       error: (error) => {
@@ -673,10 +671,12 @@ export class HomeComponent implements OnInit {
     this.materialService.post(body).subscribe({
       next: (data) => {
         console.log(data);
-        this.crearPuntuacion();
+        this.success=true;
+        this.modalSucces = true;
       },
       error: (error) => {
         console.log(error);
+        this.success=false;
         this.error = error;
         this.modalSucces = true;
       }
