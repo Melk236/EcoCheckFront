@@ -198,7 +198,9 @@
     </div>
   </div>
 
-  @if(modal){
-  <app-modal-detalle [producto]="producto" [puntuacion]="puntuacion" [materiales]="materiales"
-    (closeModal)="cerrarModal()"></app-modal-detalle>
-  }
+ @if(modal){
+  
+    <app-modal-detalle [producto]="producto" [puntuacion]="puntuacion" [materiales]="materiales"
+      (closeModal)="cerrarModal()"></app-modal-detalle>
+  
+}
