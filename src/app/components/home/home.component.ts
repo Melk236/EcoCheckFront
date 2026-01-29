@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.obtenerQr('8480000808592.json');
+      this.obtenerQr('8411485050107.json');
     }, 5000);
 
     this.obtenerEmpresas();
@@ -671,8 +671,7 @@ export class HomeComponent implements OnInit {
     this.materialService.post(body).subscribe({
       next: (data) => {
         console.log(data);
-        this.success=true;
-        this.modalSucces = true;
+        this.crearPuntuacion();
       },
       error: (error) => {
         console.log(error);
@@ -838,7 +837,11 @@ export class HomeComponent implements OnInit {
     }
 
     this.puntuacionService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
-
+      next:()=>{
+        this.success=true;
+        this.error = '';//El error los vaciamos para que asi no entre en las opciones de error en componente hijo
+        this.modalSucces = true;
+      },
       error: (error) => {
         console.log(error);
         this.error = error;
