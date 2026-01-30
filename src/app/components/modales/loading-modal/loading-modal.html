@@ -1,0 +1,44 @@
+<!-- Loading Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70 backdrop-blur-sm">
+    <div aria-modal="true"
+        class="relative w-full max-w-md mx-4 overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700"
+        role="dialog">
+        <!-- Brand Accent Line -->
+
+
+        <div class="flex flex-col items-center justify-center p-10 text-center">
+            <!-- Loading Spinner -->
+            <div class="relative mb-8">
+                <svg class="w-16 h-16 animate-spin text-green-600" viewBox="0 0 100 100">
+                    <circle class="opacity-10" cx="50" cy="50" fill="none" r="42" stroke="currentColor"
+                        stroke-width="8"></circle>
+                    <circle cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-dasharray="264"
+                        stroke-dashoffset="180" stroke-linecap="round" stroke-width="8"></circle>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-green-600 text-xl">eco</span>
+                </div>
+            </div>
+
+            <!-- Header Text -->
+            <h4 class="text-green-600 text-xs font-bold uppercase tracking-widest mb-2">
+                Analizando Sostenibilidad
+            </h4>
+            <h2 class="text-gray-800 dark:text-white tracking-tight text-2xl font-bold leading-tight mb-2">
+                Procesando información...
+            </h2>
+
+            <!-- Body / Dynamic Message -->
+            <p class="text-green-700 dark:text-green-400 text-base font-medium leading-normal animate-pulse">
+                Calculando EcoScore...
+            </p>
+        </div>
+
+        <!-- Footer Note -->
+        <div class="bg-gray-50 dark:bg-gray-700 py-3 px-6 text-center border-t border-gray-200 dark:border-gray-700">
+            <p class="text-gray-500 dark:text-gray-400 text-xs font-normal">
+                Esto puede tardar unos segundos dependiendo del tamaño de los datos.
+            </p>
+        </div>
+    </div>
+</div>

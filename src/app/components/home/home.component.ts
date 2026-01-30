@@ -20,12 +20,13 @@ import { PuntuacionService } from '../../services/puntuacion.service';
 import { Puntuacion } from '../../types/puntuacion';
 import { PaginacionComponent } from '../../shared/paginacion/paginacion.component';
 import { ModalInformativo } from '../modales/modal-informativo/modal-informativo';
+import { LoadingModal } from "../modales/loading-modal/loading-modal";
 
 
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent],
+  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -34,7 +35,8 @@ export class HomeComponent implements OnInit {
   // Variables del componente
   modalEscanerOpen: boolean = false;
   modalSucces: boolean = false;
-  success:boolean=false;//Estado de la operacion(exito o fracaso de la operación)
+  loadingModal: boolean = false;
+  success: boolean = false;//Estado de la operacion(exito o fracaso de la operación)
   error: string = '';
   codigoEscaneado: string = '';
   producto: Product | undefined;
@@ -102,7 +104,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.obtenerQr('8411485050107.json');
+      this.obtenerQr('8480000603074.json');
     }, 5000);
 
     this.obtenerEmpresas();
@@ -162,23 +164,31 @@ export class HomeComponent implements OnInit {
 
   obtenerQr(qrEscaneado: string) {
     this.codigoEscaneado = qrEscaneado;//Obtenemos el código escaneado del padre
+    this.loadingModal = true;//Mostramos el modal de carga
 
     this.apiExterna.getOpenFood(this.codigoEscaneado).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
 
         this.producto = data.product;
-        console.log(this.producto);
+
 
         const nombreEncontrado = this.productos.find(item => item.nombre?.trim().toLowerCase() === this.producto?.product_name.trim().toLowerCase());
 
 
-        if (nombreEncontrado === undefined) {
-          this.obtenerIdEmpresa();
+        if (nombreEncontrado !== undefined) {
+          setTimeout(() => {
+            this.route.navigate(['home/detalle-producto', nombreEncontrado.id]);
+          }, 1000);
+
+          return;
         }
+
+        this.obtenerIdEmpresa();
       },
       error: (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     });
@@ -190,17 +200,16 @@ export class HomeComponent implements OnInit {
     let sumaCarbono: number = 0;
 
 
-
     this.producto?.packaging_materials_tags.forEach((material) => {//Rellenamos el array materiales.
       this.cleanMaterial(material);
     });
-    
+
     this.materiales.forEach((valor) => {//Iteramos por cada material y sumamos segun su base y si es reciclable
       sumaMaterial += this.calcularValorProducto(valor);
       sumaCarbono += this.calcularValorCarbono(valor);
 
     });
-   
+
     //Cálculo final de medias, si la longitud de los materiales es 0, el impacto de carbono sera igual a 0
     const ImpactoCarbono = this.producto?.packaging_materials_tags.length == 0 ? 4 : sumaCarbono / this.producto!.packaging_materials_tags.length;
 
@@ -209,10 +218,10 @@ export class HomeComponent implements OnInit {
     const mediaCarbono = this.calculoMediaCarbono(ImpactoCarbono);
 
     //Escogemos entre el manufacturing places o el primer countrie tag para calcular la media de transporte
-    const pais = this.producto?.manufacturing_places ? this.producto.manufacturing_places : this.producto?.countries_tags[0].split(':')[1]
+    const pais = this.producto?.countries_tags[0] ? this.producto?.countries_tags[0].split(':')[1] : this.producto!.manufacturing_places
 
     const mediaTransporte = this.calculoTransporte(pais!);
-    console.log(mediaCarbono + ' y' + mediaMateriales + ' y' + mediaTransporte);
+
     this.scoreAmbiental = (mediaMateriales * 0.4) + (mediaCarbono * 0.3) + (mediaTransporte * 0.3);
 
     this.mediaScore = (this.scoreAmbiental + this.scoreSocial) / 2;
@@ -240,7 +249,7 @@ export class HomeComponent implements OnInit {
       "en:steel": "acero",
       "en:tinplate": "acero",
 
-      "en:plastic":"plastico",
+      "en:plastic": "plastico",
       "en:pet-1-polyethylene-terephthalate": "plasticoPET",
       "en:pp-5-polypropylene": "plasticoPP",
       "en:pvc-3-polyvinyl-chloride": "plasticoPVC",
@@ -249,7 +258,7 @@ export class HomeComponent implements OnInit {
       "en:other-plastics": "plastico",
 
       "en:tetrapak": "tetrapak",
-
+      "en:tetra-brik": "tetra-brik"
     };
 
 
@@ -262,7 +271,8 @@ export class HomeComponent implements OnInit {
             tag.includes('pap') ||
             tag.includes('aluminum') ||
             tag.includes('steel') ||
-            tag.includes('tinplate')) {
+            tag.includes('tinplate') ||
+            tag.includes('tetra-brik')) {
             reciclable = true;
           }
 
@@ -274,7 +284,8 @@ export class HomeComponent implements OnInit {
             tag.includes('pap') ||
             tag.includes('aluminum') ||
             tag.includes('steel') ||
-            tag.includes('tinplate')) {
+            tag.includes('tinplate') ||
+            tag.includes('tetra-brik')) {
 
             reciclable = true;
 
@@ -284,10 +295,11 @@ export class HomeComponent implements OnInit {
         case 'en:recycle-in-plastic-bin':
           if (tag.includes('polyethylene') ||
             tag.includes('polyvinyl') ||
-            tag.includes('polypropylene')
+            tag.includes('polypropylene') ||
+            tag.includes('plastic')
           ) reciclable = true;
-            
-          
+
+
 
           break;
         case 'en:recycle-in-glass-bin':
@@ -299,11 +311,20 @@ export class HomeComponent implements OnInit {
             tag.includes('papel')) reciclable = true
           break;
 
+        case 'en:recycle-with-plastics-metal-and-bricks':
 
+          if (tag.includes('polyethylene') ||
+            tag.includes('polyvinyl') ||
+            tag.includes('polypropylene') ||
+            tag.includes('plastic') ||
+            tag.includes('tetra-brik')
+          ) reciclable = true;
+
+          break;
         case 'en:non-recyclable':
           reciclable = false;
           break;
-          
+
       }
     });
 
@@ -351,9 +372,9 @@ export class HomeComponent implements OnInit {
   }
 
   calculoTransporte(pais: string): number {
-    console.log(pais)
+
     const paisNormalizado = pais.toLowerCase().trim();
-    console.log(paisNormalizado);
+
     // España
     if (paisNormalizado === 'españa' || paisNormalizado === 'spain') {
       return 100;
@@ -395,8 +416,9 @@ export class HomeComponent implements OnInit {
 
     //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
     const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.producto?.brands.toLowerCase());
-    console.log(this.producto?.brands);
-    console.table(this.empresas)
+
+
+
     if (empresa !== undefined) {
       console.log(empresa.puntuacionSocial);
       this.scoreSocial = empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
@@ -406,7 +428,7 @@ export class HomeComponent implements OnInit {
 
     this.obtenerEmpresaService.searchCompanyId(this.producto!.brands).pipe(takeUntil(this.destroy$)).subscribe(
       (empresa) => {
-        console.log(empresa)
+
         if (!empresa) {
           console.log("No se encontró la empresa en Wikidata");
           return;
@@ -419,7 +441,8 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     );
@@ -438,7 +461,7 @@ export class HomeComponent implements OnInit {
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
         const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
         if (empresa !== undefined) {
-          console.log(empresa.puntuacionSocial);
+
           this.scoreSocial = empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
           this.calcularEcoScore();//Calculamos el ecoScore.
           return;
@@ -478,7 +501,8 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     );
@@ -493,7 +517,8 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     );
@@ -534,7 +559,8 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     );
@@ -542,15 +568,15 @@ export class HomeComponent implements OnInit {
 
   crearProducto() {
 
-    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.producto?.brands.toLowerCase().trim())?.id
-    
+    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim().includes(this.producto?.brands.toLowerCase().trim() || ''))?.id
+
     if (idCompania == undefined) {//No creamos el recurso si el idCompania es undefined
       return;
     }
 
-    const pais = this.producto?.manufacturing_places ? this.producto.manufacturing_places : this.producto?.countries_tags[0].split(':')[1];
+    const pais = this.producto?.manufacturing_places;
 
-    
+
     const body = {
       id: 0,
       nombre: this.producto?.product_name,
@@ -560,26 +586,27 @@ export class HomeComponent implements OnInit {
       descripcion: this.descripcionTraducida || 'Producto alimenticio',
       ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
-      ingredientes: this.ingredientesTraducidos.replaceAll('_',''),
+      ingredientes: this.ingredientesTraducidos || 'No hay información de los ingredientes, consúltelo en manual del producto',
       fechaActualizacion: new Date()
     }
     console.table(body)
     this.ProductoService.post(body).subscribe({
       next: (data) => {
         this.productos.push(data);
-        this.productos=[...this.productos];
+        this.productos = [...this.productos];
         this.crearMateriales(data.id);//Cuando se cree el producto creamos sus materiales.
       },
       error: (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     });
   }
 
   traducir(opcion: number) {//Método auxiliar para traducir, opcion 1=>traduccion desc del producto y opcion2=>desc de la empresa
-    console.log(opcion)
+
     let descripcion: string | undefined = '';
     this.descripcionTraducida = '';
 
@@ -596,7 +623,8 @@ export class HomeComponent implements OnInit {
             },
             error: (error) => {
               console.log(error);
-              this.error = error;
+              this.success = false;
+              this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
               this.modalSucces = true;
             }
           }
@@ -612,18 +640,18 @@ export class HomeComponent implements OnInit {
           this.producto?.generic_name_de,
           this.producto?.generic_name_zh
         ];
-        
+
         //Si no cogemos el idioma en el que la descripción no está vacío y lo traducimos
         descripcion = posiblesNombres.find(item => item?.trim() !== '');
-        console.log(this.producto?.ingredients_text)
-        if (descripcion === undefined) {//Si la descricpción ya viene traducida no traducimos nada
-          this.ingredientesTraducidos = this.producto?.ingredients_text_es!;
+
+        if (descripcion === undefined && this.producto?.ingredients_text !== undefined) {//Si no hay ni descripción ni igredientes creamos el producto con placeholders en estos campos
+
           this.crearProducto();
           return;
         }
-        
+
         forkJoin({
-          descripcion: this.traducirService.post(descripcion),
+          descripcion: this.traducirService.post(descripcion!),
           ingredientes: this.traducirService.post(this.producto?.ingredients_text!)
         }).pipe(takeUntil(this.destroy$)).subscribe({
           next: (data) => {
@@ -636,7 +664,8 @@ export class HomeComponent implements OnInit {
           },
           error: (error) => {
             console.log(error);
-            this.error = error.error.mensaje;
+            this.success = false;
+            this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
             this.modalSucces = true;
           }
         })
@@ -670,22 +699,25 @@ export class HomeComponent implements OnInit {
 
     this.materialService.post(body).subscribe({
       next: (data) => {
-        console.log(data);
+
         this.crearPuntuacion();
       },
       error: (error) => {
         console.log(error);
-        this.success=false;
-        this.error = error;
+        this.success = false;
+
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     })
   }
 
   formatPais(pais: string): string {//Pasamos el nombre del país del inglés al español
-    console.log(pais)
+
     pais = pais[0].toUpperCase() + pais.substring(1);
-    if(pais.toLowerCase()=='españa') return pais;
+
+    if (pais.toLowerCase() == 'españa') return pais;
+
     const countries = new Map([
       ["Spain", "españa"],
       ["France", "francia"],
@@ -726,7 +758,10 @@ export class HomeComponent implements OnInit {
       ["Saudi arabia", "arabia saudí"],
       ["No especificado", "No especificado"]
     ]);
-    return countries.get(pais) ?? '';
+
+
+
+    return countries.get(pais)!;
   }
 
   formatNumber(ecoScore: number): string {
@@ -820,7 +855,8 @@ export class HomeComponent implements OnInit {
 
       error: (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     });
@@ -837,14 +873,19 @@ export class HomeComponent implements OnInit {
     }
 
     this.puntuacionService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
-      next:()=>{
-        this.success=true;
+      next: () => {
+        setTimeout(() => {
+          this.loadingModal=false;
+        this.success = true;
         this.error = '';//El error los vaciamos para que asi no entre en las opciones de error en componente hijo
-        this.modalSucces = true;
+        this.modalSucces = true;  
+        }, 1000);
+        
       },
       error: (error) => {
         console.log(error);
-        this.error = error;
+        this.success = false;
+        this.error = 'No se puedo procesar el código QR o hubo un problema con el producto';
         this.modalSucces = true;
       }
     });

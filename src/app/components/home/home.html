@@ -58,7 +58,7 @@
       <app-paginacion [lista]="productos" (pagin)="paginar($event)"></app-paginacion>
     </div>
   </main>
-  
+
 </div>
 
 
@@ -67,7 +67,15 @@
 @if(modalEscanerOpen){
 <app-modal-escaner (closeModal)="closeModalEscaner()" (qrScanned)="obtenerQr($event)"></app-modal-escaner>
 }
+
+<!--Modal de exito o error-->
 @if(modalSucces){
-<app-modal-informativo [messageError]="error" [success]="success" (closeModal)="closeModalSucces()"></app-modal-informativo>
+<app-modal-informativo [messageError]="error" [success]="success"
+  (closeModal)="closeModalSucces()"></app-modal-informativo>
 }
 
+<!-- Loading Modal  -->
+@if(loadingModal){
+
+<app-loading-modal></app-loading-modal>
+}

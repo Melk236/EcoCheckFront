@@ -1,9 +1,9 @@
 <!-- Modal Overlay -->
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 dark:bg-black/70 backdrop-blur-sm" 
      [class.modal-enter-backdrop]="!closing" 
      [class.modal-exit-backdrop]="closing">
   <!-- Notification Modal -->
-  <div class="relative z-10 w-full max-w-[480px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 modal-informativo-content" 
+  <div class="relative z-10 w-full max-w-[480px] bg-white dark:bg-gray-700 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 modal-informativo-content" 
        [class.modal-content-enter]="!closing"
        [class.modal-content-exit]="closing">
     <div class="p-8 flex flex-col items-center text-center stagger-content">
