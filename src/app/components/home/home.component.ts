@@ -581,7 +581,10 @@ export class HomeComponent implements OnInit {
       id: 0,
       nombre: this.producto?.product_name,
       marcaId: idCompania,
-      categoria: 'product',
+      /*Rellenamos el campo categoría con el ultimo indic del array
+      para luego hacer la comprobación en el componenete productoDetalle
+       */
+      categoria: this.producto?.countries_tags[this.producto.countries_tags.length-1].split(':')[1] || 'product',
       paisOrigen: this.formatPais(pais ?? 'No especificado'),
       descripcion: this.descripcionTraducida || 'Producto alimenticio',
       ecoScore: this.mediaScore,

@@ -21,6 +21,7 @@ export interface Product {
     generic_name_fr: string;
     generic_name_zh: string;
     labels_tags:string[];
+    categories_tags:string[];
     
 }
 
