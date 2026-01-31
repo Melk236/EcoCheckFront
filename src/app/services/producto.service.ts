@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environment/environment';
 import { map, Observable } from 'rxjs';
 import { Producto } from '../types/producto';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { not } from 'rxjs/internal/util/not';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,15 @@ export class ProductoService {
   constructor(private http: HttpClient) { }
   get(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.url);
+  }
+  
+  /*Para traerse los productos que tengan la misma categoría y mayor nota */
+  getComparacion(categoria:string,nota:number):Observable<Producto[]>{
+    let params = new HttpParams();
+  
+    params = params.set('categoria', categoria);
+   params = params.set('nota', nota);
+    return this.http.get<Producto[]>(this.url+'/Comparativa',{params});
   }
 
   getById(id: number): Observable<Producto> {

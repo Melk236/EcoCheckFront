@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../../services/producto.service';
 import { ActivatedRoute } from '@angular/router';
 import { Producto } from '../../../types/producto';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Material } from '../../../types/material';
 import { MaterialService } from '../../../services/material.service';
@@ -30,6 +30,8 @@ export class DetalleProductoComponent implements OnInit {
     ecoScore: 0,
     fechaActualizacion: new Date()
   }
+  productos:Producto[]=[];
+  
   materiales: Material[] = [];
   materialesFormateados: string[] = [];
   puntuacion: Puntuacion = {
@@ -52,6 +54,7 @@ export class DetalleProductoComponent implements OnInit {
   modal: boolean = false;
   modalInfoAmbiental: boolean = false;
   modalInfoSocial: boolean = false;
+  mostrarAlternativas:boolean=false;
   //Creamos un Observable de tipos subject para desuscribir de los observables cuando este emita algo.
   destroy$ = new Subject<void>();
 
@@ -155,6 +158,21 @@ export class DetalleProductoComponent implements OnInit {
 
   cerrarInfoSocial() {
     this.modalInfoSocial=false;
+  }
+
+  /*Lógica para obetener los elementos de la misma categoría y y mejor puntuación */
+  obetnerMejoresProductos(){
+    this.productoService.getComparacion(this.producto.categoria,this.producto.ecoScore).
+    pipe(takeUntil(this.destroy$)).
+    subscribe({
+      next:(data)=>{
+       
+        this.mostrarAlternativas=true;
+      },
+      error:(error)=>{
+        console.log(error);
+      }
+    })
   }
 
   ngOnDestroy() {
