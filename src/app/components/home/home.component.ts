@@ -104,7 +104,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.obtenerQr('8480000603074.json');
+      this.obtenerQr('8422823140008.json');
     }, 5000);
 
     this.obtenerEmpresas();
@@ -415,12 +415,11 @@ export class HomeComponent implements OnInit {
   obtenerIdEmpresa() {
 
     //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
-    const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.producto?.brands.toLowerCase());
-
-
-
+    const empresa = this.empresas.find(item => item.nombre.toLowerCase().trim() == this.producto?.brands.toLowerCase().trim());
+    
     if (empresa !== undefined) {
-      console.log(empresa.puntuacionSocial);
+      
+      
       this.scoreSocial = empresa.puntuacionSocial;//Si a existe la empresa cogemos su score social.
       this.calcularEcoScore();//Calculamos el ecoScore.
       return;
@@ -458,7 +457,9 @@ export class HomeComponent implements OnInit {
         this.empresaInfo.nombre = entity.labels?.['es']?.value || entity.labels?.['en']?.value || '';
         this.empresaInfo.sitioWeb = claims['P856']?.[0]?.mainsnak?.datavalue?.value as string;
         this.empresaInfo.logo = claims['P154']?.[0]?.mainsnak?.datavalue?.value as string;
+
         //Si ya tenemos la empresa en la base de datos no salimos de este método para no crear la misma empresa varias veces
+        /*
         const empresa = this.empresas.find(item => item.nombre.toLowerCase() == this.empresaInfo.nombre.toLowerCase())
         if (empresa !== undefined) {
 
@@ -466,7 +467,7 @@ export class HomeComponent implements OnInit {
           this.calcularEcoScore();//Calculamos el ecoScore.
           return;
         }
-
+        */
 
         const sedeId = (claims['P17']?.[0]?.mainsnak?.datavalue?.value as { id: string })?.id;
         const matrizId = (claims['P749']?.[0]?.mainsnak?.datavalue?.value as { id: string })?.id;
@@ -568,23 +569,23 @@ export class HomeComponent implements OnInit {
 
   crearProducto() {
 
-    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim().includes(this.producto?.brands.toLowerCase().trim() || ''))?.id
+    const idCompania = this.empresas.find(item => item.nombre.toLowerCase().trim().includes(this.producto?.brands.toLowerCase().trim() || ''));
 
     if (idCompania == undefined) {//No creamos el recurso si el idCompania es undefined
       return;
     }
 
-    const pais = this.producto?.manufacturing_places;
-
+    const pais = idCompania.paisSede; 
+    
 
     const body = {
       id: 0,
       nombre: this.producto?.product_name,
-      marcaId: idCompania,
+      marcaId: idCompania.id,
       /*Rellenamos el campo categoría con el ultimo indic del array
       para luego hacer la comprobación en el componenete productoDetalle
        */
-      categoria: this.producto?.countries_tags[this.producto.countries_tags.length-1].split(':')[1] || 'product',
+      categoria: this.producto?.categories_tags[this.producto.categories_tags.length-1].split(':')[1] || 'product',
       paisOrigen: this.formatPais(pais ?? 'No especificado'),
       descripcion: this.descripcionTraducida || 'Producto alimenticio',
       ecoScore: this.mediaScore,

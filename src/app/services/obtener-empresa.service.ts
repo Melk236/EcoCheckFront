@@ -29,14 +29,14 @@ export class ObtenerEmpresaService {
           (i.description ?? "").toLowerCase().includes("empresa") ||
           (i.description ?? "").toLowerCase().includes("company") ||
           (i.description ?? "").toLowerCase().includes("chocolate") ||
-          (i.description ?? "").toLowerCase().includes("confectionery")
+          (i.description ?? "").toLowerCase().includes("confectionery") |
+          (i.description ?? "").toLowerCase().includes("retail")
         );
         console.log(empresa)
         // 2. Si no encontró, buscar por nombre exacto "Ferrero SpA"
         if (!empresa) {
           empresa = items.find((i: any) =>
-            i.label?.toLowerCase().includes(nombreEmpresa.toLowerCase()) &&
-            i.label?.toLowerCase().includes("spa")
+            i.label?.toLowerCase().includes(nombreEmpresa.toLowerCase()) 
           );
         }
 
