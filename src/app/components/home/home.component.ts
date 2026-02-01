@@ -40,7 +40,7 @@ import { Material } from '../../types/material';
 import { Puntuacion } from '../../types/puntuacion';
 
 // Constantes de materiales (mapeos, reglas, impacto de carbono)
-import { MATERIAL_MAPPING, MATERIAL_IMPACT, MATERIAL_RULES, RECYCLABLE_TAGS, NON_RECYCLABLE_TAG, PLASTIC_RECYCLABLE_TAGS, MATERIAL_TAG_PATTERNS } from '../../constants/material-constants';
+import { MATERIAL_MAPPING, MATERIAL_IMPACT, MATERIAL_RULES, RECYCLABLE_TAGS, NON_RECYCLABLE_TAG, PLASTIC_RECYCLABLE_TAGS, MATERIAL_TAG_PATTERNS, CATEGORY_TO_PACKAGING } from '../../constants/material-constants';
 // Constantes de países (puntuaciones, traducciones)
 import { COUNTRY_SCORES, NEIGHBORING_COUNTRIES, EUROPEAN_COUNTRIES, AFRICAN_COUNTRIES, COUNTRY_TRANSLATION } from '../../constants/country-constants';
 // Constantes de certificaciones (puntuaciones, mapeos)
@@ -219,7 +219,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     if (nombreEncontrado !== undefined) {
       setTimeout(() => {
-        this.route.navigate(['home/detalle-producto', nombreEncontrado.id]);
+        this.abrirDetalle(nombreEncontrado.id);
       }, 1000);
       return true;
     }
@@ -256,9 +256,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   calcularEcoScore() {
     // Reinicia el array de materiales
     this.materiales = [];
+
+    let packagingMaterials = this.producto?.packaging_materials_tags || [];
+    let inferredRecyclable = true;
+
+    // Si packaging_materials_tags está vacío o es un array vacío, inferir materiales de la categoría
+    if (!packagingMaterials || packagingMaterials.length === 0) {
+      const inference = this.inferPackagingFromCategories();
+      packagingMaterials = inference.materials;
+      inferredRecyclable = inference.reciclable;
+    }
+
     // Procesa cada material del packaging
-    this.producto?.packaging_materials_tags.forEach((material) => {
-      this.cleanMaterial(material);
+    packagingMaterials.forEach((material) => {
+      this.cleanMaterial(material, inferredRecyclable);
     });
 
     let sumaMaterial: number = 0;
@@ -270,7 +281,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       sumaCarbono += this.calcularValorCarbono(valor);
     });
 
-    const materialCount = this.producto?.packaging_materials_tags.length || 0;
+    const materialCount = packagingMaterials.length;
 
     // Calcula medias
     const ImpactoCarbono = materialCount === 0 ? 4 : sumaCarbono / materialCount;
@@ -290,11 +301,34 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Infiere los materiales de packaging basándose en las categorías del producto
+   * @returns Objeto con materiales inferidos y si son reciclables
+   */
+  private inferPackagingFromCategories(): { materials: string[]; reciclable: boolean } {
+    const categories = this.producto?.categories_tags || [];
+    const materialsInferred: string[] = [];
+    let reciclableDefault = true;
+
+    // Buscar primera categoría que coincida con el mapeo
+    for (const category of categories) {
+      const categoryMapping = CATEGORY_TO_PACKAGING[category];
+      if (categoryMapping) {
+        materialsInferred.push(...categoryMapping.packaging);
+        reciclableDefault = categoryMapping.reciclable;
+        break;
+      }
+    }
+
+    return { materials: materialsInferred, reciclable: reciclableDefault };
+  }
+
+  /**
    * Procesa un material individual y determina si es reciclable
    * @param tag - Tag del material desde la API de OpenFood
+   * @param useInferredRecyclable - Si es true, usa el valor de reciclable inferido de la categoría
    */
-  private cleanMaterial(tag: string) {
-    const reciclable = this.isMaterialRecyclable(tag);
+  private cleanMaterial(tag: string, useInferredRecyclable: boolean = false) {
+    const reciclable = useInferredRecyclable ? useInferredRecyclable : this.isMaterialRecyclable(tag);
     const materialName = MATERIAL_MAPPING[tag] || 'other';
 
     this.materiales.push({

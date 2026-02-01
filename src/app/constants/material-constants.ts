@@ -64,3 +64,32 @@ export const MATERIAL_TAG_PATTERNS: Record<string, string[]> = {
   glassRecyclable: ['glass'],
   paperRecyclable: ['paper', 'papel']
 };
+
+export const CATEGORY_TO_PACKAGING: Record<string, { packaging: string[]; reciclable: boolean; nota?: string }> = {
+  'en:beverages': { packaging: ['en:pet-1-polyethylene-terephthalate', 'en:glass', 'en:aluminum'], reciclable: true },
+  'en:alcoholic-beverages': { packaging: ['en:glass', 'en:aluminum', 'en:cardboard'], reciclable: true },
+  'en:beers': { packaging: ['en:brown-glass', 'en:aluminum', 'en:steel'], reciclable: true },
+  'en:wines': { packaging: ['en:glass', 'en:tetrapak', 'en:cardboard'], reciclable: true },
+  'en:non-alcoholic-beverages': { packaging: ['en:pet-1-polyethylene-terephthalate', 'en:aluminum'], reciclable: true },
+  'en:sodas': { packaging: ['en:pet-1-polyethylene-terephthalate', 'en:aluminum', 'en:glass'], reciclable: true },
+  'en:waters': { packaging: ['en:pet-1-polyethylene-terephthalate', 'en:glass'], reciclable: true },
+  'en:juices-and-nectars': { packaging: ['en:tetrapak', 'en:pet-1-polyethylene-terephthalate', 'en:glass'], reciclable: true },
+  'en:dairies': { packaging: ['en:tetrapak', 'en:hdpe-2-high-density-polyethylene', 'en:pp-5-polypropylene'], reciclable: true },
+  'en:milks': { packaging: ['en:tetrapak', 'en:hdpe-2-high-density-polyethylene', 'en:glass'], reciclable: true },
+  'en:yogurts': { packaging: ['en:pp-5-polypropylene', 'en:aluminum', 'en:plastic'], reciclable: true },
+  'en:cheeses': { packaging: ['en:plastic', 'en:ldpe-4-low-density-polyethylene', 'en:paper'], reciclable: true },
+  'en:snacks': { packaging: ['en:plastic', 'en:ldpe-4-low-density-polyethylene', 'en:aluminum'], reciclable: false, nota: 'Bolsas flexibles multicapa suelen no reciclarse efectivamente' },
+  'en:salty-snacks': { packaging: ['en:plastic', 'en:ldpe-4-low-density-polyethylene', 'en:cardboard'], reciclable: false, nota: 'Multicapa común' },
+  'en:chips-and-fries': { packaging: ['en:plastic', 'en:ldpe-4-low-density-polyethylene', 'en:other-plastics'], reciclable: false, nota: 'Bolsas típicas multicapa difíciles de reciclar' },
+  'en:sweet-snacks': { packaging: ['en:plastic', 'en:aluminum', 'en:cardboard'], reciclable: true },
+  'en:chocolates': { packaging: ['en:aluminum', 'en:paper', 'en:cardboard'], reciclable: true },
+  'en:biscuits-and-cakes': { packaging: ['en:cardboard', 'en:plastic', 'en:non-corrugated-cardboard'], reciclable: true },
+  'en:biscuits': { packaging: ['en:cardboard', 'en:plastic', 'en:paper'], reciclable: true },
+  'en:cereals-and-their-products': { packaging: ['en:cardboard', 'en:non-corrugated-cardboard', 'en:plastic'], reciclable: true },
+  'en:breakfast-cereals': { packaging: ['en:cardboard', 'en:ldpe-4-low-density-polyethylene', 'en:corrugated-cardboard'], reciclable: true },
+  'en:coffees': { packaging: ['en:aluminum', 'en:plastic', 'en:steel'], reciclable: true },
+  'en:teas': { packaging: ['en:cardboard', 'en:paper', 'en:plastic'], reciclable: true },
+  'en:frozen-foods': { packaging: ['en:cardboard', 'en:plastic', 'en:corrugated-cardboard'], reciclable: true },
+  'en:meals': { packaging: ['en:plastic', 'en:cardboard', 'en:aluminum'], reciclable: true },
+  'en:cocoa-and-hazelnuts-spreads': {packaging: ['en:clear-glass','en:aluminum','en:paper'],reciclable: true,},
+};
