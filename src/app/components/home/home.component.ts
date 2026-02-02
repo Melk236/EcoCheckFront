@@ -11,7 +11,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { Subject, takeUntil, forkJoin, catchError } from 'rxjs';
 
 // Componentes hijos del módulo
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Inicia escaneo automático después de 5 segundos con código de prueba
     setTimeout(() => {
-      this.obtenerQr('20016388.json');
+      this.obtenerQr('8480000103802.json');
     }, 5000);
 
     // Carga datos iniciales en paralelo
@@ -590,7 +590,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       id: 0,
       nombre: this.producto?.product_name,
       marcaId: idCompania.id,
-      categoria: this.producto?.categories_tags[this.producto.categories_tags.length - 1]?.split(':')[1] || 'product',
+      categoria: this.formatCategorias(this.producto?.categories_tags ?? []),
       paisOrigen: this.formatPais(pais ?? 'No especificado'),
       descripcion: this.descripcionTraducida || 'Producto alimenticio',
       ecoScore: this.mediaScore,
@@ -816,6 +816,15 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.showError('No se puedo procesar el código QR o hubo un problema con el producto');
       }
     });
+  }
+  /*Devolvemos las categorias bein formateadas */
+  formatCategorias(categorias:string[]):string{
+
+    if(categorias.length==0) return '';//Si esta el array vacio devolvemos una cadena vacia
+
+    categorias = categorias.map(categoria => categoria.split(':')[1]);
+    console.log(categorias);
+    return categorias.join(',');
   }
 
   // ==================== NAVEGACIÓN ====================

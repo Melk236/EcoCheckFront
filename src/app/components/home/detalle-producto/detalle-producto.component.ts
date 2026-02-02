@@ -162,11 +162,12 @@ export class DetalleProductoComponent implements OnInit {
 
   /*Lógica para obetener los elementos de la misma categoría y y mejor puntuación */
   obetnerMejoresProductos(){
-    this.productoService.getComparacion(this.producto.categoria,this.producto.ecoScore).
+    const categorias=this.producto.categoria.split(',');
+    this.productoService.getComparacion(categorias,this.producto.ecoScore).
     pipe(takeUntil(this.destroy$)).
     subscribe({
       next:(data)=>{
-       
+       this.productos=data;
         this.mostrarAlternativas=true;
       },
       error:(error)=>{

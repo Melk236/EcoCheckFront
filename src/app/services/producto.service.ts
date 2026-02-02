@@ -15,14 +15,16 @@ export class ProductoService {
   get(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.url);
   }
-  
+
   /*Para traerse los productos que tengan la misma categoría y mayor nota */
-  getComparacion(categoria:string,nota:number):Observable<Producto[]>{
+  getComparacion(categorias: string[], nota: number): Observable<Producto[]> {
     let params = new HttpParams();
-  
-    params = params.set('categoria', categoria);
-   params = params.set('nota', nota);
-    return this.http.get<Producto[]>(this.url+'/Comparativa',{params});
+
+   categorias.forEach((categoria)=>{
+    params=params.append('categoria',categoria);
+   })
+    params = params.set('nota', nota);
+    return this.http.get<Producto[]>(this.url + '/Comparativa', { params });
   }
 
   getById(id: number): Observable<Producto> {
@@ -36,7 +38,7 @@ export class ProductoService {
       categoria: producto.categoria,
       paisOrigen: producto.paisOrigen,
       descripcion: producto.descripcion,
-      ingredientes:producto.ingredientes,
+      ingredientes: producto.ingredientes,
       ecoScore: producto.ecoScore,
       imagenUrl: producto.imagenUrl
     }
@@ -51,7 +53,7 @@ export class ProductoService {
       categoria: producto.categoria,
       paisOrigen: producto.paisOrigen,
       descripcion: producto.descripcion,
-      ingredientes:producto.ingredientes,
+      ingredientes: producto.ingredientes,
       ecoScore: producto.ecoScore,
       imagenUrl: producto.imagenUrl
     }
@@ -63,6 +65,6 @@ export class ProductoService {
     this.http.delete(this.url + '/' + id);
   }
 
- 
+
 
 }
