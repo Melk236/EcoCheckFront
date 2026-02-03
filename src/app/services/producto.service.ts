@@ -17,12 +17,10 @@ export class ProductoService {
   }
 
   /*Para traerse los productos que tengan la misma categoría y mayor nota */
-  getComparacion(categorias: string[], nota: number): Observable<Producto[]> {
+  getComparacion(categoria: string, nota: number): Observable<Producto[]> {
     let params = new HttpParams();
 
-   categorias.forEach((categoria)=>{
-    params=params.append('categoria',categoria);
-   })
+    params = params.set('categoria', categoria);
     params = params.set('nota', nota);
     return this.http.get<Producto[]>(this.url + '/Comparativa', { params });
   }
