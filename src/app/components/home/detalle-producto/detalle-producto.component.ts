@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../../services/producto.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../../../types/producto';
 import { Subject, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,6 @@ import { NombreMaterialPipe } from '../../../shared/nombre-material-pipe';
 })
 export class DetalleProductoComponent implements OnInit {
 
-  //Variables
   producto: Producto = {
     id: 0,
     marcaId: 0,
@@ -30,8 +29,8 @@ export class DetalleProductoComponent implements OnInit {
     ecoScore: 0,
     fechaActualizacion: new Date()
   }
-  productos:Producto[]=[];
-  
+  productos: Producto[] = [];
+  cargaAlternativas: boolean = false;
   materiales: Material[] = [];
   materialesFormateados: string[] = [];
   puntuacion: Puntuacion = {
@@ -50,22 +49,27 @@ export class DetalleProductoComponent implements OnInit {
     controversias: ''
   }
 
-  //Manejo modales
   modal: boolean = false;
   modalInfoAmbiental: boolean = false;
   modalInfoSocial: boolean = false;
-  mostrarAlternativas:boolean=false;
-  //Creamos un Observable de tipos subject para desuscribir de los observables cuando este emita algo.
+  mostrarAlternativas: boolean = false;
   destroy$ = new Subject<void>();
 
-  constructor(private productoService: ProductoService, private materialService: MaterialService, private marcaService: EmpresaService, private puntuacionService: PuntuacionService, private route: ActivatedRoute) { }
+  constructor(private productoService: ProductoService, private materialService: MaterialService, private marcaService: EmpresaService, private puntuacionService: PuntuacionService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));//Obetenemos el id del producto de la url.
 
-    this.obtenerProducto(id);//Lamamos al servicio para traerse el producto seleccionado
-    this.obtenerMateriales(id);
-    this.obtenerPuntuaciones(id);
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe({
+      next: () => {
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.obtenerProducto(id);
+        this.obtenerMateriales(id);
+        this.obtenerPuntuaciones(id);
+        this.productos=[];
+        this.mostrarAlternativas=false;
+      }
+    });
+
   }
 
   obtenerProducto(id: number) {
@@ -91,7 +95,6 @@ export class DetalleProductoComponent implements OnInit {
     });
   }
 
-
   obtenerMarca() {
     this.marcaService.getById(this.producto.marcaId).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
@@ -107,7 +110,6 @@ export class DetalleProductoComponent implements OnInit {
     this.puntuacionService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         const puntuacion = data.find(item => item.productoId == id);
-
         if (puntuacion !== undefined) {
           this.puntuacion = puntuacion;
         }
@@ -119,21 +121,47 @@ export class DetalleProductoComponent implements OnInit {
   }
 
   formatNumber(ecoScore: number): string {
-
+    console.log(ecoScore)
     return ecoScore.toFixed(0);
-
   }
 
   calcularOffset(ecoScore: number) {
     const totalLength: number = 100.53;
-
     return totalLength - (totalLength * ecoScore / 100);
-
   }
 
-  /*
-  Manejo del modal de los detalles del producto(abrir,cerrar)
-  */
+  getPorcentajeAumento(ecoScoreAlternativa: number): string {
+    const diferencia = ecoScoreAlternativa - this.producto.ecoScore;
+    const porcentaje = (diferencia / this.producto.ecoScore) * 100;
+    return '+' + porcentaje.toFixed(0) + '%';
+  }
+
+  getColorClase(ecoScore: number): string {
+    if (ecoScore <= 40) {
+      return 'text-red-500 dark:text-red-400';
+    } else if (ecoScore < 80) {
+      return 'text-yellow-500 dark:text-yellow-400';
+    } else {
+      return 'text-green-500 dark:text-green-400';
+    }
+  }
+
+  getBgColorClase(ecoScore: number): string {
+    if (ecoScore <= 40) {
+      return 'bg-red-500';
+    } else if (ecoScore < 80) {
+      return 'bg-yellow-500';
+    } else {
+      return 'bg-green-500';
+    }
+  }
+
+  scroll(id: string) {
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+
   abrirModal() {
     this.modal = true;
   }
@@ -142,43 +170,54 @@ export class DetalleProductoComponent implements OnInit {
     this.modal = false;
   }
 
-  /*Lógica para manejo del mouseover y mouseout para la info de los ecoscores*/
   mostrarInfoAmbiental() {
     this.modalInfoAmbiental = true;
   }
 
   cerrarInfoAmbiental() {
     this.modalInfoAmbiental = false;
-
   }
-  
+
   mostrarInfoSocial() {
-    this.modalInfoSocial=true;
+    this.modalInfoSocial = true;
   }
 
   cerrarInfoSocial() {
-    this.modalInfoSocial=false;
+    this.modalInfoSocial = false;
   }
 
-  /*Lógica para obetener los elementos de la misma categoría y y mejor puntuación */
-  obetnerMejoresProductos(){
-    const categorias=this.producto.categoria.split(',');
-    this.productoService.getComparacion(categorias,this.producto.ecoScore).
-    pipe(takeUntil(this.destroy$)).
-    subscribe({
-      next:(data)=>{
-       this.productos=data;
-        this.mostrarAlternativas=true;
-      },
-      error:(error)=>{
-        console.log(error);
-      }
-    })
+  obetnerMejoresProductos() {
+    if (this.cargaAlternativas) {
+      this.mostrarAlternativas = !this.mostrarAlternativas;
+      if (this.mostrarAlternativas) this.scroll('alternativas')
+      return;
+    }
+
+    const categorias = this.producto.categoria.split(',');
+    this.productoService.getComparacion(categorias, this.producto.ecoScore).
+      pipe(takeUntil(this.destroy$)).
+      subscribe({
+        next: (data) => {
+          this.productos = data;
+          this.mostrarAlternativas = true;
+          this.cargaAlternativas = true;
+          this.scroll('alternativas');
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+  }
+
+  abrirDetalle(id: number) {
+
+    this.router.navigate(['home/detalle-producto', id]);
+
   }
 
   ngOnDestroy() {
-    this.destroy$.next();//Nos desuscribimos de los observables del componente
-    this.destroy$.complete();//Completamos este para que tambien ya no exista
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

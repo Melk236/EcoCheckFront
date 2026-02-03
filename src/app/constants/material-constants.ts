@@ -92,4 +92,5 @@ export const CATEGORY_TO_PACKAGING: Record<string, { packaging: string[]; recicl
   'en:frozen-foods': { packaging: ['en:cardboard', 'en:plastic', 'en:corrugated-cardboard'], reciclable: true },
   'en:meals': { packaging: ['en:plastic', 'en:cardboard', 'en:aluminum'], reciclable: true },
   'en:cocoa-and-hazelnuts-spreads': {packaging: ['en:clear-glass','en:aluminum','en:paper'],reciclable: true,},
+  'en:margarines': { packaging: ['en:pp-5-polypropylene', 'en:aluminum', 'en:plastic'], reciclable: true },
 };
