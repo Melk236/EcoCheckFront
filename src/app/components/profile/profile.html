@@ -1,0 +1,58 @@
+<main class="flex-1 w-full sm:px-6 md:px-8 py-6 md:py-8 bg-[#f6f8f7] dark:bg-gray-800 h-screen md:h-auto overflow-y-auto">
+  <div class="w-full max-w-[1200px] mx-auto pt-15">
+    <div class="mb-6">
+      <p class="text-gray-800 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Mi Cuenta</p>
+      <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal mt-1">Gestiona tu información personal</p>
+    </div>
+
+    <div class="flex flex-col gap-8">
+      <!-- Perfil -->
+      <section>
+        <h2 class="text-green-600 dark:text-green-500 text-lg font-bold leading-tight px-1 pb-3">Información Personal</h2>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 flex flex-col gap-5">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+            <div class="flex items-center gap-4">
+              <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 shrink-0" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHLdsiS9dq6Rw-7AGCek6S_kGx5ORZjUUl6gYWpmcoQgQgJxf85gOXxdYeCuslnDUgMP0s4H9PzyX3JxwRctFgWEcqDbHZtG1VHsWvGK7PCZZI2l-Jcacl3vW03P45-mnhV7bTnXy_Y6X3ofgZtIf2QAHgmFTX3hVPrwWyV5IQhTsavrryAYPGkZgPy5etb2whyYj_d5jNEGm36qLqwG84mEjxTWFUFb4Y3HfQbflhBN_hguNpntKjmHZwTwnR-uNomyeASTx3VOmX");'></div>
+              <div>
+                <p class="text-gray-800 dark:text-white text-base font-medium">Ana Gomez</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">ana.gomez&#64;example.com</p>
+              </div>
+            </div>
+            <button class="rounded-lg h-9 px-5 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors">Editar foto</button>
+          </div>
+          
+          <hr class="border-gray-200 dark:border-gray-700"/>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label class="flex flex-col gap-1.5">
+              <span class="text-gray-800 dark:text-white text-sm font-medium">Nombre</span>
+              <input class="w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-2 focus:ring-green-500/50 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 h-10 px-3 text-sm" value="Ana"/>
+            </label>
+            <label class="flex flex-col gap-1.5">
+              <span class="text-gray-800 dark:text-white text-sm font-medium">Apellido</span>
+              <input class="w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-2 focus:ring-green-500/50 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 h-10 px-3 text-sm" value="Gomez"/>
+            </label>
+          </div>
+          
+          <label class="flex flex-col gap-1.5">
+            <span class="text-gray-800 dark:text-white text-sm font-medium">Email</span>
+            <input class="w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-2 focus:ring-green-500/50 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 h-10 px-3 text-sm" type="email" value="ana.gomez&#64;example.com"/>
+          </label>
+
+          <button class="rounded-lg h-10 px-6 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors self-start">Guardar cambios</button>
+        </div>
+      </section>
+
+      <!-- Seguridad -->
+      <section>
+        <h2 class="text-green-600 dark:text-green-500 text-lg font-bold leading-tight px-1 pb-3">Seguridad</h2>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cambiar contraseña</button>
+            <button class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-red-500 dark:text-red-400 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Eliminar cuenta</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
