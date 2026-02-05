@@ -2,6 +2,6 @@ export interface User {
     id:number;
     userName:string;
     nombre?:string;
-    apellidos?:string;
+    apellido?:string;
     email?:string;
 }

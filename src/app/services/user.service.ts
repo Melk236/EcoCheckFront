@@ -25,7 +25,7 @@ export class UserService {
     const body={
       userName:user.userName,
       nombre:user.nombre,
-      apellido:user.apellidos,
+      apellido:user.apellido,
       email:user.email
     };
     return this.http.put<User>(`${this.url}/${id}`, body);

@@ -2,6 +2,8 @@
   class="flex-1 w-full sm:px-6 md:px-8 py-6 md:py-8 bg-[#f6f8f7] dark:bg-gray-800  md:h-auto overflow-y-auto min-h-screen">
   <div class="w-full max-w-[1200px] mx-auto pt-15 ">
 
+    
+    <app-alerta [mensajeError]="mensajeError" [esExito]="esExito" [posicion]="'top-18'" (closeModal)="cerrarAlerta()"></app-alerta>
 
     <div class="flex flex-col gap-8">
       <!-- Perfil -->
@@ -11,14 +13,14 @@
         <form [formGroup]="formulario"
           class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 flex flex-col gap-5">
           <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
-            <div class="flex items-center gap-4">
-              <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 shrink-0"
-                [style]="'background-image: url(' + this.imagePreview + ')'"></div>
-              <div>
-                <p class="text-gray-800 dark:text-white text-base font-medium">Ana Gomez</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">ana.gomez&#64;example.com</p>
+              <div class="flex items-center gap-4 cursor-pointer group" (click)="abrirModalFoto()">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 shrink-0 profile-image-hover"
+                  [style]="'background-image: url(' + this.imagePreview + ')'"></div>
+                <div>
+                  <p class="text-gray-800 dark:text-white text-base font-medium">{{usuario.nombre ?? usuario.userName}}</p>
+                  <p class="text-gray-500 dark:text-gray-400 text-sm">{{usuario.email || ''}}</p>
+                </div>
               </div>
-            </div>
             <button
               class="rounded-lg h-9 px-5 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
               (click)="abrirArchivos()">
@@ -45,15 +47,15 @@
             </label>
             <label class="flex flex-col gap-1.5">
               <span class="text-gray-800 dark:text-white text-sm font-medium">Apellido</span>
-              <input formControlName="apellidos"
+              <input formControlName="apellido"
                 class="w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-2 focus:ring-green-500/50 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 h-10 px-3 text-sm"
-                [class.border-red-500]="formulario.get('apellidos')?.invalid && formulario.get('apellidos')?.touched" />
-              @if(formulario.get('apellidos')?.invalid && formulario.get('apellidos')?.touched){
+                [class.border-red-500]="formulario.get('apellido')?.invalid && formulario.get('apellido')?.touched" />
+              @if(formulario.get('apellido')?.invalid && formulario.get('apellido')?.touched){
                 <span class="text-red-500 text-xs">
-                  @if(formulario.get('apellidos')?.hasError('required')){El apellido es obligatorio}
-                  @if(formulario.get('apellidos')?.hasError('minlength')){Mínimo 6 caracteres}
-                  @if(formulario.get('apellidos')?.hasError('maxlength')){Máximo 20 caracteres}
-                  @if(formulario.get('apellidos')?.hasError('pattern')){Solo letras}
+                  @if(formulario.get('apellido')?.hasError('required')){El apellido es obligatorio}
+                  @if(formulario.get('apellido')?.hasError('minlength')){Mínimo 6 caracteres}
+                  @if(formulario.get('apellido')?.hasError('maxlength')){Máximo 20 caracteres}
+                  @if(formulario.get('apellido')?.hasError('pattern')){Solo letras}
                 </span>
               }
             </label>
@@ -92,4 +94,10 @@
       </section>
     </div>
   </div>
+
+  @if(modalFotoAbierta){
+    <div class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" (click)="cerrarModalFoto()">
+      <img [src]="imagePreview" class="max-w-full max-h-full rounded-lg cursor-zoom-out" alt="Foto de perfil" />
+    </div>
+  }
 </main>

@@ -5,12 +5,13 @@ import { Subject, takeUntil } from 'rxjs';
 import { User } from '../../types/user';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { AlertaComponent } from '../modales/alerta/alerta.component';
 
 
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, AlertaComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -23,22 +24,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     id: 0,
     userName: ''
   }
+  modalFotoAbierta: boolean = false;
+  mensajeError: string = '';
+  esExito: boolean = false;
 
   destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService,private UserService:UserService) {
+  constructor(private fb: FormBuilder, private profileService: ProfileService, private UserService: UserService) {
     this.formulario = this.fb.group({
-      nombre: [this.usuario.userName, [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
-      apellidos: [this.usuario.apellidos, [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
-      email: [this.usuario.email, [Validators.email]]
+      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
+      apellido: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
+      email: ['', [Validators.email]]
     });
 
   }
 
   ngOnInit(): void {
-
     this.cargarPerfil();
-
   }
 
 
@@ -74,24 +76,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   //Envíos datos formualario del usuario
   actualizarDatosUser() {
-    const body:User = {
+    const body: User = {
       id: 0,
-      userName: '',
+      userName: this.usuario.userName,
       nombre: this.formulario.get('nombre')?.value,
-      apellidos: this.formulario.get('apellidos')?.value.trim(),
-      email: this.formulario.get('email')?.value
+      apellido: this.formulario.get('apellido')?.value.trim(),
+      email: this.formulario.get('email')?.value ?? this.usuario.email
     }
 
-    this.UserService.update(this.usuario.id,body).pipe(takeUntil(this.destroy$)).
-    subscribe({
-      next:(data)=>{
-        this.usuario=data;
-      },
-      error:(error)=>{
-        console.log(error);
-      }
-      
-    })
+    this.UserService.update(this.usuario.id, body).pipe(takeUntil(this.destroy$)).
+      subscribe({
+        next: (data) => {
+          this.usuario = data;
+          this.mensajeError = 'Perfil actualizado correctamente';
+          this.esExito = true;
+        },
+        error: (error) => {
+          console.log(error);
+          this.mensajeError = 'Error al actualizar el perfil';
+          this.esExito = false;
+        }
+      });
   }
 
   /*Nos treamos el perfil del usuario*/
@@ -101,11 +106,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
       subscribe({
         next: (data) => {
           this.usuario = data;
+          this.formulario.patchValue({
+            nombre: data.nombre || data.userName,
+            apellido: data.apellido,
+            email: data.email
+          });
         },
         error: (error) => {
           console.log('Error al obtener al usuario ' + error);
         }
       });
+  }
+
+  abrirModalFoto() {
+    this.modalFotoAbierta = true;
+  }
+
+  cerrarModalFoto() {
+    this.modalFotoAbierta = false;
+  }
+
+  cerrarAlerta() {
+    setTimeout(() => {
+      this.mensajeError = '';
+    }, 3000);
   }
 
   /*Al destruirse el componente nos desuscribimos de los observables para que 
@@ -114,4 +138,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+
 }

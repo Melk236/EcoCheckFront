@@ -1,10 +1,8 @@
-
-@if (mensajeError!=='') {
-  <div class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 alert-content" 
+@if (mensajeError !== '') {
+  <div [class]="'fixed ' + posicion + ' right-4 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 z-50 ' + (!esExito ? 'bg-red-500' : 'bg-green-500') + ' text-white'"
        [class.alert-enter]="!closing"
        [class.alert-exit]="closing">
-    <span class="material-symbols-outlined">error</span>
-    <span>{{mensajeError || 'Error interno del servidor'}}</span>
-    
+    <span class="material-symbols-outlined">{{esExito ? 'check_circle' : 'error'}}</span>
+    <span>{{mensajeError}}</span>
   </div>
 }

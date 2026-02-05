@@ -1,3 +1,12 @@
 .bg-primary {
   background-color: #39E079;
 }
+
+.profile-image-hover {
+  transition: transform 0.3s ease;
+}
+
+.profile-image-hover:hover {
+  transform: scale(1.05);
+}
+
