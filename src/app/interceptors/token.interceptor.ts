@@ -17,8 +17,8 @@ export class TokenInterceptor implements HttpInterceptor {
         ];
         // Obtiene el token del sessionStorage
         const token = sessionStorage.getItem('jwt');
-
-        if (token && urlExcludes.includes(req.url)) {
+       
+        if (token && !urlExcludes.includes(req.url)) {
             // Clona la petición añadiendo el encabezado Authorization
             const cloned = req.clone({
                 setHeaders: { Authorization: `Bearer ${token}` },

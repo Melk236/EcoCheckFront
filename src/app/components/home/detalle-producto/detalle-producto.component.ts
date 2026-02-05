@@ -193,7 +193,7 @@ export class DetalleProductoComponent implements OnInit {
       return;
     }
 
-    const categoria = this.obtenerUltimaCategoria();
+    const categoria = this.producto.categoria.split(',');
     
     this.productoService.getComparacion(categoria, this.producto.ecoScore).
       pipe(takeUntil(this.destroy$)).
@@ -215,12 +215,8 @@ export class DetalleProductoComponent implements OnInit {
     this.router.navigate(['home/detalle-producto', id]);
 
   }
-  obtenerUltimaCategoria():string{
-    const inicio=this.producto.categoria.lastIndexOf(',')+1;
+ 
     
-    return this.producto.categoria.substring(inicio);
-  }
-
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
