@@ -21,17 +21,13 @@ export class UserService {
     return this.http.get<User>(`${this.url}/${id}`);
   }
 
-  update(id: number, user: User): Observable<User> {
-    const body={
-      userName:user.userName,
-      nombre:user.nombre,
-      apellido:user.apellido,
-      email:user.email
-    };
-    return this.http.put<User>(`${this.url}/${id}`, body);
+  update(id: number, user: FormData): Observable<User> {
+    
+    return this.http.put<User>(`${this.url}/${id}`, user);
   }
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
+  
 }

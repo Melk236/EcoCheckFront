@@ -76,15 +76,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   //Envíos datos formualario del usuario
   actualizarDatosUser() {
-    const body: User = {
-      id: 0,
-      userName: this.usuario.userName,
-      nombre: this.formulario.get('nombre')?.value,
-      apellido: this.formulario.get('apellido')?.value.trim(),
-      email: this.formulario.get('email')?.value ?? this.usuario.email
-    }
+    //FormData para actualizar los datos del usuario con la imagen
+    const form=new FormData();
+    form.append('userName',this.usuario.userName);
+    form.append('nombre',this.formulario.get('nombre')?.value);
+    form.append('apellido',this.formulario.get('apellido')?.value.trim());
+    form.append('email',this.formulario.get('email')?.value.trim());
+    form.append('imagen',this.imagen!);
 
-    this.UserService.update(this.usuario.id, body).pipe(takeUntil(this.destroy$)).
+
+    this.UserService.update(this.usuario.id, form).pipe(takeUntil(this.destroy$)).
       subscribe({
         next: (data) => {
           this.usuario = data;
@@ -106,8 +107,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       subscribe({
         next: (data) => {
           this.usuario = data;
+          console.log(this.usuario);
           this.formulario.patchValue({
-            nombre: data.nombre || data.userName,
+            nombre: data.nombre,
             apellido: data.apellido,
             email: data.email
           });
