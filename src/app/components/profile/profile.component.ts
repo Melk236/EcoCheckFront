@@ -6,17 +6,20 @@ import { User } from '../../types/user';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { AlertaComponent } from '../modales/alerta/alerta.component';
+import { environment } from '../../environment/environment';
+import { ModalConfirmarComponent } from '../modales/modal-confirmar/modal-confirmar.component';
 
 
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, CommonModule, AlertaComponent],
+  imports: [ReactiveFormsModule, CommonModule, AlertaComponent, ModalConfirmarComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-
+  //Url Imagen del servidor
+  private urlImagen = environment.imagenUrl;
   imagen: File | null = null;
   imagePreview: string = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHLdsiS9dq6Rw-7AGCek6S_kGx5ORZjUUl6gYWpmcoQgQgJxf85gOXxdYeCuslnDUgMP0s4H9PzyX3JxwRctFgWEcqDbHZtG1VHsWvGK7PCZZI2l-Jcacl3vW03P45-mnhV7bTnXy_Y6X3ofgZtIf2QAHgmFTX3hVPrwWyV5IQhTsavrryAYPGkZgPy5etb2whyYj_d5jNEGm36qLqwG84mEjxTWFUFb4Y3HfQbflhBN_hguNpntKjmHZwTwnR-uNomyeASTx3VOmX';
   formulario: FormGroup;
@@ -25,8 +28,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     userName: ''
   }
   modalFotoAbierta: boolean = false;
+  modalConfirmacion: boolean = false;
+  opcion: number = 0;
   mensajeError: string = '';
+  mensajeModal: string = '';
   esExito: boolean = false;
+  tipo: string = '';
 
   destroy$ = new Subject<void>();
 
@@ -67,6 +74,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     if (!archivosPermitidos.includes(archivo.item(0)!.type)) return false;
 
+
+
+
     this.imagen = archivo.item(0);
     this.imagePreview = URL.createObjectURL(this.imagen!);
 
@@ -77,20 +87,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
   //Envíos datos formualario del usuario
   actualizarDatosUser() {
     //FormData para actualizar los datos del usuario con la imagen
-    const form=new FormData();
-    form.append('userName',this.usuario.userName);
-    form.append('nombre',this.formulario.get('nombre')?.value);
-    form.append('apellido',this.formulario.get('apellido')?.value.trim());
-    form.append('email',this.formulario.get('email')?.value.trim());
-    form.append('imagen',this.imagen!);
+    const form = new FormData();
+    form.append('userName', this.usuario.userName);
+    form.append('nombre', this.formulario.get('nombre')?.value);
+    form.append('apellido', this.formulario.get('apellido')?.value.trim());
+    form.append('email', this.formulario.get('email')?.value.trim());
+    form.append('imagen', this.imagen!);
 
 
     this.UserService.update(this.usuario.id, form).pipe(takeUntil(this.destroy$)).
       subscribe({
         next: (data) => {
           this.usuario = data;
+          
           this.mensajeError = 'Perfil actualizado correctamente';
           this.esExito = true;
+
         },
         error: (error) => {
           console.log(error);
@@ -107,12 +119,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
       subscribe({
         next: (data) => {
           this.usuario = data;
-          console.log(this.usuario);
+
           this.formulario.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
             email: data.email
           });
+
+          this.imagePreview = this.urlImagen + data.imagen
+
         },
         error: (error) => {
           console.log('Error al obtener al usuario ' + error);
@@ -129,11 +144,49 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   cerrarAlerta() {
-    setTimeout(() => {
-      this.mensajeError = '';
-    }, 3000);
+    this.mensajeError = '';
   }
 
+  /*Abrir modal de confirmación para operaciones */
+  mostrarModalConfirmacion(opcion: number) {
+    this.opcion = opcion;
+
+    switch (opcion) {
+      case 1:
+        this.tipo = 'actualizar';
+        this.mensajeModal = '¿Está seguro de actualizar su perfil?';
+        break;
+      case 2:
+        this.tipo = 'actualizar';
+        this.mensajeModal = '¿Está seguro de cambiar su contraseña?';
+        break;
+      case 3:
+        this.tipo = 'borrar'
+        this.mensajeModal = '¿Está seguro de eliminar su cuenta de forma permanente?';
+    }
+
+    this.modalConfirmacion = true;
+
+  }
+  /*Confirmación del modal hijo por lo se procede a realizar la opración segun la opcion */
+  confirmar() {
+    switch (this.opcion) {
+      case 1:
+        this.actualizarDatosUser();
+        this.cancelar()//Cerramos el modal hijo
+        break;
+      case 2:
+
+        break;
+      case 3:
+
+    }
+  }
+
+  /*Cerramos el modal hijo */
+  cancelar(){
+    this.modalConfirmacion=false;
+  }
   /*Al destruirse el componente nos desuscribimos de los observables para que 
   no haya una fugas de memoria */
   ngOnDestroy(): void {

@@ -5,10 +5,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthUser } from '../../types/auth-user';
 import { Router } from '@angular/router';
+import { AlertaComponent } from "../modales/alerta/alerta.component";
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule,CommonModule, AlertaComponent],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
@@ -47,7 +48,7 @@ export class RegistroComponent implements OnDestroy {
         },
         error:(error)=>{
           this.mensajeError=error.error.mensaje;
-
+          this.closeAlert();
         }
 
       }
@@ -57,6 +58,12 @@ export class RegistroComponent implements OnDestroy {
   /*Guardamos el token en el sessionStorage*/
   saveToken(token:string){
     sessionStorage.setItem('jwt',token);
+  }
+
+  closeAlert() {
+    setTimeout(() => {
+      this.mensajeError = '';
+    }, 3000);
   }
 
   ngOnDestroy(): void {

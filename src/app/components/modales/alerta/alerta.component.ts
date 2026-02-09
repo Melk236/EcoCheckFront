@@ -10,12 +10,20 @@ export class AlertaComponent implements OnChanges {
   @Input() esExito: boolean = false;
   @Input() posicion: string = 'top-4';
   closing: boolean = false;
+  private timeoutId: any;
 
   @Output() closeModal = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['mensajeError'] && this.mensajeError === '') {
-      this.cerrarModal();
+    if (changes['mensajeError']) {
+      if (this.mensajeError !== '') {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = setTimeout(() => {
+          this.cerrarModal();
+        }, 3000);
+      } else {
+        this.cerrarModal();
+      }
     }
   }
 

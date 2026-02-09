@@ -22,7 +22,7 @@
                 </div>
               </div>
             <button
-              class="rounded-lg h-9 px-5 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
+              class="rounded-lg h-9 px-5 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors btn-hover"
               (click)="abrirArchivos()">
               <input type="file" id="file" class="hidden" accept="image/*" (change)="subirImagen($event)">
               Editar foto</button>
@@ -72,8 +72,8 @@
             }
           </label>
 
-          <button (click)="actualizarDatosUser()" [disabled]="formulario.invalid"
-            class="rounded-lg h-10 px-6 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors self-start">Guardar
+          <button (click)="mostrarModalConfirmacion(1)" [disabled]="formulario.invalid"
+            class="rounded-lg h-10 px-6 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors self-start btn-hover">Guardar
             cambios</button>
         </form>
       </section>
@@ -83,11 +83,11 @@
         <h2 class="text-green-600 dark:text-green-500 text-lg font-bold leading-tight px-1 pb-3">Seguridad</h2>
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
           <div class="flex flex-col sm:flex-row gap-4">
-            <button
-              class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cambiar
+            <button (click)="mostrarModalConfirmacion(2)"
+              class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors btn-hover">Cambiar
               contraseña</button>
-            <button
-              class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-red-500 dark:text-red-400 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Eliminar
+            <button (click)="mostrarModalConfirmacion(3)"
+              class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-red-500 dark:text-red-400 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors btn-hover">Eliminar
               cuenta</button>
           </div>
         </div>
@@ -99,5 +99,9 @@
     <div class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" (click)="cerrarModalFoto()">
       <img [src]="imagePreview" class="max-w-full max-h-full rounded-lg cursor-zoom-out" alt="Foto de perfil" />
     </div>
+  }
+
+  @if(modalConfirmacion){
+    <app-modal-confirmar [mensaje]="mensajeModal" [tipo]="tipo" (confirm)="confirmar()" (cancel)="cancelar()"></app-modal-confirmar>
   }
 </main>
