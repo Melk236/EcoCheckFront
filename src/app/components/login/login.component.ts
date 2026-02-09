@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   /*Guardamos el token en el sessionSotrage */
   saveToken(token: string) {
 
-    sessionStorage.setItem('jwt', token);
+    this.authService.setToken(token);
 
   }
 

@@ -8,12 +8,14 @@ import { UserService } from '../../services/user.service';
 import { AlertaComponent } from '../modales/alerta/alerta.component';
 import { environment } from '../../environment/environment';
 import { ModalConfirmarComponent } from '../modales/modal-confirmar/modal-confirmar.component';
+import { ModalPasswordComponent } from '../modales/modal-password/modal-password.component';
+import { Router } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, CommonModule, AlertaComponent, ModalConfirmarComponent],
+  imports: [ReactiveFormsModule, CommonModule, AlertaComponent, ModalConfirmarComponent, ModalPasswordComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -29,6 +31,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   modalFotoAbierta: boolean = false;
   modalConfirmacion: boolean = false;
+  modalPassword: boolean = false;
   opcion: number = 0;
   mensajeError: string = '';
   mensajeModal: string = '';
@@ -37,10 +40,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService, private UserService: UserService) {
+  constructor(private fb: FormBuilder, private profileService: ProfileService, private UserService: UserService,private route:Router) {
     this.formulario = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
-      apellido: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
+      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
+      apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
       email: ['', [Validators.email]]
     });
 
@@ -157,9 +160,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.mensajeModal = '¿Está seguro de actualizar su perfil?';
         break;
       case 2:
-        this.tipo = 'actualizar';
-        this.mensajeModal = '¿Está seguro de cambiar su contraseña?';
-        break;
+        this.modalPassword = true;
+        return;
       case 3:
         this.tipo = 'borrar'
         this.mensajeModal = '¿Está seguro de eliminar su cuenta de forma permanente?';
@@ -167,6 +169,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.modalConfirmacion = true;
 
+  }
+
+  abrirModalPassword() {
+    this.modalPassword = true;
+  }
+
+  cerrarModalPassword() {
+    this.modalPassword = false;
+  }
+
+  onPasswordConfirm(password: string) {
+    // Aquí iría la lógica para cambiar la contraseña
+    console.log('Cambiar contraseña:', password);
+    this.modalPassword = false;
+    this.mensajeError = 'Contraseña actualizada correctamente';
+    this.esExito = true;
   }
   /*Confirmación del modal hijo por lo se procede a realizar la opración segun la opcion */
   confirmar() {
@@ -176,10 +194,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.cancelar()//Cerramos el modal hijo
         break;
       case 2:
-
+        
         break;
       case 3:
-
+        this.eliminarUsuario()//Eliminamos la cuenta del usuario
     }
   }
 
@@ -187,6 +205,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
   cancelar(){
     this.modalConfirmacion=false;
   }
+
+  /*Eliminamos la cuenta del usuario luego de que el usuario lo confirme*/
+  eliminarUsuario(){
+    this.UserService.delete(this.usuario.id).subscribe({
+      next:()=>{
+        sessionStorage.removeItem('jwt')//Eliminamos el token del usuario de sessionStorage
+        this.route.navigate(['login'])//Y lo mandamos al componente login
+      },
+      error:(error)=>{
+        console.log(error);
+        this.mensajeError='No se ha podido eliminar la cuenta del usuario';
+      }
+    })
+  }
+
+
   /*Al destruirse el componente nos desuscribimos de los observables para que 
   no haya una fugas de memoria */
   ngOnDestroy(): void {

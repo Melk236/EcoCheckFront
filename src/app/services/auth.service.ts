@@ -19,4 +19,12 @@ export class AuthService {
   register(usuario:AuthUser):Observable<{token:string}>{
     return this.http.post<{token:string}>(this.url+'Register',usuario);
   }
+
+  setToken(token:string){
+    sessionStorage.setItem('jwt',token);
+  } 
+
+  removeToken(){
+    sessionStorage.removeItem('jwt');
+  }
 }

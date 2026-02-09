@@ -39,7 +39,7 @@
               @if(formulario.get('nombre')?.invalid && formulario.get('nombre')?.touched){
                 <span class="text-red-500 text-xs">
                   @if(formulario.get('nombre')?.hasError('required')){El nombre es obligatorio}
-                  @if(formulario.get('nombre')?.hasError('minlength')){Mínimo 6 caracteres}
+                  @if(formulario.get('nombre')?.hasError('minlength')){Mínimo 2 caracteres}
                   @if(formulario.get('nombre')?.hasError('maxlength')){Máximo 20 caracteres}
                   @if(formulario.get('nombre')?.hasError('pattern')){Solo letras}
                 </span>
@@ -53,7 +53,7 @@
               @if(formulario.get('apellido')?.invalid && formulario.get('apellido')?.touched){
                 <span class="text-red-500 text-xs">
                   @if(formulario.get('apellido')?.hasError('required')){El apellido es obligatorio}
-                  @if(formulario.get('apellido')?.hasError('minlength')){Mínimo 6 caracteres}
+                  @if(formulario.get('apellido')?.hasError('minlength')){Mínimo 2 caracteres}
                   @if(formulario.get('apellido')?.hasError('maxlength')){Máximo 20 caracteres}
                   @if(formulario.get('apellido')?.hasError('pattern')){Solo letras}
                 </span>
@@ -83,11 +83,11 @@
         <h2 class="text-green-600 dark:text-green-500 text-lg font-bold leading-tight px-1 pb-3">Seguridad</h2>
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
           <div class="flex flex-col sm:flex-row gap-4">
-            <button (click)="mostrarModalConfirmacion(2)"
-              class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors btn-hover">Cambiar
+            <button (click)="abrirModalPassword()"
+              class="rounded-lg h-10 px-4 sm:px-5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors btn-hover">Cambiar
               contraseña</button>
             <button (click)="mostrarModalConfirmacion(3)"
-              class="rounded-lg h-10 px-5 bg-gray-100 dark:bg-gray-700 text-red-500 dark:text-red-400 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors btn-hover">Eliminar
+              class="rounded-lg h-10 px-4 sm:px-5 bg-gray-100 dark:bg-gray-700 text-red-500 dark:text-red-400 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors btn-hover">Eliminar
               cuenta</button>
           </div>
         </div>
@@ -103,5 +103,9 @@
 
   @if(modalConfirmacion){
     <app-modal-confirmar [mensaje]="mensajeModal" [tipo]="tipo" (confirm)="confirmar()" (cancel)="cancelar()"></app-modal-confirmar>
+  }
+
+  @if(modalPassword){
+    <app-modal-password (confirm)="onPasswordConfirm($event)" (cancel)="cerrarModalPassword()"></app-modal-password>
   }
 </main>

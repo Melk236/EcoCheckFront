@@ -11,19 +11,16 @@
     </p>
     <div class="flex flex-col sm:flex-row gap-3 w-full">
       <button (click)="onCancel()"
-        class="flex-1 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 text-gray-700 dark:text-gray-300 text-sm font-bold leading-normal tracking-wide transition-all btn-hover"
+        class="flex-1 cursor-pointer rounded-lg min-h-10 text-gray-700 dark:text-gray-300 text-sm font-bold tracking-wide transition-all btn-hover"
         style="background-color: #f3f4f6;">
         Cancelar
       </button>
       <button (click)="onConfirm()"
-        class="flex-1 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 text-white text-sm font-bold leading-normal tracking-wide transition-all shadow-lg btn-hover"
+        class="flex-1 cursor-pointer rounded-lg min-h-10 text-white text-sm font-bold tracking-wide transition-all shadow-lg btn-hover"
         [style.background-color]="getColor()">
         {{getBoton()}}
       </button>
     </div>
-    <div class="mt-8 flex items-center justify-center gap-2 text-gray-400 dark:text-gray-500 text-xs">
-      <span class="material-symbols-outlined text-sm">verified_user</span>
-      <span>Acción segura para Eco-Check</span>
-    </div>
+    
   </div>
 </div>
