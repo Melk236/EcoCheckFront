@@ -37,10 +37,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   mensajeModal: string = '';
   esExito: boolean = false;
   tipo: string = '';
-
+  body:{password:string,newPassword:string}={
+    password: '',
+    newPassword: ''
+  }
   destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService, private UserService: UserService,private route:Router) {
+  constructor(private fb: FormBuilder, private profileService: ProfileService, private UserService: UserService, private route: Router) {
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
       apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
@@ -102,7 +105,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       subscribe({
         next: (data) => {
           this.usuario = data;
-          
+
           this.mensajeError = 'Perfil actualizado correctamente';
           this.esExito = true;
 
@@ -129,7 +132,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             email: data.email
           });
 
-          this.imagePreview = this.urlImagen + data.imagen
+          this.imagePreview = this.urlImagen + data.urlImagen;
 
         },
         error: (error) => {
@@ -160,8 +163,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.mensajeModal = '¿Está seguro de actualizar su perfil?';
         break;
       case 2:
-        this.modalPassword = true;
-        return;
+        this.tipo = 'actualizar';
+        this.mensajeModal = '¿Está seguro de actualizar su contraseña?';
+        this.cerrarModalPassword();
+        break;
       case 3:
         this.tipo = 'borrar'
         this.mensajeModal = '¿Está seguro de eliminar su cuenta de forma permanente?';
@@ -179,13 +184,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.modalPassword = false;
   }
 
-  onPasswordConfirm(password: string) {
-    // Aquí iría la lógica para cambiar la contraseña
-    console.log('Cambiar contraseña:', password);
-    this.modalPassword = false;
-    this.mensajeError = 'Contraseña actualizada correctamente';
-    this.esExito = true;
+  /*Cambio de contraseña del usuario */
+  onPasswordConfirm(body:{password:string,newPassword:string}) {
+    this.opcion = 2;
+    this.body={
+      password:body.password,
+      newPassword:body.newPassword
+    }
+    this.mostrarModalConfirmacion(this.opcion);
   }
+
   /*Confirmación del modal hijo por lo se procede a realizar la opración segun la opcion */
   confirmar() {
     switch (this.opcion) {
@@ -194,7 +202,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.cancelar()//Cerramos el modal hijo
         break;
       case 2:
-        
+        this.cambiarContrasena();
         break;
       case 3:
         this.eliminarUsuario()//Eliminamos la cuenta del usuario
@@ -202,24 +210,53 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   /*Cerramos el modal hijo */
-  cancelar(){
-    this.modalConfirmacion=false;
+  cancelar() {
+    this.modalConfirmacion = false;
   }
 
   /*Eliminamos la cuenta del usuario luego de que el usuario lo confirme*/
-  eliminarUsuario(){
-    this.UserService.delete(this.usuario.id).subscribe({
-      next:()=>{
+  eliminarUsuario() {
+    this.UserService.delete(this.usuario.id).pipe(takeUntil(this.destroy$)).subscribe({
+      next: () => {
         sessionStorage.removeItem('jwt')//Eliminamos el token del usuario de sessionStorage
         this.route.navigate(['login'])//Y lo mandamos al componente login
       },
-      error:(error)=>{
+      error: (error) => {
         console.log(error);
-        this.mensajeError='No se ha podido eliminar la cuenta del usuario';
+        this.mensajeError = 'No se ha podido eliminar la cuenta del usuario';
       }
     })
   }
 
+  /*Luego de que confirme el usuario de que quiere cambiar la contraseña se la cambiamos 
+  llamando al changePassword del servicio profile*/
+  cambiarContrasena() {
+    
+    this.UserService.changePassword(this.usuario.id,this.body).pipe(takeUntil(this.destroy$)).subscribe({
+      next:()=>{
+        this.mensajeError = 'Contraseña actualizada correctamente';
+        this.esExito = true;
+        //Vaciamos body
+        this.body={
+          password:'',
+          newPassword:''
+        }
+      this.modalConfirmacion=false;
+      },
+      error:(error)=>{
+        console.log(error);
+        this.mensajeError='No se ha podido actualizar la contraseña';
+        this.esExito=false;
+        //Vaciamos body
+        this.body={
+          password:'',
+          newPassword:''
+        }
+        this.modalConfirmacion=false;
+  
+      }
+    });
+  }
 
   /*Al destruirse el componente nos desuscribimos de los observables para que 
   no haya una fugas de memoria */

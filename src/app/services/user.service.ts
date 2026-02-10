@@ -26,6 +26,12 @@ export class UserService {
     return this.http.put<User>(`${this.url}/${id}`, user);
   }
 
+  changePassword(id:number,body:{password:string,newPassword:string}):Observable<void>{
+
+    return this.http.patch<void>(this.url+'/'+id+'/ChangePassword',body);
+
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
