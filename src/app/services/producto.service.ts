@@ -62,8 +62,8 @@ export class ProductoService {
 
   }
 
-  delete(id: number) {
-    this.http.delete(this.url + '/' + id);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(this.url + '/' + id);
   }
 
 

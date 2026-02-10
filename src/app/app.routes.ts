@@ -6,6 +6,7 @@ import { ListaEmpresasComponent } from './components/lista-empresas/lista-empres
 import { LoginComponent } from './components/login/login.component';
 import { RegistroComponent } from './components/registro/registro.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { AdminComponent } from './components/admin/admin.component';
 export const routes: Routes = [
 
     {path:'',redirectTo:'login',pathMatch:'full'},
@@ -15,5 +16,6 @@ export const routes: Routes = [
     {path:'empresas/empresa/:id',component:EmpresaComponent},
     {path:'login',component:LoginComponent},
     {path:'registro',component:RegistroComponent},
-    {path:'perfil', component:ProfileComponent}
+    {path:'perfil', component:ProfileComponent},
+    {path:'admin',component:AdminComponent}
 ];

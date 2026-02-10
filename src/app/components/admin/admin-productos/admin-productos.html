@@ -1,0 +1,165 @@
+<div class="bg-[#f6f8f6] dark:bg-gray-800 text-[#111813] dark:text-white min-h-screen p-8">
+
+  <!-- Top Header & Add Button -->
+  <header class="flex flex-wrap justify-between items-end gap-4 mb-8 pt-15">
+    <div class="space-y-1">
+      <h2 class="text-3xl font-black text-[#102216] dark:text-white">Gestion de Productos</h2>
+      <p class="text-[#61896f] dark:text-gray-400">Administra el inventario de productos eco-responsables.</p>
+    </div>
+
+  </header>
+
+  <!-- Filters & Search -->
+  <section class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-[#dbe6e0] dark:border-gray-600 mb-6 flex flex-col md:flex-row gap-4 items-center">
+    <div
+      class="grow flex items-stretch rounded-xl h-14 bg-[#f6f8f6] dark:bg-gray-800 border border-[#dbe6e0] dark:border-gray-600 focus-within:ring-2 focus-within:ring-[#39E079]/50 focus-within:border-[#39E079] transition-shadow overflow-hidden">
+      <div class="flex items-center justify-center pl-4 pr-2">
+        <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
+      </div>
+      <input
+        class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 border-none! outline-none ring-0 focus:ring-0 appearance-none px-2 text-sm"
+        placeholder="Buscar por nombre, categoria..."
+        type="text"
+        [(ngModel)]="busqueda"
+        (ngModelChange)="onBusquedaChange()"
+      />
+    </div>
+    <div class="flex gap-2 w-full md:w-auto">
+      <div class="relative flex items-center">
+        <span class="material-symbols-outlined absolute left-3 text-gray-400 dark:text-gray-400">category</span>
+        <select
+          class="h-14 pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+          [(ngModel)]="categoriaFiltro"
+          (change)="onCategoriaChange()"
+        >
+          <option value="">Categoria</option>
+          @for (cat of categorias; track cat) {
+            <option [value]="cat">{{cat}}</option>
+          }
+        </select>
+      </div>
+      <div class="relative flex items-center">
+        <span class="material-symbols-outlined absolute left-3 text-[#39E079]">eco</span>
+        <select
+          class="h-14 pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+          [(ngModel)]="ecoScoreFiltro"
+          (change)="onEcoScoreChange()"
+        >
+          <option value="">EcoScore</option>
+          @for (score of ecoScores; track score) {
+            <option [value]="score">{{score}}</option>
+          }
+        </select>
+      </div>
+      <button
+        class="flex items-center justify-center h-14 px-5 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+        (click)="limpiarFiltros()"
+        title="Limpiar filtros"
+      >
+        <span class="material-symbols-outlined">clear</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Product Table Container -->
+  <div class="bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 overflow-hidden shadow-sm flex flex-col">
+    <div class="overflow-x-auto flex-1">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-[#f6f8f6]/50 dark:bg-gray-800/50 border-b border-[#dbe6e0] dark:border-gray-600">
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400">Imagen</th>
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400">Nombre del Producto</th>
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400">Categoria</th>
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400">Descripcion</th>
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400">EcoScore</th>
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400">Creacion</th>
+            <th class="px-6 py-4 text-xs font-black uppercase tracking-wider text-[#61896f] dark:text-gray-400 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#dbe6e0] dark:divide-gray-600">
+
+          @for (producto of productosPaginados; track producto.id) {
+          <tr class="hover:bg-[#f6f8f6] dark:hover:bg-gray-600 transition-colors">
+            <td class="px-6 py-4">
+              <div class="w-12 h-12 rounded-lg bg-[#f6f8f6] dark:bg-gray-800 border border-[#dbe6e0] dark:border-gray-600 overflow-hidden">
+                <img class="w-full h-full object-cover" [alt]="producto.nombre" [src]="producto.imagenUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC3ORf-FnudDaA1NzV5UvdmmzQpCofGyUeOmYqp59ZNzqs1Q0RlfF8qKyHUGrT-qJ8sPqHw1W3pMc948xO59s3AY4HAcV0uzJTUGuRd0j4ryP79b2Ddxlj8QMyI-yz_19Owq5mFLjVy8uhsmLW5qKQagIIedD5UcDa7QxihO4CUOStI4iqITk6jTR1CEyAoZCDmve56S8lZEjHbWqF2N5A0LTTX4vZJSYO2s65GdC51X5_avEfz4KPExWa-wKb_VqxqS9-lC0GX8wn3'" />
+              </div>
+            </td>
+            <td class="px-6 py-4 font-bold text-[#102216] dark:text-white">{{producto.nombre || 'Sin nombre'}}</td>
+            <td class="px-6 py-4">
+              <span class="px-2 py-1 rounded text-xs font-medium" [ngClass]="getCategoriaClass(producto.categoria)">{{producto.categoria || 'Sin categoria'}}</span>
+            </td>
+            <td class="px-6 py-4 text-[#111814] dark:text-gray-300 max-w-xs truncate">{{producto.descripcion || 'Sin descripcion'}}</td>
+            <td class="px-6 py-4 font-bold text-[#102216] dark:text-white">{{producto.ecoScore}}</td>
+            <td class="px-6 py-4 text-sm text-[#61896f] dark:text-gray-400">{{formatDate(producto.fechaActualizacion)}}</td>
+            <td class="px-6 py-4 text-right">
+              <button
+                class="p-2 hover:bg-red-500/20 rounded-lg text-[#61896f] dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                (click)="abrirModalEliminar(producto)"
+                title="Eliminar producto"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+          }           @empty {
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center">
+              <div class="flex flex-col items-center justify-center">
+                <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">inventory_2</span>
+                <p class="text-lg text-[#61896f] dark:text-gray-400">No se encontraron productos</p>
+                <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">Intenta ajustar los filtros de busqueda</p>
+              </div>
+            </td>
+          </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if(productos.length > 0){
+    <div class="px-6 py-4 bg-[#f6f8f6]/30 dark:bg-gray-800/30 border-t border-[#dbe6e0] dark:border-gray-600 flex items-center justify-between">
+      <p class="text-sm text-[#61896f] dark:text-gray-400">
+        Mostrando <span class="font-bold text-[#102216] dark:text-white">{{productosPaginados.length}}</span> de <span class="font-bold text-[#102216] dark:text-white">{{productosFiltrados.length}}</span> productos
+      </p>
+      <app-paginacion [lista]="productosFiltrados" (pagin)="paginar($event)"></app-paginacion>
+    </div>
+    }
+  </div>
+
+</div>
+
+<!-- Modal Eliminar -->
+@if(modalEliminarOpen){
+<app-modal-confirmar
+  tipo="borrar"
+  (confirm)="confirmarEliminar()"
+  (cancel)="cerrarModalEliminar()">
+</app-modal-confirmar>
+}
+
+<!-- Modal Exito -->
+@if(mostrarModalExito){
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" (click)="cerrarModalExito()">
+  <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl border border-[#39E079]/30" (click)="$event.stopPropagation()">
+    <div class="flex flex-col items-center text-center">
+      <span class="material-symbols-outlined text-6xl text-green-500 mb-4">check_circle</span>
+      <p class="text-[#111814] dark:text-white font-semibold">{{mensajeExito}}</p>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal Error -->
+@if(mostrarModalError){
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" (click)="cerrarModalError()">
+  <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl border border-red-500/30" (click)="$event.stopPropagation()">
+    <div class="flex flex-col items-center text-center">
+      <span class="material-symbols-outlined text-6xl text-red-500 mb-4">error</span>
+      <p class="text-[#111814] dark:text-white font-semibold">{{mensajeError}}</p>
+    </div>
+  </div>
+</div>
+}

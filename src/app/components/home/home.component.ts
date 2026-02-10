@@ -125,11 +125,11 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Inicia escaneo automático después de 5 segundos con código de prueba
-    /* 
+    
     setTimeout(() => {
       this.obtenerQr('8480000603074.json');
     }, 5000);
-    */
+    
     // Carga datos iniciales en paralelo
     this.loadInitialData();
   }
