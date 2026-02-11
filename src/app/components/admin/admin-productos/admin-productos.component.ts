@@ -2,53 +2,101 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductoService } from '../../../services/producto.service';
+import { MaterialService } from '../../../services/material.service';
 import { Producto } from '../../../types/producto';
+import { ProductoConMateriales } from '../../../types/producto-con-materiales';
 import { PaginacionComponent } from '../../../shared/paginacion/paginacion.component';
 import { ModalConfirmarComponent } from '../../modales/modal-confirmar/modal-confirmar.component';
+import { AlertaComponent } from '../../modales/alerta/alerta.component';
 
 @Component({
   selector: 'app-admin-productos',
-  imports: [CommonModule, FormsModule, PaginacionComponent, ModalConfirmarComponent],
+  imports: [CommonModule, FormsModule, PaginacionComponent, ModalConfirmarComponent, AlertaComponent],
   templateUrl: './admin-productos.html',
   styleUrl: './admin-productos.css',
 })
 export class AdminProductosComponent implements OnInit {
-  productos: Producto[] = [];
-  productosFiltrados: Producto[] = [];
-  productosPaginados: Producto[] = [];
+  productos: ProductoConMateriales[] = [];
+  productosFiltrados: ProductoConMateriales[] = [];
+  productosPaginados: ProductoConMateriales[] = [];
 
   busqueda: string = '';
-  categoriaFiltro: string = '';
+  materialFiltro: string = '';
   ecoScoreFiltro: string = '';
+  fechaFiltro: string = '';
 
-  categorias: string[] = ['Higiene', 'Alimentacion', 'Hogar', 'Electronica', 'Ropa', 'Cosmetica'];
+  materiales: string[] = [];
   ecoScores: string[] = ['Alto (80+)', 'Medio (50-79)', 'Bajo (0-49)'];
 
   modalEliminarOpen: boolean = false;
   productoAEliminar: Producto | null = null;
-  mensajeExito: string = '';
-  mensajeError: string = '';
-  mostrarModalExito: boolean = false;
-  mostrarModalError: boolean = false;
 
-  constructor(private productoService: ProductoService) {}
+  mensajeAlerta: string = '';
+  esExitoAlerta: boolean = false;
+
+  constructor(
+    private productoService: ProductoService,
+    private materialService: MaterialService
+  ) {}
 
   ngOnInit(): void {
     this.cargarProductos();
   }
 
+
   cargarProductos(): void {
     this.productoService.get().subscribe({
       next: (data) => {
-        this.productos = data;
+        this.productos = data.map(p => ({ ...p, materiales: [] }));
         this.productosFiltrados = [...this.productos];
-        this.aplicarFiltros();
+        this.cargarMaterialesPorProducto();
       },
       error: (err) => {
         console.error('Error al cargar productos:', err);
-        this.mostrarMensajeError('Error al cargar los productos');
+        this.mostrarAlerta('Error al cargar los productos', false);
       }
     });
+  }
+
+  cargarMaterialesPorProducto(): void {
+    let materialesCargados = 0;
+    this.productos.forEach(producto => {
+      if (producto.id) {
+        this.materialService.getById(producto.id).subscribe({
+          next: (materiales) => {
+            producto.materiales = materiales;
+            materialesCargados++;
+            if (materialesCargados === this.productos.length) {
+              this.extraerMaterialesUnicos();
+            }
+          },
+          error: (err) => {
+            console.error('Error al cargar materiales para producto:', err);
+            materialesCargados++;
+            if (materialesCargados === this.productos.length) {
+              this.extraerMaterialesUnicos();
+            }
+          }
+        });
+      } else {
+        materialesCargados++;
+        if (materialesCargados === this.productos.length) {
+          this.extraerMaterialesUnicos();
+        }
+      }
+    });
+  }
+
+  extraerMaterialesUnicos(): void {
+    const todosMateriales: string[] = [];
+    this.productos.forEach(producto => {
+      producto.materiales?.forEach(m => {
+        if (m.nombre) {
+          todosMateriales.push(m.nombre);
+        }
+      });
+    });
+    this.materiales = [...new Set(todosMateriales)].sort();
   }
 
   aplicarFiltros(): void {
@@ -59,12 +107,15 @@ export class AdminProductosComponent implements OnInit {
       filtrados = filtrados.filter(p =>
         p.nombre?.toLowerCase().includes(termino) ||
         p.descripcion?.toLowerCase().includes(termino) ||
-        p.categoria?.toLowerCase().includes(termino)
+        p.categoria?.toLowerCase().includes(termino) ||
+        p.materiales?.some(m => m.nombre?.toLowerCase().includes(termino))
       );
     }
 
-    if (this.categoriaFiltro) {
-      filtrados = filtrados.filter(p => p.categoria === this.categoriaFiltro);
+    if (this.materialFiltro) {
+      filtrados = filtrados.filter(p =>
+        p.materiales?.some(m => m.nombre === this.materialFiltro)
+      );
     }
 
     if (this.ecoScoreFiltro) {
@@ -76,14 +127,26 @@ export class AdminProductosComponent implements OnInit {
       });
     }
 
+    if (this.fechaFiltro) {
+      const fechaFiltro = new Date(this.fechaFiltro);
+      filtrados = filtrados.filter(p => {
+        if (!p.fechaActualizacion) return false;
+        const fechaProducto = new Date(p.fechaActualizacion);
+        return fechaProducto.toDateString() === fechaFiltro.toDateString();
+      });
+    }
+
     this.productosFiltrados = filtrados;
+    if (this.productosFiltrados.length === 0) {
+      this.productosPaginados.splice(0, 1);
+    }
   }
 
   onBusquedaChange(): void {
     this.aplicarFiltros();
   }
 
-  onCategoriaChange(): void {
+  onMaterialChange(): void {
     this.aplicarFiltros();
   }
 
@@ -91,18 +154,22 @@ export class AdminProductosComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-  limpiarFiltros(): void {
-    this.busqueda = '';
-    this.categoriaFiltro = '';
-    this.ecoScoreFiltro = '';
+  onFechaChange(): void {
     this.aplicarFiltros();
   }
 
-  paginar(lista: Producto[]): void {
+  limpiarFiltros(): void {
+    this.busqueda = '';
+    this.materialFiltro = '';
+    this.ecoScoreFiltro = '';
+    this.fechaFiltro = '';
+    this.aplicarFiltros();
+  }
+
+  paginar(lista: ProductoConMateriales[]): void {
     setTimeout(() => {
-     this.productosPaginados = lista;   
+      this.productosPaginados = lista;
     }, 0);
-   
   }
 
   abrirModalEliminar(producto: Producto): void {
@@ -118,13 +185,13 @@ export class AdminProductosComponent implements OnInit {
           this.aplicarFiltros();
           this.modalEliminarOpen = false;
           this.productoAEliminar = null;
-          this.mostrarMensajeExito('Producto eliminado correctamente');
+          this.mostrarAlerta('Producto eliminado correctamente', true);
         },
-        error: (err: any) => {
-          console.error('Error al eliminar producto:', err);
+        error: (error) => {
+          console.error('Error al eliminar producto:', error.error.mensaje);
           this.modalEliminarOpen = false;
           this.productoAEliminar = null;
-          this.mostrarMensajeError('Error al eliminar el producto');
+          this.mostrarAlerta('Error al eliminar el producto', false);
         }
       });
     }
@@ -135,24 +202,13 @@ export class AdminProductosComponent implements OnInit {
     this.productoAEliminar = null;
   }
 
-  mostrarMensajeExito(mensaje: string): void {
-    this.mensajeExito = mensaje;
-    this.mostrarModalExito = true;
-    setTimeout(() => this.mostrarModalExito = false, 3000);
+  mostrarAlerta(mensaje: string, esExito: boolean): void {
+    this.mensajeAlerta = mensaje;
+    this.esExitoAlerta = esExito;
   }
 
-  mostrarMensajeError(mensaje: string): void {
-    this.mensajeError = mensaje;
-    this.mostrarModalError = true;
-    setTimeout(() => this.mostrarModalError = false, 3000);
-  }
-
-  cerrarModalExito(): void {
-    this.mostrarModalExito = false;
-  }
-
-  cerrarModalError(): void {
-    this.mostrarModalError = false;
+  cerrarAlerta(): void {
+    this.mensajeAlerta = '';
   }
 
   formatDate(dateString: string | Date): string {
@@ -162,15 +218,14 @@ export class AdminProductosComponent implements OnInit {
     return date.toLocaleDateString('es-ES', options);
   }
 
-  getCategoriaClass(categoria: string): string {
-    const classes: { [key: string]: string } = {
-      'Higiene': 'bg-[#e8f5e9] dark:bg-green-900/30 text-green-700 dark:text-green-400',
-      'Alimentacion': 'bg-[#fff3e0] dark:bg-orange-900/30 text-orange-700 dark:text-orange-400',
-      'Hogar': 'bg-[#e3f2fd] dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
-      'Electronica': 'bg-[#f3e5f5] dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
-      'Ropa': 'bg-[#fce4ec] dark:bg-pink-900/30 text-pink-700 dark:text-pink-400',
-      'Cosmetica': 'bg-[#fff8e1] dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
-    };
-    return classes[categoria] || 'bg-[#f6f8f6] dark:bg-gray-800 text-[#111814] dark:text-gray-300';
+  getMaterialesStr(producto: ProductoConMateriales): string {
+    if (!producto.materiales || producto.materiales.length === 0) return 'Sin materiales';
+    return producto.materiales.map(m => m.nombre).join(', ');
+  }
+
+  getEcoScoreClass(ecoScore: number): string {
+    if (ecoScore > 80) return 'text-green-600 dark:text-green-400';
+    if (ecoScore > 50) return 'text-yellow-500 dark:text-yellow-400';
+    return 'text-orange-500 dark:text-orange-400';
   }
 }

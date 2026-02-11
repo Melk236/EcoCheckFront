@@ -26,7 +26,7 @@ export class PaginacionComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.entradaDatos();
-
+    
   }
   /*Métodos para manejar la navegación */
   entradaDatos() {

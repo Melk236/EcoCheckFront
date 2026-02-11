@@ -83,6 +83,17 @@
           <span class="ml-3">Empresas</span>
         </a>
       </li>
+      <li>
+        <a routerLink="/admin" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/admin')}"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+          <span
+            class="material-symbols-outlined text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-3xl"
+            style="font-variation-settings: 'FILL' 1;">
+            admin_panel_settings
+          </span>
+          <span class="ml-3">Administración</span>
+        </a>
+      </li>
       <!-- ... el resto de ítems igual que los tuyos ... -->
     </ul>
   </div>

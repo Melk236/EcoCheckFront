@@ -5,4 +5,5 @@ export interface User {
     apellido?:string;
     email?:string;
     urlImagen?:string;
+    fechaRegistro?:Date;
 }
