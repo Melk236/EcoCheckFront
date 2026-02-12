@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../types/user';
 import { PaginacionComponent } from '../../../shared/paginacion/paginacion.component';
@@ -14,7 +15,9 @@ import { environment } from '../../../environment/environment';
   templateUrl: './admin-usuarios.html',
   styleUrl: './admin-usuarios.css',
 })
-export class AdminUsuariosComponent implements OnInit {
+export class AdminUsuariosComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  @ViewChild('fechaInput') fechaInput!: ElementRef<HTMLInputElement>;
   private urlImagen = environment.imagenUrl;
   
   usuarios: User[] = [];
@@ -40,7 +43,7 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
   cargarUsuarios(): void {
-    this.userService.get().subscribe({
+    this.userService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.usuarios = data;
         this.usuariosFiltrados = [...this.usuarios];
@@ -75,7 +78,7 @@ export class AdminUsuariosComponent implements OnInit {
     }
 
     this.usuariosFiltrados = filtrados;
-    if(this.usuariosFiltrados.length==0) this.usuariosPaginados.splice(0,1);
+    if(this.usuariosFiltrados.length==0) this.usuariosPaginados=[...this.usuariosFiltrados];
   }
 
   onBusquedaChange(): void {
@@ -88,6 +91,13 @@ export class AdminUsuariosComponent implements OnInit {
 
   onFechaChange(): void {
     this.aplicarFiltros();
+  }
+
+  focusFecha(): void {
+    if (this.fechaInput?.nativeElement) {
+      this.fechaInput.nativeElement.showPicker?.();
+      this.fechaInput.nativeElement.focus();
+    }
   }
 
   limpiarFiltros(): void {
@@ -110,7 +120,7 @@ export class AdminUsuariosComponent implements OnInit {
 
   confirmarEliminar(): void {
     if (this.usuarioAEliminar && this.usuarioAEliminar.id) {
-      this.userService.delete(this.usuarioAEliminar.id).subscribe({
+      this.userService.delete(this.usuarioAEliminar.id).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.usuarios = this.usuarios.filter(u => u.id !== this.usuarioAEliminar!.id);
           this.aplicarFiltros();
@@ -151,5 +161,10 @@ export class AdminUsuariosComponent implements OnInit {
       return this.urlImagen + usuario.urlImagen;
     }
     return 'https://lh3.googleusercontent.com/aida-public/AB6AXuC3ORf-FnudDaA1NzV5UvdmmzQpCofGyUeOmYqp59ZNzqs1Q0RlfF8qKyHUGrT-qJ8sPqHw1W3pMc948xO59s3AY4HAcV0uzJTUGuRd0j4ryP79b2Ddxlj8QMyI-yz_19Owq5mFLjVy8uhsmLW5qKQagIIedD5UcDa7QxihO4CUOStI4iqITk6jTR1CEyAoZCDmve56S8lZEjHbWqF2N5A0LTTX4vZJSYO2s65GdC51X5_avEfz4KPExWa-wKb_VqxqS9-lC0GX8wn3';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

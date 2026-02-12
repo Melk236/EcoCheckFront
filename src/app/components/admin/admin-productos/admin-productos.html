@@ -1,12 +1,13 @@
-<div class="bg-[#f6f8f6] dark:bg-gray-800 text-[#111813] dark:text-white min-h-screen p-8">
+<div class="bg-[#f6f8f6] dark:bg-gray-800 text-[#111813] dark:text-white p-8">
 
    
   
   <!-- Filters & Search -->
-  <section class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-[#dbe6e0] dark:border-gray-600 mb-6 flex flex-col md:flex-row gap-4 items-center">
+  <section class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-[#dbe6e0] dark:border-gray-600 mb-6 flex flex-col gap-4">
     
+    <!-- Busqueda - siempre visible -->
     <div
-      class="grow flex items-stretch rounded-xl h-14 bg-[#f6f8f6] dark:bg-gray-800 border border-[#dbe6e0] dark:border-gray-600 focus-within:ring-2 focus-within:ring-[#39E079]/50 focus-within:border-[#39E079] transition-shadow overflow-hidden">
+      class="flex items-stretch rounded-xl h-14 bg-[#f6f8f6] dark:bg-gray-800 border border-[#dbe6e0] dark:border-gray-600 focus-within:ring-2 focus-within:ring-[#39E079]/50 focus-within:border-[#39E079] transition-shadow overflow-hidden">
       <div class="flex items-center justify-center pl-4 pr-2">
         <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
       </div>
@@ -18,11 +19,13 @@
         (ngModelChange)="onBusquedaChange()"
       />
     </div>
-    <div class="flex gap-2 w-full md:w-auto">
-      <div class="relative flex items-center">
+    
+    <!-- Filtros -->
+    <div class="flex flex-wrap gap-2">
+      <div class="relative flex items-center flex-1 min-w-[140px]">
         <span class="material-symbols-outlined absolute left-3 text-gray-400 dark:text-gray-400">inventory_2</span>
         <select
-          class="h-14 pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+          class="h-12 w-full pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
           [(ngModel)]="materialFiltro"
           (change)="onMaterialChange()"
         >
@@ -32,10 +35,10 @@
           }
         </select>
       </div>
-      <div class="relative flex items-center">
+      <div class="relative flex items-center flex-1 min-w-[140px]">
         <span class="material-symbols-outlined absolute left-3 text-[#39E079]">eco</span>
         <select
-          class="h-14 pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+          class="h-12 w-full pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
           [(ngModel)]="ecoScoreFiltro"
           (change)="onEcoScoreChange()"
         >
@@ -45,17 +48,18 @@
           }
         </select>
       </div>
-      <div class="relative flex items-center">
-        <span class="material-symbols-outlined absolute left-3 text-gray-400 dark:text-gray-400">calendar_today</span>
+      <div class="relative flex items-center flex-1 min-w-[140px] cursor-pointer" (click)="focusFecha()">
+        <span class="material-symbols-outlined absolute left-3 text-gray-400 dark:text-gray-400 z-10 pointer-events-none">calendar_today</span>
         <input
+          #fechaInput
           type="date"
-          class="h-14 pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+          class="h-12 w-full pl-10 pr-2 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
           [(ngModel)]="fechaFiltro"
           (change)="onFechaChange()"
         />
       </div>
       <button
-        class="flex items-center justify-center h-14 px-5 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+        class="flex items-center justify-center h-12 px-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
         (click)="limpiarFiltros()"
         title="Limpiar filtros"
       >

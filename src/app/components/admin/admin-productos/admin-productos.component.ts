@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { ProductoService } from '../../../services/producto.service';
 import { MaterialService } from '../../../services/material.service';
 import { Producto } from '../../../types/producto';
@@ -15,7 +16,10 @@ import { AlertaComponent } from '../../modales/alerta/alerta.component';
   templateUrl: './admin-productos.html',
   styleUrl: './admin-productos.css',
 })
-export class AdminProductosComponent implements OnInit {
+export class AdminProductosComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  @ViewChild('fechaInput') fechaInput!: ElementRef<HTMLInputElement>;
+  
   productos: ProductoConMateriales[] = [];
   productosFiltrados: ProductoConMateriales[] = [];
   productosPaginados: ProductoConMateriales[] = [];
@@ -45,7 +49,7 @@ export class AdminProductosComponent implements OnInit {
 
 
   cargarProductos(): void {
-    this.productoService.get().subscribe({
+    this.productoService.get().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.productos = data.map(p => ({ ...p, materiales: [] }));
         this.productosFiltrados = [...this.productos];
@@ -62,7 +66,7 @@ export class AdminProductosComponent implements OnInit {
     let materialesCargados = 0;
     this.productos.forEach(producto => {
       if (producto.id) {
-        this.materialService.getById(producto.id).subscribe({
+        this.materialService.getById(producto.id).pipe(takeUntil(this.destroy$)).subscribe({
           next: (materiales) => {
             producto.materiales = materiales;
             materialesCargados++;
@@ -137,9 +141,7 @@ export class AdminProductosComponent implements OnInit {
     }
 
     this.productosFiltrados = filtrados;
-    if (this.productosFiltrados.length === 0) {
-      this.productosPaginados.splice(0, 1);
-    }
+    if (this.productosFiltrados.length === 0) this.productosPaginados=[...this.productosFiltrados];
   }
 
   onBusquedaChange(): void {
@@ -156,6 +158,13 @@ export class AdminProductosComponent implements OnInit {
 
   onFechaChange(): void {
     this.aplicarFiltros();
+  }
+
+  focusFecha(): void {
+    if (this.fechaInput?.nativeElement) {
+      this.fechaInput.nativeElement.showPicker?.();
+      this.fechaInput.nativeElement.focus();
+    }
   }
 
   limpiarFiltros(): void {
@@ -179,7 +188,7 @@ export class AdminProductosComponent implements OnInit {
 
   confirmarEliminar(): void {
     if (this.productoAEliminar && this.productoAEliminar.id) {
-      this.productoService.delete(this.productoAEliminar.id).subscribe({
+      this.productoService.delete(this.productoAEliminar.id).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.productos = this.productos.filter(p => p.id !== this.productoAEliminar!.id);
           this.aplicarFiltros();
@@ -227,5 +236,10 @@ export class AdminProductosComponent implements OnInit {
     if (ecoScore > 80) return 'text-green-600 dark:text-green-400';
     if (ecoScore > 50) return 'text-yellow-500 dark:text-yellow-400';
     return 'text-orange-500 dark:text-orange-400';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

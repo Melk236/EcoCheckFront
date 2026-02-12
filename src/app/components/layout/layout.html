@@ -1,11 +1,11 @@
-<div class="flex">
- @if(comprobarRuta()){
-   <!-- Sidebar -->
+<div class="relative min-h-screen">
+  @if(comprobarRuta()){
+    <!-- Sidebar -->
   <app-sidebar></app-sidebar>
- }
+  }
 
   <!-- Main content -->
-  <main class="flex-1" [ngClass]="{'md:ml-64 md:w-auto':comprobarRuta()}">
+  <main [ngClass]="comprobarRuta() ? 'md:ml-64' : ''">
     <router-outlet></router-outlet>
   </main>
 </div>
