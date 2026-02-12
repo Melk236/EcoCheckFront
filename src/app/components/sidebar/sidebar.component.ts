@@ -15,7 +15,8 @@ export class SidebarComponent implements OnInit {
   dropdownOpen = false;
   usuario:User={
     id: 0,
-    userName: ''
+    userName: '',
+    roleName: ''
   }
   imagenUrl='https://lh3.googleusercontent.com/aida-public/AB6AXuBHLdsiS9dq6Rw-7AGCek6S_kGx5ORZjUUl6gYWpmcoQgQgJxf85gOXxdYeCuslnDUgMP0s4H9PzyX3JxwRctFgWEcqDbHZtG1VHsWvGK7PCZZI2l-Jcacl3vW03P45-mnhV7bTnXy_Y6X3ofgZtIf2QAHgmFTX3hVPrwWyV5IQhTsavrryAYPGkZgPy5etb2whyYj_d5jNEGm36qLqwG84mEjxTWFUFb4Y3HfQbflhBN_hguNpntKjmHZwTwnR-uNomyeASTx3VOmX';
   constructor(private router: Router,private profileService:ProfileService) { }

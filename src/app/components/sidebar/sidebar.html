@@ -83,7 +83,10 @@
           <span class="ml-3">Empresas</span>
         </a>
       </li>
-      <li>
+
+      <!--Para cuando el usuario es admin-->
+      @if(usuario.roleName.toLowerCase()=='admin'){
+        <li>
         <a routerLink="/admin" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/admin')}"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
           <span
@@ -94,6 +97,8 @@
           <span class="ml-3">Administración</span>
         </a>
       </li>
+      }
+      
       <!-- ... el resto de ítems igual que los tuyos ... -->
     </ul>
   </div>

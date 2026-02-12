@@ -6,4 +6,5 @@ export interface User {
     email?:string;
     urlImagen?:string;
     fechaRegistro?:Date;
+    roleName:string;
 }

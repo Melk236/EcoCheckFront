@@ -27,7 +27,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   formulario: FormGroup;
   usuario: User = {
     id: 0,
-    userName: ''
+    userName: '',
+    roleName: ''
   }
   modalFotoAbierta: boolean = false;
   modalConfirmacion: boolean = false;
