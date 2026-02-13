@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService, private UserService: UserService, private route: Router) {
+  constructor(private fb: FormBuilder, private profileService: ProfileService,private route: Router) {
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
       apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
@@ -102,7 +102,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     form.append('imagen', this.imagen!);
 
 
-    this.UserService.update(this.usuario.id, form).pipe(takeUntil(this.destroy$)).
+    this.profileService.update(form).pipe(takeUntil(this.destroy$)).
       subscribe({
         next: (data) => {
           this.usuario = data;
@@ -217,7 +217,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   /*Eliminamos la cuenta del usuario luego de que el usuario lo confirme*/
   eliminarUsuario() {
-    this.UserService.delete(this.usuario.id).pipe(takeUntil(this.destroy$)).subscribe({
+    this.profileService.delete().pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         sessionStorage.removeItem('jwt')//Eliminamos el token del usuario de sessionStorage
         this.route.navigate(['login'])//Y lo mandamos al componente login
@@ -233,7 +233,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   llamando al changePassword del servicio profile*/
   cambiarContrasena() {
     
-    this.UserService.changePassword(this.usuario.id,this.body).pipe(takeUntil(this.destroy$)).subscribe({
+    this.profileService.changePassword(this.body).pipe(takeUntil(this.destroy$)).subscribe({
       next:()=>{
         this.mensajeError = 'Contraseña actualizada correctamente';
         this.esExito = true;

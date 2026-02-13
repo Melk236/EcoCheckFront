@@ -14,9 +14,21 @@ export class ProfileService {
 
   getUser(): Observable<User> {
 
-
     return this.http.get<User>(this.url);
   }
 
+  update(user: FormData): Observable<User> {
 
+    return this.http.put<User>(`${this.url}`, user);
+  }
+
+  changePassword(body: { password: string, newPassword: string }): Observable<void> {
+
+    return this.http.patch<void>(this.url + '/ChangePassword', body);
+
+  }
+
+  delete(): Observable<void> {
+    return this.http.delete<void>(`${this.url}`);
+  }
 }

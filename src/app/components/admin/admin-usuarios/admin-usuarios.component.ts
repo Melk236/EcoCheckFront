@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../../services/user.service';
+import { RolService } from '../../../services/rol.service';
 import { User } from '../../../types/user';
+import { Rol } from '../../../types/rol';
 import { PaginacionComponent } from '../../../shared/paginacion/paginacion.component';
 import { ModalConfirmarComponent } from '../../modales/modal-confirmar/modal-confirmar.component';
 import { AlertaComponent } from '../../modales/alerta/alerta.component';
@@ -25,10 +27,10 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
   usuariosPaginados: User[] = [];
 
   busqueda: string = '';
-  estadoFiltro: string = '';
+  rolFiltro: string = '';
   fechaFiltro: string = '';
 
-  estados: string[] = ['Activo', 'Suspendido'];
+  roles: Rol[] = [];
 
   modalEliminarOpen: boolean = false;
   usuarioAEliminar: User | null = null;
@@ -36,10 +38,25 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
   mensajeAlerta: string = '';
   esExitoAlerta: boolean = false;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private rolService: RolService
+  ) {}
 
   ngOnInit(): void {
+    this.cargarRoles();
     this.cargarUsuarios();
+  }
+
+  cargarRoles(): void {
+    this.rolService.get().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data) => {
+        this.roles = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar roles:', err);
+      }
+    });
   }
 
   cargarUsuarios(): void {
@@ -68,6 +85,10 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
       );
     }
 
+    if (this.rolFiltro) {
+      filtrados = filtrados.filter(u => u.roleName === this.rolFiltro);
+    }
+
     if (this.fechaFiltro) {
       const fechaFiltro = new Date(this.fechaFiltro);
       filtrados = filtrados.filter(u => {
@@ -85,7 +106,7 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
     this.aplicarFiltros();
   }
 
-  onEstadoChange(): void {
+  onRolChange(): void {
     this.aplicarFiltros();
   }
 
@@ -102,7 +123,7 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
 
   limpiarFiltros(): void {
     this.busqueda = '';
-    this.estadoFiltro = '';
+    this.rolFiltro = '';
     this.fechaFiltro = '';
     this.aplicarFiltros();
   }

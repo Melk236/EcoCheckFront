@@ -24,12 +24,12 @@
         <span class="material-symbols-outlined absolute left-3 text-gray-400 dark:text-gray-400">person</span>
         <select
           class="h-12 w-full pl-10 pr-4 bg-[#f6f8f6] dark:bg-gray-800 rounded-xl text-sm font-medium border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
-          [(ngModel)]="estadoFiltro"
-          (change)="onEstadoChange()"
+          [(ngModel)]="rolFiltro"
+          (change)="onRolChange()"
         >
-          <option value="">Todos los Estados</option>
-          @for (estado of estados; track estado) {
-            <option [value]="estado">{{estado}}</option>
+          <option value="">Todos los Roles</option>
+          @for (rol of roles; track rol.id) {
+            <option [value]="rol.name">{{rol.name}}</option>
           }
         </select>
       </div>
