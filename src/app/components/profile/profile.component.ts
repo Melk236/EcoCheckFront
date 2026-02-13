@@ -10,6 +10,7 @@ import { environment } from '../../environment/environment';
 import { ModalConfirmarComponent } from '../modales/modal-confirmar/modal-confirmar.component';
 import { ModalPasswordComponent } from '../modales/modal-password/modal-password.component';
 import { Router } from '@angular/router';
+import { SharedService } from '../../services/shared-service.service';
 
 
 
@@ -44,7 +45,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService,private route: Router) {
+  constructor(private fb: FormBuilder, private profileService: ProfileService,private route: Router,private sharedService:SharedService) {
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z]*$/)]],
       apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z ]*$/)]],
@@ -109,6 +110,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
           this.mensajeError = 'Perfil actualizado correctamente';
           this.esExito = true;
+
+          this.actualizarUserSidebar();
 
         },
         error: (error) => {
@@ -266,5 +269,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /*Método que emite un observable para que cuando actualizemos el perfil,
+  los datos del usuario se actualizan y con ellos la foto de perfil
+   */
+  actualizarUserSidebar(){
+
+    this.sharedService.emitirObservable();
+    
+  }
 
 }
