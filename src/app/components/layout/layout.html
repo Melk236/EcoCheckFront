@@ -5,7 +5,7 @@
   }
 
   <!-- Main content -->
-  <main [ngClass]="comprobarRuta() ? 'md:ml-64' : ''">
+  <main [ngClass]="isLargeScreen ? 'lg:ml-64' : ''">
     <router-outlet></router-outlet>
   </main>
 </div>

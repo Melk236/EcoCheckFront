@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../types/user';
@@ -13,6 +13,7 @@ import { environment } from '../../environment/environment';
 })
 export class SidebarComponent implements OnInit {
   dropdownOpen = false;
+  isLargeScreen = false;
   usuario:User={
     id: 0,
     userName: '',
@@ -22,7 +23,21 @@ export class SidebarComponent implements OnInit {
   constructor(private router: Router,private profileService:ProfileService) { }
 
   ngOnInit(): void {
+    this.checkScreenSize();
     this.cargarPerfil();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isLargeScreen = window.innerWidth >= 1024;
+  }
+
+  mostrarSidebar(): boolean {
+    return this.isLargeScreen;
   }
 
   isActive(route: string): boolean {
