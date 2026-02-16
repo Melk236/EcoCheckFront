@@ -266,15 +266,22 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
         ));
         break;
       default:
-        this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.certificacion.includes(this.filtroCertificacion) && 
+
+      if(this.filtroCertificacion=='Todas las certificaciones') this.listaEmpresasFiltradas = this.listaEmpresas.filter(item =>
         (
           item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
           item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
           item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
         ));
-
+        
+        else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.certificacion.includes(this.filtroCertificacion) && 
+        (
+          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+        ));
     };
-
+    if(this.listaEmpresasFiltradas.length==0) this.listaEmpresasPaginacion=this.listaEmpresasFiltradas;
   }
   /*Desuscribirnos a los observables al destruirse los componentes*/
   ngOnDestroy(): void {

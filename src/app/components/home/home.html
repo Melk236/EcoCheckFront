@@ -10,8 +10,9 @@
             <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
           </div>
           <input
+            [(ngModel)]="busqueda" (input)="buscar()"
             class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 border-none! outline-none ring-0 focus:ring-0 appearance-none px-2"
-            placeholder="Buscar productos por nombre, marca..." type="text">
+            placeholder="Buscar productos por nombre, descripción o puntuación (ej. 80)..." type="text">
         </div>
         <button
           class="flex items-center justify-center gap-2 h-14 px-5 rounded-xl bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white text-base font-semibold leading-normal hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
@@ -69,8 +70,8 @@
 
 
       </div>
-      @if(productos.length > 0){
-      <app-paginacion [lista]="productos" (pagin)="paginar($event)"></app-paginacion>
+      @if(productosFiltrados.length > 0){
+      <app-paginacion [lista]="productosFiltrados" (pagin)="paginar($event)"></app-paginacion>
       }
     </div>
   </main>

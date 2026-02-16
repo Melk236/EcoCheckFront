@@ -20,15 +20,10 @@
                             <span class="material-symbols-outlined">search</span>
                         </div>
                         <input [(ngModel)]="busqueda" (input)="filtrar()"
-                            class="flex w-full min-w-0 flex-1 resize-none bg-transparenttext-[#111814] dark:text-white placeholder:text-[#618972] dark:placeholder:text-gray-400 focus:outline-0 text-base font-normal leading-normal px-2"
+                            class="flex w-full min-w-0 min-h-10 flex-1 resize-none bg-transparenttext-[#111814] dark:text-white placeholder:text-[#618972] dark:placeholder:text-gray-400 focus:outline-0 text-base font-normal leading-normal px-2"
                             placeholder="Buscar por nombre, sector o etiqueta (ej. Textil, Carbono Neutral)..."
                             value="" />
-                        <div class="flex items-center justify-center pr-2">
-                            <button
-                                class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-green-600 dark:bg-green-600 text-white text-sm font-bold hover:bg-green-700 dark:hover:bg-green-700 transition-colors">
-                                Buscar
-                            </button>
-                        </div>
+                        
                     </div>
                 </label>
             </div>
@@ -83,44 +78,50 @@
                     }
                 </div>
                 <button
-                    class="flex h-9 items-center justify-center gap-x-2 text-[#13ec6d] hover:underline pl-2 text-sm font-medium"
+                    class="flex h-9 items-center justify-center gap-x-2 px-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-medium transition-colors"
                     (click)="limpiarFiltros()"
                     [class.hidden]="!tieneFiltrosActivos()">
+                    <span class="material-symbols-outlined text-base">clear</span>
                     Limpiar filtros
                 </button>
             </div>
             <!-- Active Filters -->
-            @if(tieneFiltrosActivos()){
-            <div class="flex gap-2 flex-wrap items-center mt-2">
-                <span class="text-[#111814] dark:text-gray-300 text-xs font-medium">Filtros activos:</span>
+            @if(tieneFiltrosActivos() && listaEmpresasFiltradas.length > 0){
+            <div class="flex gap-2 flex-wrap items-center mt-2 pl-2">
+                <span class="text-[#618972] dark:text-gray-400 text-xs font-medium">Filtros activos:</span>
                 @if(filtroPuntuacion){
-                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-medium">
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-medium">
+                    <span class="material-symbols-outlined text-[12px]">trending_up</span>
                     {{filtroPuntuacion}}
-                    <button (click)="limpiarFiltros()" class="hover:text-green-900 dark:hover:text-green-100">
-                        <span class="material-symbols-outlined text-xs">close</span>
+                    <button (click)="limpiarFiltros()" class="ml-1 hover:text-green-900 dark:hover:text-green-100">
+                        <span class="material-symbols-outlined text-[12px]">close</span>
                     </button>
                 </span>
                 }
                 @if(filtroCertificacion !== 'Todas las certificaciones'){
-                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium">
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium">
+                    <span class="material-symbols-outlined text-[12px]">verified</span>
                     {{filtroCertificacion}}
-                    <button (click)="limpiarFiltros()" class="hover:text-blue-900 dark:hover:text-blue-100">
-                        <span class="material-symbols-outlined text-xs">close</span>
+                    <button (click)="limpiarFiltros()" class="ml-1 hover:text-blue-900 dark:hover:text-blue-100">
+                        <span class="material-symbols-outlined text-[12px]">close</span>
                     </button>
                 </span>
                 }
                 @if(busqueda.trim()){
-                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium">
+                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium">
+                    <span class="material-symbols-outlined text-[12px]">search</span>
                     "{{busqueda}}"
-                    <button (click)="limpiarFiltros()" class="hover:text-purple-900 dark:hover:text-purple-100">
-                        <span class="material-symbols-outlined text-xs">close</span>
+                    <button (click)="limpiarFiltros()" class="ml-1 hover:text-purple-900 dark:hover:text-purple-100">
+                        <span class="material-symbols-outlined text-[12px]">close</span>
                     </button>
                 </span>
                 }
             </div>
             }
             <!-- Result Count -->
-            <p class="text-[#618972] dark:text-gray-400 text-sm font-normal">Mostrando 12 de 145 empresas</p>
+            @if(listaEmpresasFiltradas.length > 0){
+            <p class="text-[#618972] dark:text-gray-400 text-sm font-normal">Mostrando {{listaEmpresasPaginacion.length}} de {{listaEmpresasFiltradas.length}} empresas</p>
+            }
         </div>
 
         <!-- Company Grid -->
@@ -179,9 +180,22 @@
                     </button>
                 </div>
             </div>
+            } @empty {
+            <div class="col-span-full flex flex-col items-center justify-center py-20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-gray-300 dark:text-gray-600 mb-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+                </svg>
+                <h3 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">No hay empresas</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">No existen empresas en este momento.</p>
+            </div>
             }
         </div>
-
-        <app-paginacion [lista]="listaEmpresasFiltradas" (pagin)="paginar($event)"></app-paginacion>
+       
+        @if(listaEmpresasFiltradas.length>0){
+            <app-paginacion [lista]="listaEmpresasFiltradas" (pagin)="paginar($event)"></app-paginacion>
+        }   
+        
+        
+        
 
     </div>

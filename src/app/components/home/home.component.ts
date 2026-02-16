@@ -11,6 +11,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, forkJoin, catchError } from 'rxjs';
 
 // Componentes hijos del módulo
@@ -54,7 +55,7 @@ enum TranslationType {
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal],
+  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -91,7 +92,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   // ==================== DATOS DE PRODUCTOS ====================
   // Listas de productos para visualización
   productos: Producto[] = [];
+  productosFiltrados: Producto[] = [];
   productosPaginados: Producto[] = [];
+
+  // Busqueda
+  busqueda: string = '';
 
   // ==================== CERTIFICACIONES ====================
   // Certificaciones disponibles y procesadas
@@ -157,6 +162,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.empresas = data.empresas;
         this.productos = data.productos;
+        this.productosFiltrados = [...this.productos];
         this.certificaciones = data.certificaciones;
       },
       error: () => this.errorHandler.handleError('Error al cargar datos iniciales')
@@ -846,5 +852,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.productosPaginados = lista;
     }, 0);
+  }
+
+  /**
+   * Filtra los productos por búsqueda (nombre, descripción o score)
+   */
+  buscar(): void {
+    const termino = this.busqueda.trim().toLowerCase();
+
+    if (!termino) {
+      this.productosFiltrados = [...this.productos];
+      return;
+    }
+
+    // Verificar si es un número (para buscar por puntuación)
+    const scoreBuscado = parseFloat(termino);
+
+    this.productosFiltrados = this.productos.filter(producto => {
+      const nombreMatch = producto.nombre?.toLowerCase().includes(termino);
+      const descripcionMatch = producto.descripcion?.toLowerCase().includes(termino);
+      
+      // Buscar por puntuación (puede buscar por ejemplo "80" para encontrar productos con ecoScore >= 80)
+      let scoreMatch = false;
+      if (!isNaN(scoreBuscado)) {
+        const productoScore = producto.ecoScore || 0;
+        scoreMatch = productoScore >= scoreBuscado;
+      }
+
+      return nombreMatch || descripcionMatch || scoreMatch;
+    });
+    if(this.productosFiltrados.length==0) this.productosPaginados=this.productosFiltrados;
   }
 }
