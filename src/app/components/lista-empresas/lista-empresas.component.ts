@@ -9,12 +9,13 @@ import { EmpresaCertificacion } from '../../types/empresa-certificacion';
 import { CommonModule } from '@angular/common';
 import { PaginacionComponent } from "../../shared/paginacion/paginacion.component";
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 
 
 @Component({
   selector: 'app-lista-empresas',
-  imports: [CommonModule, PaginacionComponent],
+  imports: [CommonModule, PaginacionComponent,FormsModule],
   templateUrl: './lista-empresas.html',
   styleUrl: './lista-empresas.css',
 })
@@ -41,7 +42,13 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
   /*Dropdown toggles*/
   mostrarDropdownPuntuacion = false;
   mostrarDropdownCertificaciones = false;
-  filtroSeleccionados: number = 0;
+
+  /*Varibales de filtros*/
+  filtroSeleccionadoCertificacion: number = 0;
+  filtroSeleccionadoPuntuacion: number = 0;
+  filtroCertificacion: string = 'Todas las certificaciones';
+  filtroPuntuacion: string = '';
+  busqueda:string='';
 
   constructor(private empresaService: EmpresaService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private route: Router) { }
 
@@ -165,60 +172,109 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
     this.mostrarDropdownCertificaciones = false;
   }
 
-  /*Filtramos por  certificación*/
+  /*Cogemos el valor de la certificación*/
   filtrarPorCertificacion(event: Event, id: number) {
 
     this.toggleDropdownCertificaciones();//Cerramos el dropdown
 
     //Cambiamos el background del elemnto seleccionado
-    this.filtroSeleccionados = id;
-    this.listaEmpresasFiltradas = this.listaEmpresas;
+    this.filtroSeleccionadoCertificacion = id;
+
 
     //Obtenemos el elemento seleccionado
     const elemento = event.target as HTMLElement;
-    const valor = elemento.textContent;
+    this.filtroCertificacion = elemento.textContent;
 
-
-    if (valor.trim().toLowerCase() == 'todas las certificaciones') {
-      this.listaEmpresasFiltradas = this.listaEmpresas;
-      return;
-    }
-
-    //Filtramos el array original y se lo asignamos al array filtrado
-    this.listaEmpresasFiltradas = this.listaEmpresas.filter(item =>
-      item.certificacion.includes(valor));
-    this.listaEmpresasPaginacion = this.listaEmpresasFiltradas;
-
-
+    //Filtramos
+    this.filtrar();
   }
 
-  /*Filtramos por  puntuación*/
-  filtrarPorPuntuacion(event: Event) {
+  /*Limpiar todos los filtros*/
+  limpiarFiltros(): void {
+    this.filtroSeleccionadoCertificacion = 0;
+    this.filtroSeleccionadoPuntuacion = 0;
+    this.filtroCertificacion = 'Todas las certificaciones';
+    this.filtroPuntuacion = '';
+    this.busqueda = '';
+    this.listaEmpresasFiltradas = [...this.listaEmpresas];
+  }
+
+  /*Verificar si hay filtros activos*/
+  tieneFiltrosActivos(): boolean {
+    return this.filtroSeleccionadoCertificacion !== 0 || 
+           this.filtroSeleccionadoPuntuacion !== 0 || 
+           this.busqueda.trim() !== '';
+  }
+
+  /*Filtramos por valor de puntuación*/
+  filtrarPorPuntuacion(event: Event, indice: number) {
+    this.filtroSeleccionadoPuntuacion = indice;
     this.toggleDropdownPuntuacion()//Cerramos el toggle de la puntuación
     const elemento = event.target as HTMLElement;
 
-    const valor = elemento.textContent.trim().toLowerCase();
+    this.filtroPuntuacion = elemento.textContent.trim().toLowerCase();
+   
+    //Filtamos
+    this.filtrar();
     
-    switch(valor){
-      case '80-100 (alta)':
-        this.listaEmpresasFiltradas=this.listaEmpresas.filter(item=>item.puntuacionSocial>=80);
-        break;
-      case '50-79 (media)':
-        this.listaEmpresasFiltradas=this.listaEmpresas.filter(item=>item.puntuacionSocial>=50 &&item.puntuacionSocial<80);
-        break;
-      case '0-49 (baja)':
-        this.listaEmpresasFiltradas=this.listaEmpresas.filter(item=>item.puntuacionSocial>=0 && item.puntuacionSocial<50);
 
-    }
-    
-    
   }
+
   /*Método pra cerrar los dropdowns al evento click*/
-  cerrarDropdown(){
-    addEventListener('click',()=>{
-      
+  cerrarDropdown() {
+    addEventListener('click', () => {
+
       this.cerrarDropdowns();
     });
+  }
+
+  //Método para filtrar según filtros
+  filtrar() {
+   
+    switch (this.filtroPuntuacion) {
+      case '80-100 (alta)':
+        if(this.filtroCertificacion=='Todas las certificaciones') this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 80);
+
+        else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 80 && item.certificacion.includes(this.filtroCertificacion) && 
+        (
+          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+        )
+      );
+        
+        break;
+      case '50-79 (media)':
+        if(this.filtroCertificacion=='Todas las certificaciones') this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 50 && item.puntuacionSocial < 80);
+
+        else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 50 && item.puntuacionSocial < 80 && item.certificacion.includes(this.filtroCertificacion) && 
+        (
+          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+        ));
+        
+        break;
+      case '0-49 (baja)':
+        if(this.filtroCertificacion=='Todas las certificaciones') this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 0 && item.puntuacionSocial < 50);
+
+        else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 0 && item.puntuacionSocial < 50 && item.certificacion.includes(this.filtroCertificacion) && 
+        (
+          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+        ));
+        break;
+      default:
+        this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.certificacion.includes(this.filtroCertificacion) && 
+        (
+          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+        ));
+
+    };
+
   }
   /*Desuscribirnos a los observables al destruirse los componentes*/
   ngOnDestroy(): void {

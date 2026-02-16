@@ -19,7 +19,7 @@
                         <div class="text-[#618972] flex items-center justify-center pl-4 pr-2">
                             <span class="material-symbols-outlined">search</span>
                         </div>
-                        <input
+                        <input [(ngModel)]="busqueda" (input)="filtrar()"
                             class="flex w-full min-w-0 flex-1 resize-none bg-transparenttext-[#111814] dark:text-white placeholder:text-[#618972] dark:placeholder:text-gray-400 focus:outline-0 text-base font-normal leading-normal px-2"
                             placeholder="Buscar por nombre, sector o etiqueta (ej. Textil, Carbono Neutral)..."
                             value="" />
@@ -52,10 +52,11 @@
                     @if(mostrarDropdownPuntuacion){
                     <div class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 rounded-lg shadow-lg z-50" (click)="$event.stopPropagation()">
                         <ul class="py-2">
-                            <li class="cursor-pointer" ><a href="#" class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">Todas las puntuaciones</a></li>
-                            <li class="cursor-pointer"><a (click)="filtrarPorPuntuacion($event)"  class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">80-100 (Alta)</a></li>
-                            <li class="cursor-pointer"><a (click)="filtrarPorPuntuacion($event)"class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">50-79 (Media)</a></li>
-                            <li class="cursor-pointer"><a (click)="filtrarPorPuntuacion($event)" class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">0-49 (Baja)</a></li>
+                            <li class="cursor-pointer" ><a (click)="filtrarPorPuntuacion($event,1)" class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
+                                [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionadoPuntuacion==0}">Todas las puntuaciones</a></li>
+                            <li class="cursor-pointer"><a (click)="filtrarPorPuntuacion($event,1)"  class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionadoPuntuacion==1}">80-100 (Alta)</a></li>
+                            <li class="cursor-pointer"><a (click)="filtrarPorPuntuacion($event,2)"class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionadoPuntuacion==2}">50-79 (Media)</a></li>
+                            <li class="cursor-pointer"><a (click)="filtrarPorPuntuacion($event,3)" class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionadoPuntuacion==3}">0-49 (Baja)</a></li>
                         </ul>
                     </div>
                     }
@@ -71,9 +72,9 @@
                     @if(mostrarDropdownCertificaciones){
                     <div class="absolute top-full left-0 mt-2 w-48 max-h-40 overflow-y-auto bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 rounded-lg shadow-lg z-50" (click)="$event.stopPropagation()">
                         <ul class="py-2" >
-                            <li class="cursor-pointer"><a (click)="filtrarPorCertificacion($event,0)" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionados==0}"class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">Todas las certificaciones</a></li>
+                            <li class="cursor-pointer"><a (click)="filtrarPorCertificacion($event,0)" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionadoCertificacion==0}"class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">Todas las certificaciones</a></li>
                             @for(certificacion of certificaciones;track certificacion.id){
-                                 <li class="cursor-pointer"><a (click)="filtrarPorCertificacion($event,certificacion.id)" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionados==certificacion.id}" class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">{{certificacion.nombre}}</a></li>
+                                 <li class="cursor-pointer"><a (click)="filtrarPorCertificacion($event,certificacion.id)" [ngClass]="{'bg-gray-100 dark:bg-gray-600':filtroSeleccionadoCertificacion==certificacion.id}" class="block px-4 py-2 text-sm text-[#111814] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600">{{certificacion.nombre}}</a></li>
                             }
                            
                             
@@ -82,10 +83,42 @@
                     }
                 </div>
                 <button
-                    class="flex h-9 items-center justify-center gap-x-2 text-[#13ec6d] hover:underline pl-2 text-sm font-medium">
+                    class="flex h-9 items-center justify-center gap-x-2 text-[#13ec6d] hover:underline pl-2 text-sm font-medium"
+                    (click)="limpiarFiltros()"
+                    [class.hidden]="!tieneFiltrosActivos()">
                     Limpiar filtros
                 </button>
             </div>
+            <!-- Active Filters -->
+            @if(tieneFiltrosActivos()){
+            <div class="flex gap-2 flex-wrap items-center mt-2">
+                <span class="text-[#111814] dark:text-gray-300 text-xs font-medium">Filtros activos:</span>
+                @if(filtroPuntuacion){
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-medium">
+                    {{filtroPuntuacion}}
+                    <button (click)="limpiarFiltros()" class="hover:text-green-900 dark:hover:text-green-100">
+                        <span class="material-symbols-outlined text-xs">close</span>
+                    </button>
+                </span>
+                }
+                @if(filtroCertificacion !== 'Todas las certificaciones'){
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium">
+                    {{filtroCertificacion}}
+                    <button (click)="limpiarFiltros()" class="hover:text-blue-900 dark:hover:text-blue-100">
+                        <span class="material-symbols-outlined text-xs">close</span>
+                    </button>
+                </span>
+                }
+                @if(busqueda.trim()){
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium">
+                    "{{busqueda}}"
+                    <button (click)="limpiarFiltros()" class="hover:text-purple-900 dark:hover:text-purple-100">
+                        <span class="material-symbols-outlined text-xs">close</span>
+                    </button>
+                </span>
+                }
+            </div>
+            }
             <!-- Result Count -->
             <p class="text-[#618972] dark:text-gray-400 text-sm font-normal">Mostrando 12 de 145 empresas</p>
         </div>
