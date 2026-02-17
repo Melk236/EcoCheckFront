@@ -15,6 +15,7 @@
             placeholder="Buscar productos por nombre, descripción o puntuación (ej. 80)..." type="text">
         </div>
         <button
+          (click)="openModalFiltros()"
           class="flex items-center justify-center gap-2 h-14 px-5 rounded-xl bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white text-base font-semibold leading-normal hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
           <span class="material-symbols-outlined">filter_list</span>
           <span>Filtros</span>
@@ -96,4 +97,12 @@
 @if(loadingModal){
 
 <app-loading-modal></app-loading-modal>
+}
+
+<!-- Modal Filtros -->
+@if(modalFiltrosOpen){
+<app-modal-filtros 
+  (close)="closeModalFiltros()" 
+  (aplicarFiltros)="aplicarFiltrosHomg($event)">
+</app-modal-filtros>
 }

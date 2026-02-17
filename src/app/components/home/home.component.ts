@@ -19,6 +19,7 @@ import { ModalEscaner } from './modal-escaner/modal-escaner.component';
 import { ModalInformativo } from '../modales/modal-informativo/modal-informativo';
 import { LoadingModal } from '../modales/loading-modal/loading-modal';
 import { PaginacionComponent } from '../../shared/paginacion/paginacion.component';
+import { ModalFiltrosComponent } from '../modales/modal-filtros/modal-filtros.component';
 
 // Servicios de la aplicación
 import { ApiExternaService } from '../../services/api-externa.service';
@@ -55,7 +56,7 @@ enum TranslationType {
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule],
+  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule, ModalFiltrosComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -97,6 +98,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Busqueda
   busqueda: string = '';
+
+  // Filtros
+  modalFiltrosOpen: boolean = false;
+  filtroPais: string = '';
+  filtroPuntuacion: string = '';
 
   // ==================== CERTIFICACIONES ====================
   // Certificaciones disponibles y procesadas
@@ -190,6 +196,29 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   closeModalSucces() {
     this.modalSucces = false;
+  }
+
+  /**
+   * Abre el modal de filtros
+   */
+  openModalFiltros() {
+    this.modalFiltrosOpen = true;
+  }
+
+  /**
+   * Cierra el modal de filtros
+   */
+  closeModalFiltros() {
+    this.modalFiltrosOpen = false;
+  }
+
+  /**
+   * Aplica los filtros del modal
+   */
+  aplicarFiltrosHomg(data: {pais: string, puntuacion: string}) {
+    this.filtroPais = data.pais;
+    this.filtroPuntuacion = data.puntuacion;
+    this.buscar();
   }
 
   // ==================== PROCESAMIENTO DE QR ====================
@@ -855,31 +884,47 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Filtra los productos por búsqueda (nombre, descripción o score)
+   * Filtra los productos por búsqueda (nombre, descripción, score) y por filtros (país, puntuación)
    */
   buscar(): void {
     const termino = this.busqueda.trim().toLowerCase();
 
-    if (!termino) {
-      this.productosFiltrados = [...this.productos];
-      return;
-    }
-
-    // Verificar si es un número (para buscar por puntuación)
-    const scoreBuscado = parseFloat(termino);
-
     this.productosFiltrados = this.productos.filter(producto => {
-      const nombreMatch = producto.nombre?.toLowerCase().includes(termino);
-      const descripcionMatch = producto.descripcion?.toLowerCase().includes(termino);
-      
-      // Buscar por puntuación (puede buscar por ejemplo "80" para encontrar productos con ecoScore >= 80)
-      let scoreMatch = false;
-      if (!isNaN(scoreBuscado)) {
-        const productoScore = producto.ecoScore || 0;
-        scoreMatch = productoScore >= scoreBuscado;
+      // Filtro por búsqueda
+      let busquedaMatch = true;
+      if (termino) {
+        const scoreBuscado = parseFloat(termino);
+        
+        busquedaMatch = 
+          producto.nombre?.toLowerCase().includes(termino) ||
+          producto.descripcion?.toLowerCase().includes(termino) ||
+          (!isNaN(scoreBuscado) && (producto.ecoScore || 0) >= scoreBuscado);
       }
 
-      return nombreMatch || descripcionMatch || scoreMatch;
+      // Filtro por país
+      let paisMatch = true;
+      if (this.filtroPais && producto.paisOrigen) {
+        paisMatch = producto.paisOrigen.toLowerCase().includes(this.filtroPais.toLowerCase());
+      }
+
+      // Filtro por puntuación
+      let puntuacionMatch = true;
+      if (this.filtroPuntuacion && this.filtroPuntuacion !== 'Todas') {
+        const score = producto.ecoScore || 0;
+        switch (this.filtroPuntuacion) {
+          case '80-100 (Alta)':
+            puntuacionMatch = score >= 80;
+            break;
+          case '50-79 (Media)':
+            puntuacionMatch = score >= 50 && score < 80;
+            break;
+          case '0-49 (Baja)':
+            puntuacionMatch = score < 50;
+            break;
+        }
+      }
+
+      return busquedaMatch && paisMatch && puntuacionMatch;
     });
     if(this.productosFiltrados.length==0) this.productosPaginados=this.productosFiltrados;
   }
