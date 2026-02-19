@@ -1,7 +1,9 @@
 // token.interceptor.ts
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 /**
  * Interceptor que agrega el token JWT almacenado en sessionStorage bajo la clave 'jwt'
@@ -11,6 +13,8 @@ import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 export class TokenInterceptor implements HttpInterceptor {
     private isRefreshing = false;
     private refreshSubject = new BehaviorSubject<string | null>(null);
+
+    constructor(private authService:AuthService,private route:Router){}
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const urlExcludes = [
             '/api/v2/product/',
@@ -35,6 +39,7 @@ export class TokenInterceptor implements HttpInterceptor {
             const cloned = req.clone({
                 setHeaders: { Authorization: `Bearer ${token}` },
             });
+            
             return next.handle(cloned).pipe(
                 catchError(error => {
                     if (error.status === 401 && !urlSinToken) {
@@ -48,17 +53,18 @@ export class TokenInterceptor implements HttpInterceptor {
         return next.handle(req);
     }
     private handle401(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshSubject.next(null);
 
-            const refreshToken = sessionStorage.getItem('refreshToken');
+            
 
-            return this.authService.refreshToken(refreshToken!).pipe(
+            return this.authService.refreshToken().pipe(
                 switchMap(tokens => {
                     this.isRefreshing = false;
                     sessionStorage.setItem('jwt', tokens.token);
-                    sessionStorage.setItem('refreshToken', tokens.refreshToken);
+                    
                     this.refreshSubject.next(tokens.token);
 
                     // Reintenta el request original con el nuevo token
@@ -69,7 +75,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 catchError(err => {
                     this.isRefreshing = false;
                     sessionStorage.clear();
-                    this.router.navigate(['/login']);
+                    this.route.navigate(['/login']);
                     return throwError(() => err);
                 })
             );

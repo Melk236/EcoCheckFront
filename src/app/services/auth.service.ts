@@ -3,28 +3,36 @@ import { environment } from '../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { AuthUser } from '../types/auth-user';
 import { Observable } from 'rxjs';
+import { TokenResponse } from '../types/token-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly url=environment.apiUrl+'Auth/';
+  private readonly url = environment.apiUrl + 'Auth/';
 
-  constructor(private http:HttpClient){}
+  constructor(private http: HttpClient) { }
 
-  login(usuario:AuthUser):Observable<{token:string}>{
-    return this.http.post<{token:string}>(this.url+'login',usuario);
+  login(usuario: AuthUser): Observable<TokenResponse> {
+    return this.http.post<TokenResponse>(this.url + 'login', usuario);
   }
 
-  register(usuario:AuthUser):Observable<{token:string}>{
-    return this.http.post<{token:string}>(this.url+'Register',usuario);
+  register(usuario: AuthUser): Observable<TokenResponse> {
+    return this.http.post<TokenResponse>(this.url + 'Register', usuario);
   }
 
-  setToken(token:string){
-    sessionStorage.setItem('jwt',token);
-  } 
+  setToken(token: string) {
+    sessionStorage.setItem('jwt', token);
+  }
 
-  removeToken(){
+  removeToken() {
     sessionStorage.removeItem('jwt');
+  }
+
+  refreshToken(): Observable<TokenResponse> {
+    
+    return this.http.post<TokenResponse>(this.url + 'Refresh', {},{
+      withCredentials:true
+    });
   }
 }
