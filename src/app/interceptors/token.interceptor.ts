@@ -33,9 +33,13 @@ export class TokenInterceptor implements HttpInterceptor {
 
         }
 
-        if (token && !urlSinToken) {
+        if (urlSinToken) {
+            const cloned = req.clone();
+            return next.handle(cloned);
+        }
 
-            // Clona la petición añadiendo el encabezado Authorization
+        if (token) {
+
             const cloned = req.clone({
                 setHeaders: { Authorization: `Bearer ${token}` },
             });
@@ -66,8 +70,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     sessionStorage.setItem('jwt', tokens.token);
                     
                     this.refreshSubject.next(tokens.token);
-
-                    // Reintenta el request original con el nuevo token
+                    
                     return next.handle(req.clone({
                         setHeaders: { Authorization: `Bearer ${tokens.token}` }
                     }));

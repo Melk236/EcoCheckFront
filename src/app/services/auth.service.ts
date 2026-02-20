@@ -14,11 +14,15 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(usuario: AuthUser): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(this.url + 'login', usuario);
+    return this.http.post<TokenResponse>(this.url + 'login', usuario, {
+      withCredentials: true
+    });
   }
 
   register(usuario: AuthUser): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(this.url + 'Register', usuario);
+    return this.http.post<TokenResponse>(this.url + 'Register', usuario, {
+      withCredentials: true
+    });
   }
 
   setToken(token: string) {
