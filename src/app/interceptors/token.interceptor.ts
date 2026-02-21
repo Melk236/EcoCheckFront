@@ -14,25 +14,27 @@ export class TokenInterceptor implements HttpInterceptor {
     private isRefreshing = false;
     private refreshSubject = new BehaviorSubject<string | null>(null);
 
-    constructor(private authService:AuthService,private route:Router){}
+    constructor(private authService: AuthService, private route: Router) { }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const urlExcludes = [
             '/api/v2/product/',
-
+            '/Auth/login',
+            '/Auth/Register'
         ];
         // Obtiene el token del sessionStorage
         const token = sessionStorage.getItem('jwt');
         let urlSinToken: boolean = false;
 
-        for (var url in urlExcludes) {
+        for (let i = 0; i < urlExcludes.length; i++) {
+            
+            if (req.url.includes(urlExcludes[i])) {
 
-            if (req.url.includes(url)) {
                 urlSinToken = true;
                 break;
             }
 
         }
-
+        
         if (urlSinToken) {
             const cloned = req.clone();
             return next.handle(cloned);
@@ -43,7 +45,7 @@ export class TokenInterceptor implements HttpInterceptor {
             const cloned = req.clone({
                 setHeaders: { Authorization: `Bearer ${token}` },
             });
-            
+
             return next.handle(cloned).pipe(
                 catchError(error => {
                     if (error.status === 401 && !urlSinToken) {
@@ -62,15 +64,15 @@ export class TokenInterceptor implements HttpInterceptor {
             this.isRefreshing = true;
             this.refreshSubject.next(null);
 
-            
+
 
             return this.authService.refreshToken().pipe(
                 switchMap(tokens => {
                     this.isRefreshing = false;
                     sessionStorage.setItem('jwt', tokens.token);
-                    
+
                     this.refreshSubject.next(tokens.token);
-                    
+
                     return next.handle(req.clone({
                         setHeaders: { Authorization: `Bearer ${tokens.token}` }
                     }));
