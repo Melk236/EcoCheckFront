@@ -132,7 +132,9 @@
 
             <div
                 class="cards group flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-gray-600 hover:shadow-lg dark:hover:shadow-[#13ec6d]/10 transition-all duration-300">
-                <div class="relative h-40 bg-cover bg-center fondo-imagen">
+                <div class="relative h-40 bg-gray-200 dark:bg-gray-600 bg-cover bg-center bg-no-repeat"
+                    [style.background-image]="'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(' + empresa.logo + ')'"
+                    [style.background-size]="'contain'">
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
 
@@ -155,10 +157,7 @@
                                 class="text-[#111814] dark:text-white text-lg font-bold leading-tight group-hover:text-[#13ec6d] transition-colors">
                                 {{empresa.nombre}}</h3>
                         </div>
-                        <div class="size-10 rounded-full bg-gray-100 shrink-0 border border-gray-200 overflow-hidden">
-                            <img alt="Company Logo" class="w-full h-full object-cover"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCP2ClvLPEWzaBq4r8UFkG-qtv2k3K0Q-Xhku6mEHSu51jFIGkmuof0qYCZfRyi8rJPGNWEoteLqyxqgDb0snloRGHRWnR5Imy1FUYN_ODqdOEUYVcJEkLgaTTjhdVBU3W-pl5Dlcka1dhtL2TqAEz1EJB8mZVN9nsKEXFptAUmcPKIoO9p_ngNmXclJlBQNvXzEFMitl-DPiRC5AX4ulnfDw5J8mVTYJfHj6UEEPOHl5oJGLn1w3LQn9EqttPwOBO9T0gwCbF7ICu" />
-                        </div>
+                       
                     </div>
                     <p class="text-[#111814]/70 dark:text-gray-400 text-sm ">{{empresa.descripcion}}</p>
                     <div class="flex flex-wrap gap-2 mt-auto pt-2">

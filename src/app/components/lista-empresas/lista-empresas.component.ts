@@ -101,7 +101,8 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
         puntuacionSocial: valor.puntuacionSocial,
         controversias: valor.controversias,
         descripcion: valor.descripcion,
-        certificacion: []
+        certificacion: [],
+        logo:valor.logo
 
       };
 

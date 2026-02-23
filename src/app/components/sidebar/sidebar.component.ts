@@ -38,6 +38,19 @@ export class SidebarComponent implements OnInit,OnDestroy {
     this.checkScreenSize();
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    
+    if (userMenuButton && userDropdown) {
+      if (!userMenuButton.contains(target) && !userDropdown.contains(target)) {
+        this.dropdownOpen = false;
+      }
+    }
+  }
+
   checkScreenSize() {
     this.isLargeScreen = window.innerWidth >= 1024;
   }

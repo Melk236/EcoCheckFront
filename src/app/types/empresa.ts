@@ -21,6 +21,7 @@ export interface IListaEmpresas {
   controversias: string;
   descripcion: string;
   certificacion: string[];
+  logo?:string;
 }
 export interface BusquedaEmpresaId {
   search: Array<{
