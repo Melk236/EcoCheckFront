@@ -126,7 +126,7 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
     this.listaEmpresas = [...this.listaEmpresas];  // Crea una NUEVA referencia
     this.listaEmpresasFiltradas = this.listaEmpresas;
 
-
+    
   }
 
   paginar(listaEmpresas: any) {

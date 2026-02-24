@@ -133,8 +133,14 @@
             <div
                 class="cards group flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-gray-600 hover:shadow-lg dark:hover:shadow-[#13ec6d]/10 transition-all duration-300">
                 <div class="relative h-40 bg-gray-200 dark:bg-gray-600 bg-cover bg-center bg-no-repeat"
-                    [style.background-image]="'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(' + empresa.logo + ')'"
-                    [style.background-size]="'contain'">
+                    [style.background-image]="empresa.logo ? 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(' + empresa.logo + ')' : ''"
+                    [style.background-size]="empresa.logo ? 'contain' : 'auto'">
+                    @if(!empresa.logo){
+                       
+                    <div class="flex items-center justify-center h-full">
+                        <span class="material-symbols-outlined text-6xl text-gray-400 dark:text-gray-500">storefront</span>
+                    </div>
+                    }
                     <div
                         class="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
 
