@@ -39,4 +39,12 @@ export class AuthService {
       withCredentials:true
     });
   }
+
+  logOut():Observable<void>{
+
+  return this.http.post<void>(this.url+'LogOut',{},{
+     withCredentials:true
+  });
+
+  }
 }

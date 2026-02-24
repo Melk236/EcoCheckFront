@@ -11,12 +11,13 @@ import { CommonModule } from '@angular/common';
 import { ProductoService } from '../../../services/producto.service';
 import { Producto } from '../../../types/producto';
 import { PaginacionComponent } from '../../../shared/paginacion/paginacion.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 
 @Component({
   selector: 'app-empresa',
-  imports: [CommonModule,PaginacionComponent],
+  imports: [CommonModule,PaginacionComponent, MatCardModule],
   templateUrl: './empresa.html',
   styleUrl: './empresa.css',
 })
@@ -45,6 +46,11 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   /*Observable que maneja la desuscripción del componente cuando se destruye el componente*/
   destroy$ = new Subject<void>();
 
+  /*Loading skeleton*/
+  loading: boolean = true;
+  loadingProductos: boolean = false;
+  skeletonItems: number[] = Array.from({ length: 4 }, (_, i) => i + 1);
+
   constructor(private route: ActivatedRoute, private empresaService: EmpresaService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private productoService: ProductoService, private ruta: Router) { }
 
 
@@ -69,10 +75,12 @@ export class EmpresaComponent implements OnInit, OnDestroy {
         this.empresaCertificacion = data.empresaCertificacion;
 
         this.asociarEmpresaCertificaciones();
+        this.loading = false;
 
       },
       error: (error) => {
         console.log(error);
+        this.loading = false;
       }
     })
 
@@ -124,6 +132,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   /*Obtenemos los productos*/
   obtenerProductos() {
+    this.loadingProductos = true;
     this.productoService.get()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -131,9 +140,11 @@ export class EmpresaComponent implements OnInit, OnDestroy {
           this.productos = data;
           //Cuando ya tengamos todos los productos filtramos los productos pertenecientes a la empresa correspondiente
           this.productosEmpresa = this.productos.filter(item => item.marcaId == this.empresa.id)
+          this.loadingProductos = false;
         },
         error: (error) => {
           console.log(error);
+          this.loadingProductos = false;
         }
       });
   }

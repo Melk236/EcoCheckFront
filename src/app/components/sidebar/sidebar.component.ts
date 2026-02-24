@@ -6,6 +6,7 @@ import { ProfileService } from '../../services/profile.service';
 import { environment } from '../../environment/environment';
 import { SharedService } from '../../services/shared-service.service';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +25,7 @@ export class SidebarComponent implements OnInit,OnDestroy {
   imagenUrl='https://lh3.googleusercontent.com/aida-public/AB6AXuBHLdsiS9dq6Rw-7AGCek6S_kGx5ORZjUUl6gYWpmcoQgQgJxf85gOXxdYeCuslnDUgMP0s4H9PzyX3JxwRctFgWEcqDbHZtG1VHsWvGK7PCZZI2l-Jcacl3vW03P45-mnhV7bTnXy_Y6X3ofgZtIf2QAHgmFTX3hVPrwWyV5IQhTsavrryAYPGkZgPy5etb2whyYj_d5jNEGm36qLqwG84mEjxTWFUFb4Y3HfQbflhBN_hguNpntKjmHZwTwnR-uNomyeASTx3VOmX';
 
   destroy$=new Subject<void>();
-  constructor(private router: Router,private profileService:ProfileService,private sharedService:SharedService) { }
+  constructor(private router: Router,private profileService:ProfileService,private sharedService:SharedService,private authService:AuthService) { }
   
 
   ngOnInit(): void {
@@ -84,6 +85,19 @@ export class SidebarComponent implements OnInit,OnDestroy {
         this.cargarPerfil();
       }
     });
+  }
+  /*Cierre de sesión del usuario */
+  cerrarSesion(){
+    this.authService.removeToken();
+
+    this.authService.logOut().pipe(takeUntil(this.destroy$)).subscribe({
+      next:()=>{
+        this.router.navigate(['login']);
+      },
+      error:(error)=>{
+        console.log(error.error.mensaje);
+      }
+    })
   }
 
   ngOnDestroy(): void {

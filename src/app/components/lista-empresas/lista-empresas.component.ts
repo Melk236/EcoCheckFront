@@ -10,12 +10,13 @@ import { CommonModule } from '@angular/common';
 import { PaginacionComponent } from "../../shared/paginacion/paginacion.component";
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 
 
 
 @Component({
   selector: 'app-lista-empresas',
-  imports: [CommonModule, PaginacionComponent,FormsModule],
+  imports: [CommonModule, PaginacionComponent, FormsModule, MatCardModule],
   templateUrl: './lista-empresas.html',
   styleUrl: './lista-empresas.css',
 })
@@ -35,6 +36,10 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
   pagActual: number = 1;
   numPaginasTotal: number = 0;
   paginas: number[] = [];
+
+  /*Loading skeleton*/
+  loading: boolean = true;
+  skeletonItems: number[] = Array.from({ length: 8 }, (_, i) => i + 1);
 
   /*Para desuscribirnos de los observables al destruirse el componente*/
   destroy$ = new Subject<void>();
@@ -77,10 +82,12 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
 
           //Cuando todos los datos estén listos asociamos las empresas con sus certificaciones
           this.asociarCertificacionEmpresa();
+          this.loading = false;
 
         },
         error: (error) => {
           console.log(error);
+          this.loading = false;
         }
       }
     );

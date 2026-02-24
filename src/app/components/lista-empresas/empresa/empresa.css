@@ -5,3 +5,25 @@
   transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
+
+.skeleton-element {
+  background-color: #d1d5db;
+  border-radius: 0.375rem;
+}
+
+:global(.dark) .skeleton-element {
+  background-color: #374151;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}

@@ -126,6 +126,26 @@
 
         <!-- Company Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
+            <!-- Skeleton Loading -->
+            @if(loading){
+            @for(item of skeletonItems; track item){
+            <mat-card class="flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-600">
+                <div class="relative h-40 bg-gray-200 dark:bg-gray-600 skeleton-element animate-pulse"></div>
+                <div class="p-5 flex flex-col gap-3 flex-1">
+                    <div class="flex flex-col gap-2">
+                        <div class="h-3 w-1/2 skeleton-element animate-pulse"></div>
+                        <div class="h-5 w-3/4 skeleton-element animate-pulse"></div>
+                    </div>
+                    <div class="h-4 w-full skeleton-element animate-pulse"></div>
+                    <div class="flex gap-2 mt-auto pt-2">
+                        <div class="h-6 w-20 skeleton-element animate-pulse"></div>
+                        <div class="h-6 w-20 skeleton-element animate-pulse"></div>
+                    </div>
+                </div>
+            </mat-card>
+            }
+            }
+
             <!-- Card 1 -->
             <!-- Aplicada paleta gray en todas las cards -->
             @for(empresa of listaEmpresasPaginacion;track empresa.id){
