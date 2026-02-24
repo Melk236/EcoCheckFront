@@ -45,10 +45,10 @@
               </div>
               <div>
                 <h3 class="text-lg md:text-xl font-bold text-[#333333] dark:text-white">Puntuación EcoScore Total</h3>
-                @if(puntuacion.valor>=80){
+                 @if(puntuacion.valor>=80){
                    <p class="text-sm text-[#6c757d] dark:text-gray-400">Alto nivel de sostenibilidad global</p>
                 }
-                @if(puntuacion.valor<=70 && puntuacion.valor>=50){
+                @if(puntuacion.valor<80 && puntuacion.valor>=50){
                    <p class="text-sm text-[#6c757d] dark:text-gray-400">Medio nivel de sostenibilidad global</p>
                 }
                 @if(puntuacion.valor<50){
@@ -71,24 +71,24 @@
               </div>
               <div class="w-8 h-px bg-gray-200 dark:bg-gray-600"></div>
               <div class="flex flex-col items-center gap-1 opacity-40"
-                [ngClass]="{'opacity-100 scale-110': puntuacion.valor >= 50 && puntuacion.valor < 70}">
-                <div *ngIf="puntuacion.valor >= 50 && puntuacion.valor < 70"
+                [ngClass]="{'opacity-100 scale-110': puntuacion.valor >= 50 && puntuacion.valor < 80}">
+                <div *ngIf="puntuacion.valor >= 50 && puntuacion.valor < 80"
                   class="w-4 h-4 rounded-full bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.6)] ring-2 ring-yellow-100 dark:ring-yellow-900">
                 </div>
-                <div *ngIf="!(puntuacion.valor >= 50 && puntuacion.valor < 70)"
+                <div *ngIf="!(puntuacion.valor >= 50 && puntuacion.valor < 80)"
                   class="w-3 h-3 rounded-full bg-yellow-500"></div>
                 <span class="text-[10px] uppercase font-bold text-gray-500"
-                  [ngClass]="{'text-yellow-600 dark:text-yellow-400': puntuacion.valor >= 50 && puntuacion.valor < 70}">Medio</span>
+                  [ngClass]="{'text-yellow-600 dark:text-yellow-400': puntuacion.valor >= 50 && puntuacion.valor < 80}">Medio</span>
               </div>
               <div class="w-8 h-px bg-gray-200 dark:bg-gray-600"></div>
               <div class="flex flex-col items-center gap-1 opacity-40"
-                [ngClass]="{'opacity-100 scale-110': puntuacion.valor >= 70}">
-                <div *ngIf="puntuacion.valor >= 70"
+                [ngClass]="{'opacity-100 scale-110': puntuacion.valor >= 80}">
+                <div *ngIf="puntuacion.valor >= 80"
                   class="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)] ring-2 ring-green-100 dark:ring-green-900">
                 </div>
-                <div *ngIf="!(puntuacion.valor >= 70)" class="w-3 h-3 rounded-full bg-green-500"></div>
+                <div *ngIf="!(puntuacion.valor >= 80)" class="w-3 h-3 rounded-full bg-green-500"></div>
                 <span class="text-[10px] uppercase font-bold text-gray-500"
-                  [ngClass]="{'text-green-600 dark:text-green-400': puntuacion.valor >= 70}">Alto</span>
+                  [ngClass]="{'text-green-600 dark:text-green-400': puntuacion.valor >= 80}">Alto</span>
               </div>
             </div>
           </div>
@@ -98,15 +98,15 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 min-h-full">
           <!-- Environmental Score Column -->
           <div class="p-8 border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-700" [ngClass]="{
-              'bg-green-50/30 dark:bg-green-900/5': puntuacion.valorAmbiental >= 70,
-              'bg-yellow-50/30 dark:bg-yellow-900/5': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 70,
+              'bg-green-50/30 dark:bg-green-900/5': puntuacion.valorAmbiental >= 80,
+              'bg-yellow-50/30 dark:bg-yellow-900/5': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
               'bg-red-50/30 dark:bg-red-900/5': puntuacion.valorAmbiental < 50
             }">
             <div class="flex items-center justify-between gap-3 mb-6">
               <div class="flex items-center gap-3">
                 <div class="p-2.5 rounded-lg shadow-sm" [ngClass]="{
-                    'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400': puntuacion.valorAmbiental >= 70,
-                    'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 70,
+                    'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400': puntuacion.valorAmbiental >= 80,
+                    'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
                     'bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400': puntuacion.valorAmbiental < 50
                   }">
                   <span class="material-symbols-outlined">eco</span>
@@ -114,18 +114,18 @@
                 <h3 class="text-xl font-bold text-[#333333] dark:text-white">Score Ambiental</h3>
               </div>
               <div class="flex items-center gap-2 px-3 py-1 rounded-full border" [ngClass]="{
-                  'bg-green-100 dark:bg-green-900/40 border-green-200 dark:border-green-800/30': puntuacion.valorAmbiental >= 70,
-                  'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-200 dark:border-yellow-800/30': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 70,
+                  'bg-green-100 dark:bg-green-900/40 border-green-200 dark:border-green-800/30': puntuacion.valorAmbiental >= 80,
+                  'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-200 dark:border-yellow-800/30': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
                   'bg-red-100 dark:bg-red-900/40 border-red-200 dark:border-red-800/30': puntuacion.valorAmbiental < 50
                 }">
                 <div class="w-2.5 h-2.5 rounded-full" [ngClass]="{
-                  'bg-green-500': puntuacion.valorAmbiental >= 70,
-                  'bg-yellow-500': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 70,
+                  'bg-green-500': puntuacion.valorAmbiental >= 80,
+                  'bg-yellow-500': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
                   'bg-red-500': puntuacion.valorAmbiental < 50
                 }"></div>
                 <span class="text-sm font-bold" [ngClass]="{
-                  'text-green-700 dark:text-green-300': puntuacion.valorAmbiental >= 70,
-                  'text-yellow-700 dark:text-yellow-300': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 70,
+                  'text-green-700 dark:text-green-300': puntuacion.valorAmbiental >= 80,
+                  'text-yellow-700 dark:text-yellow-300': puntuacion.valorAmbiental >= 50 && puntuacion.valorAmbiental < 80,
                   'text-red-700 dark:text-red-300': puntuacion.valorAmbiental < 50
                 }">{{formatNumber(puntuacion.valorAmbiental)}}/100</span>
               </div>
@@ -207,15 +207,15 @@
 
           <!-- Social Score Column -->
           <div class="p-8" [ngClass]="{
-              'bg-white dark:bg-gray-800': puntuacion.valorSocial >= 70,
-              'bg-yellow-50/30 dark:bg-yellow-900/5': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 70,
+              'bg-white dark:bg-gray-800': puntuacion.valorSocial >= 80,
+              'bg-yellow-50/30 dark:bg-yellow-900/5': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
               'bg-red-50/30 dark:bg-red-900/5': puntuacion.valorSocial < 50
             }">
             <div class="flex items-center justify-between gap-3 mb-6">
               <div class="flex items-center gap-3">
                 <div class="p-2.5 rounded-lg shadow-sm" [ngClass]="{
-                    'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400': puntuacion.valorSocial >= 70,
-                    'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 70,
+                    'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400': puntuacion.valorSocial >= 80,
+                    'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
                     'bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400': puntuacion.valorSocial < 50
                   }">
                   <span class="material-symbols-outlined">diversity_3</span>
@@ -223,18 +223,18 @@
                 <h3 class="text-xl font-bold text-[#333333] dark:text-white">Score Social</h3>
               </div>
               <div class="flex items-center gap-2 px-3 py-1 rounded-full border" [ngClass]="{
-                  'bg-green-100 dark:bg-green-900/40 border-green-200 dark:border-green-800/30': puntuacion.valorSocial >= 70,
-                  'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-200 dark:border-yellow-800/30': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 70,
+                  'bg-green-100 dark:bg-green-900/40 border-green-200 dark:border-green-800/30': puntuacion.valorSocial >= 80,
+                  'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-200 dark:border-yellow-800/30': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
                   'bg-red-100 dark:bg-red-900/40 border-red-200 dark:border-red-800/30': puntuacion.valorSocial < 50
                 }">
                 <div class="w-2.5 h-2.5 rounded-full" [ngClass]="{
-                  'bg-green-500': puntuacion.valorSocial >= 70,
-                  'bg-yellow-500': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 70,
+                  'bg-green-500': puntuacion.valorSocial >= 80,
+                  'bg-yellow-500': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
                   'bg-red-500': puntuacion.valorSocial < 50
                 }"></div>
                 <span class="text-sm font-bold" [ngClass]="{
-                  'text-green-700 dark:text-green-300': puntuacion.valorSocial >= 70,
-                  'text-yellow-700 dark:text-yellow-300': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 70,
+                  'text-green-700 dark:text-green-300': puntuacion.valorSocial >= 80,
+                  'text-yellow-700 dark:text-yellow-300': puntuacion.valorSocial >= 50 && puntuacion.valorSocial < 80,
                   'text-red-700 dark:text-red-300': puntuacion.valorSocial < 50
                 }">{{formatNumber(puntuacion.valorSocial)}}/100</span>
               </div>

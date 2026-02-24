@@ -75,7 +75,7 @@ export const CATEGORY_TO_PACKAGING: Record<string, { packaging: string[]; recicl
   'en:waters': { packaging: ['en:pet-1-polyethylene-terephthalate', 'en:glass'], reciclable: true },
   'en:juices-and-nectars': { packaging: ['en:tetrapak', 'en:pet-1-polyethylene-terephthalate', 'en:glass'], reciclable: true },
   'en:dairies': { packaging: ['en:tetrapak', 'en:hdpe-2-high-density-polyethylene', 'en:pp-5-polypropylene'], reciclable: true },
-  'en:milks': { packaging: ['en:tetrapak', 'en:hdpe-2-high-density-polyethylene', 'en:glass'], reciclable: true },
+  'en:milks': { packaging: ['en:tetrapak'], reciclable: true },
   'en:yogurts': { packaging: ['en:pp-5-polypropylene', 'en:aluminum', 'en:plastic'], reciclable: true },
   'en:cheeses': { packaging: ['en:plastic', 'en:ldpe-4-low-density-polyethylene', 'en:paper'], reciclable: true },
   'en:snacks': { packaging: ['en:plastic', 'en:ldpe-4-low-density-polyethylene', 'en:aluminum'], reciclable: false, nota: 'Bolsas flexibles multicapa suelen no reciclarse efectivamente' },

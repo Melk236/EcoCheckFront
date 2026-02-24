@@ -12,7 +12,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil, forkJoin, catchError } from 'rxjs';
+import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { MatCardModule } from '@angular/material/card';
+
 
 // Componentes hijos del módulo
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
@@ -56,7 +58,7 @@ enum TranslationType {
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule, ModalFiltrosComponent],
+  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule, ModalFiltrosComponent, MatCardModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -70,6 +72,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   success: boolean = false;
   error: string = '';
   codigoEscaneado: string = '';
+  loading: boolean = true;
+  skeletonItems: number[] = Array.from({ length: 8 }, (_, i) => i + 1);
 
   // ==================== DATOS DEL PRODUCTO ====================
   // Información del producto escaneado y traducciones
@@ -138,7 +142,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Inicia escaneo automático después de 5 segundos con código de prueba
     
     setTimeout(() => {
-      this.obtenerQr('8480000603074.json');
+      this.obtenerQr('8480000103826.json');
     }, 5000);
     
     // Carga datos iniciales en paralelo
@@ -168,10 +172,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.empresas = data.empresas;
         this.productos = data.productos;
-        this.productosFiltrados = [...this.productos];
+        this.productosFiltrados = this.productos;
         this.certificaciones = data.certificaciones;
+        setTimeout(() => {
+          this.loading = false;  
+        }, 5000);
+        
       },
-      error: () => this.errorHandler.handleError('Error al cargar datos iniciales')
+      error: () => {
+        this.errorHandler.handleError('Error al cargar datos iniciales')
+        this.loading = false;
+      }
     });
   }
 
@@ -596,7 +607,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.EmpreService.post(body).pipe(takeUntil(this.destroy$)).subscribe(
       (data) => {
-        console.log(data);
+        
         this.empresas.push(data);
         this.asociarCertificacionesEmpresa();
         this.calcularEcoScore();
@@ -638,7 +649,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.ProductoService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.productos.push(data);
-        this.productos = [...this.productos];
+        this.productosFiltrados=[...this.productosFiltrados];
         this.crearMateriales(data.id);
       },
       error: (error) => {
@@ -859,7 +870,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if(categorias.length==0) return '';//Si esta el array vacio devolvemos una cadena vacia
 
     categorias = categorias.map(categoria => categoria.split(':')[1]);
-    console.log(categorias);
+   
     return categorias.join(',');
   }
 
@@ -878,6 +889,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @param lista - Lista de productos para la página actual
    */
   paginar(lista: Producto[]) {
+    
     setTimeout(() => {
       this.productosPaginados = lista;
     }, 0);
