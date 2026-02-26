@@ -17,5 +17,6 @@ export const routes: Routes = [
     {path:'login',component:LoginComponent},
     {path:'registro',component:RegistroComponent},
     {path:'perfil', component:ProfileComponent},
-    {path:'admin',component:AdminComponent}
+    {path:'admin',component:AdminComponent},
+    {path:'**', redirectTo:'home'}
 ];

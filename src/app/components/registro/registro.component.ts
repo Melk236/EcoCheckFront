@@ -55,7 +55,7 @@ export class RegistroComponent implements OnDestroy {
     )
   }
 
-  /*Guardamos el token en el sessionStorage*/
+  /*Guardamos el token en el localStorage*/
   saveToken(token:string){
     this.authService.setToken(token);
   }

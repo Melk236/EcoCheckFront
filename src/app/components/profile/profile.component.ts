@@ -222,7 +222,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   eliminarUsuario() {
     this.profileService.delete().pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
-        sessionStorage.removeItem('jwt')//Eliminamos el token del usuario de sessionStorage
+        localStorage.removeItem('jwt')//Eliminamos el token del usuario de localStorage
         this.route.navigate(['login'])//Y lo mandamos al componente login
       },
       error: (error) => {

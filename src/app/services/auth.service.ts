@@ -26,11 +26,11 @@ export class AuthService {
   }
 
   setToken(token: string) {
-    sessionStorage.setItem('jwt', token);
+    localStorage.setItem('jwt', token);
   }
 
   removeToken() {
-    sessionStorage.removeItem('jwt');
+    localStorage.removeItem('jwt');
   }
 
   refreshToken(): Observable<TokenResponse> {

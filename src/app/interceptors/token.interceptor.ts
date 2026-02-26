@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 /**
- * Interceptor que agrega el token JWT almacenado en sessionStorage bajo la clave 'jwt'
+ * Interceptor que agrega el token JWT almacenado en localStorage bajo la clave 'jwt'
  * al encabezado Authorization de cada petición HTTP saliente.
  */
 @Injectable()
@@ -21,8 +21,8 @@ export class TokenInterceptor implements HttpInterceptor {
             '/Auth/login',
             '/Auth/Register'
         ];
-        // Obtiene el token del sessionStorage
-        const token = sessionStorage.getItem('jwt');
+        // Obtiene el token del localStorage
+        const token = localStorage.getItem('jwt');
         let urlSinToken: boolean = false;
 
         for (let i = 0; i < urlExcludes.length; i++) {
@@ -67,7 +67,7 @@ export class TokenInterceptor implements HttpInterceptor {
             return this.authService.refreshToken().pipe(
                 switchMap(tokens => {
                     this.isRefreshing = false;
-                    sessionStorage.setItem('jwt', tokens.token);
+                    localStorage.setItem('jwt', tokens.token);
 
                     this.refreshSubject.next(tokens.token);
 
@@ -77,7 +77,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 }),
                 catchError(err => {
                     this.isRefreshing = false;
-                    sessionStorage.clear();
+                    localStorage.clear();
                     this.route.navigate(['/login']);
                     return throwError(() => err);
                 })
