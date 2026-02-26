@@ -9,10 +9,11 @@ import { ProductoConMateriales } from '../../../types/producto-con-materiales';
 import { PaginacionComponent } from '../../../shared/paginacion/paginacion.component';
 import { ModalConfirmarComponent } from '../../modales/modal-confirmar/modal-confirmar.component';
 import { AlertaComponent } from '../../modales/alerta/alerta.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-admin-productos',
-  imports: [CommonModule, FormsModule, PaginacionComponent, ModalConfirmarComponent, AlertaComponent],
+  imports: [CommonModule, FormsModule, PaginacionComponent, ModalConfirmarComponent, AlertaComponent, MatCardModule],
   templateUrl: './admin-productos.html',
   styleUrl: './admin-productos.css',
 })
@@ -38,6 +39,10 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
   mensajeAlerta: string = '';
   esExitoAlerta: boolean = false;
 
+  /*Loading skeleton*/
+  loading: boolean = true;
+  skeletonItems: number[] = Array.from({ length: 5 }, (_, i) => i + 1);
+
   constructor(
     private productoService: ProductoService,
     private materialService: MaterialService
@@ -58,6 +63,7 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error al cargar productos:', err);
         this.mostrarAlerta('Error al cargar los productos', false);
+        this.loading = false;
       }
     });
   }
@@ -72,6 +78,7 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
             materialesCargados++;
             if (materialesCargados === this.productos.length) {
               this.extraerMaterialesUnicos();
+              this.loading = false;
             }
           },
           error: (err) => {
@@ -79,6 +86,7 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
             materialesCargados++;
             if (materialesCargados === this.productos.length) {
               this.extraerMaterialesUnicos();
+              this.loading = false;
             }
           }
         });

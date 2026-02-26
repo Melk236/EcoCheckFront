@@ -33,6 +33,45 @@ export class AuthService {
     localStorage.removeItem('jwt');
   }
 
+  getToken(): string | null {
+    return localStorage.getItem('jwt');
+  }
+
+  isTokenValid(): boolean {
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const payload = this.decodeToken(token);
+      if (!payload || !payload.exp) {
+        return false;
+      }
+
+      const expirationDate = new Date(payload.exp * 1000);
+      return expirationDate > new Date();
+    } catch (error) {
+      return false;
+    }
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) {//Si no hay header,payload y la key.
+        return null;
+      }
+
+      const payload = parts[1];
+      /*Hacemos l replace para pasar d base64url a base64 y con el método atob lo pasamos a texto normal */
+      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decoded);
+    } catch (error) {
+      return null;
+    }
+  }
+
   refreshToken(): Observable<TokenResponse> {
     
     return this.http.post<TokenResponse>(this.url + 'Refresh', {},{

@@ -1,0 +1,21 @@
+.skeleton-element {
+  background-color: #d1d5db;
+  border-radius: 0.25rem;
+}
+
+:global(.dark) .skeleton-element {
+  background-color: #374151;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}

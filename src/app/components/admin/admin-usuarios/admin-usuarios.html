@@ -68,6 +68,35 @@
         </thead>
         <tbody class="divide-y divide-[#dbe6e0] dark:divide-gray-600">
 
+          <!-- Skeleton Loading -->
+          @if(loading){
+          @for(item of skeletonItems; track item){
+          <tr>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full skeleton-element animate-pulse"></div>
+                <div class="flex flex-col gap-1">
+                  <div class="h-4 w-24 skeleton-element animate-pulse"></div>
+                  <div class="h-3 w-32 skeleton-element animate-pulse"></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="h-6 w-20 skeleton-element animate-pulse rounded"></div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="h-4 w-24 skeleton-element animate-pulse"></div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="h-4 w-16 skeleton-element animate-pulse"></div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="h-8 w-8 skeleton-element animate-pulse ml-auto rounded"></div>
+            </td>
+          </tr>
+          }
+          }
+
           @for (usuario of usuariosPaginados; track usuario.id) {
           <tr class="hover:bg-[#f6f8f6] dark:hover:bg-gray-600 transition-colors">
             <td class="px-6 py-4">
@@ -106,6 +135,7 @@
             </td>
           </tr>
           } @empty {
+          @if(!loading){
           <tr>
             <td colspan="5" class="px-6 py-12 text-center">
               <div class="flex flex-col items-center justify-center">
@@ -116,13 +146,14 @@
             </td>
           </tr>
           }
+          }
 
         </tbody>
       </table>
     </div>
 
     <!-- Pagination -->
-    @if(usuariosFiltrados.length > 0){
+    @if(!loading && usuariosFiltrados.length > 0){
     <div class="px-6 py-4 bg-[#f6f8f6]/30 dark:bg-gray-800/30 border-t border-[#dbe6e0] dark:border-gray-600 flex items-center justify-between">
       <p class="text-sm text-[#61896f] dark:text-gray-400">
         Mostrando <span class="font-bold text-[#102216] dark:text-white">{{usuariosPaginados.length}}</span> de <span class="font-bold text-[#102216] dark:text-white">{{usuariosFiltrados.length}}</span> usuarios

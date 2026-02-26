@@ -10,10 +10,11 @@ import { PaginacionComponent } from '../../../shared/paginacion/paginacion.compo
 import { ModalConfirmarComponent } from '../../modales/modal-confirmar/modal-confirmar.component';
 import { AlertaComponent } from '../../modales/alerta/alerta.component';
 import { environment } from '../../../environment/environment';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-admin-usuarios',
-  imports: [CommonModule, FormsModule, PaginacionComponent, ModalConfirmarComponent, AlertaComponent],
+  imports: [CommonModule, FormsModule, PaginacionComponent, ModalConfirmarComponent, AlertaComponent, MatCardModule],
   templateUrl: './admin-usuarios.html',
   styleUrl: './admin-usuarios.css',
 })
@@ -37,6 +38,10 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
 
   mensajeAlerta: string = '';
   esExitoAlerta: boolean = false;
+
+  /*Loading skeleton*/
+  loading: boolean = true;
+  skeletonItems: number[] = Array.from({ length: 5 }, (_, i) => i + 1);
 
   constructor(
     private userService: UserService,
@@ -65,10 +70,12 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
         this.usuarios = data;
         this.usuariosFiltrados = [...this.usuarios];
         this.aplicarFiltros();
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error al cargar usuarios:', err);
         this.mostrarAlerta('Error al cargar los usuarios', false);
+        this.loading = false;
       }
     });
   }
