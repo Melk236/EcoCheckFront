@@ -1,32 +1,28 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { ProfileService } from '../services/profile.service';
-import { User } from '../types/user';
-import { map } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { map, catchError, of } from 'rxjs';
 
 export const adminGuard: CanActivateFn = (route, state) => {
 
-
-  /*Injectamos el servicio profile para obtener el usuario
-  mediante el metodo inject */
   const profileService = inject(ProfileService);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
-  return profileService.getUser().pipe(map((usuario) => {
-    if (usuario.roleName === 'Admin'){
-      console.log('Hola mundo')
-      return true;
-    } 
+  if (!authService.isTokenValid()) {
+    return router.createUrlTree(['/login']);
+  }
 
- 
-    router.navigate(['login']); // Redirige a login
-    return false; // Acceso denegado
-  
-    
-  })
-
+  return profileService.getUser().pipe(
+    map((usuario) => {
+      if (usuario.roleName === 'Admin') {
+        return true;
+      }
+      return router.createUrlTree(['/login']);
+    }),
+    catchError(() => {
+      return of(router.createUrlTree(['/login']));
+    })
   );
-
-
-
 };
