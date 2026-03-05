@@ -35,5 +35,6 @@ export interface Producto {
     ecoScore: number;
     imagenUrl?: string;
     ingredientes?:string;
+    usuarioId:number;
     fechaActualizacion: Date;
 }

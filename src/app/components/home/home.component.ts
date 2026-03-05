@@ -50,6 +50,9 @@ import { COUNTRY_SCORES, NEIGHBORING_COUNTRIES, EUROPEAN_COUNTRIES, AFRICAN_COUN
 // Constantes de certificaciones (puntuaciones, mapeos)
 import { CERTIFICATION_SCORES, DISPLAYABLE_CERTIFICATIONS, CERTIFICATION_MAPPING, DEFAULT_SOCIAL_SCORE, RECYCLING_IMPACT_FACTOR, MAX_CO2_KG } from '../../constants/certification-constants';
 
+import { ProfileService } from '../../services/profile.service';
+import { User } from '../../types/user';
+
 // Enum para tipos de traducción
 enum TranslationType {
   Company = 1,
@@ -65,6 +68,13 @@ enum TranslationType {
 export class HomeComponent implements OnInit, OnDestroy {
 
   // ==================== ESTADO DEL COMPONENTE ====================
+
+  //Variable para los datos del usuario
+  usuario:User={
+    id: 0,
+    userName: '',
+    roleName: ''
+  }
   // Variables de estado para modales y operaciones
   modalEscanerOpen: boolean = false;
   modalSucces: boolean = false;
@@ -130,7 +140,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private empresaCertificacionService: EmpresaCertificacionService,
     private puntuacionService: PuntuacionService,
     private route: Router,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private profileService:ProfileService
   ) {}
 
   // ==================== CICLO DE VIDA ====================
@@ -144,7 +155,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     /*setTimeout(() => {
       this.obtenerQr('8480000103826.json');
     }, 5000);*/
-    
+    //Nos traemos el perfil del usuario
+    this.getUser();
     // Carga datos iniciales en paralelo
     this.loadInitialData();
   }
@@ -643,6 +655,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       ecoScore: this.mediaScore,
       imagenUrl: this.producto?.image_front_url,
       ingredientes: this.ingredientesTraducidos || 'No hay información de los ingredientes, consúltelo en manual del producto',
+      usuarioId:this.usuario.id,
       fechaActualizacion: new Date()
     };
 
@@ -939,5 +952,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       return busquedaMatch && paisMatch && puntuacionMatch;
     });
     if(this.productosFiltrados.length==0) this.productosPaginados=this.productosFiltrados;
+  }
+
+  //Obtenemos el usuario del profileService
+  getUser(){
+    this.profileService.getUser().pipe(takeUntil(this.destroy$)).subscribe({
+      next:(data)=>{
+        this.usuario=data;
+      },
+      error:(error)=>{
+        console.log(error);
+      }
+    });
   }
 }

@@ -8,8 +8,8 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isTokenValid()) {
-    return true;
+  if (!authService.isTokenValid()) {
+    return router.createUrlTree(['/login']);
   }
 
   return authService.refreshToken().pipe(
@@ -19,8 +19,8 @@ export const loginGuard: CanActivateFn = (route, state) => {
     }),
     catchError(() => {
       authService.removeToken();
-      router.navigate(['/login']);
-      return of(false);
+      
+      return of(router.createUrlTree(['/login']));
     })
   );
 };

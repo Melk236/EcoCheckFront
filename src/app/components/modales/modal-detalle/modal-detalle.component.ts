@@ -36,7 +36,8 @@ export class ModalDetalleComponent implements OnInit,OnDestroy {
     categoria: '',
     descripcion: '',
     ecoScore: 0,
-    fechaActualizacion: new Date()
+    fechaActualizacion: new Date(),
+    usuarioId: 0
   }
   @Output() closeModal = new EventEmitter<void>();
   closing: boolean = false;

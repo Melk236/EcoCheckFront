@@ -27,7 +27,8 @@ export class DetalleProductoComponent implements OnInit {
     categoria: '',
     descripcion: '',
     ecoScore: 0,
-    fechaActualizacion: new Date()
+    fechaActualizacion: new Date(),
+    usuarioId: 0
   }
   productos: Producto[] = [];
   cargaAlternativas: boolean = false;
