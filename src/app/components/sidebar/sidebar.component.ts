@@ -69,7 +69,7 @@ export class SidebarComponent implements OnInit,OnDestroy {
     this.profileService.getUser().pipe(takeUntil(this.destroy$)).subscribe({
       next:(data)=>{
         this.usuario=data;
-        this.imagenUrl=this.usuario.urlImagen ? environment.imagenUrl+this.usuario.urlImagen : this.imagenUrl;
+        this.imagenUrl=environment.imagenUrl+this.usuario.urlImagen;
       },
       error:(error)=>{
         console.log(error);

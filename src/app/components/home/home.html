@@ -9,13 +9,11 @@
           <div class="flex items-center justify-center pl-4 pr-2">
             <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
           </div>
-          <input
-            [(ngModel)]="busqueda" (input)="buscar()"
+          <input [(ngModel)]="busqueda" (input)="buscar()"
             class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 border-none! outline-none ring-0 focus:ring-0 appearance-none px-2"
             placeholder="Buscar productos por nombre, descripción o puntuación (ej. 80)..." type="text">
         </div>
-        <button
-          (click)="openModalFiltros()"
+        <button (click)="openModalFiltros()"
           class="flex items-center justify-center gap-2 h-14 px-5 rounded-xl bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white text-base font-semibold leading-normal hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
           <span class="material-symbols-outlined">filter_list</span>
           <span>Filtros</span>
@@ -28,20 +26,21 @@
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
         <!-- Skeleton Loading with Angular Material -->
+        <!-- Skeleton Loading -->
         @if(loading){
         @for(item of skeletonItems; track item){
-        <mat-card class="flex flex-col gap-3 p-4 rounded-xl cursor-pointer border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 skeleton-card" [class.fade-out]="skeletonFadeOut">
-          <div class="w-full h-40 rounded-lg skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
-          <div class="flex flex-col gap-2 mt-2">
-            <div class="h-4 w-1/3 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
-            <div class="h-5 w-3/4 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
-            <div class="h-4 w-1/2 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
+        <div
+          class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 cursor-pointer">
+          <div class="w-full h-40 rounded-lg bg-gray-300 dark:bg-gray-600 animate-pulse"></div>
+          <div class="flex flex-col grow gap-2">
+            <div class="h-3 w-1/3 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
+            <div class="h-5 w-3/4 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
           </div>
           <div class="flex items-center justify-between mt-2">
-            <div class="h-3 w-16 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
-            <div class="h-5 w-12 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
+            <div class="h-3 w-16 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
+            <div class="h-6 w-12 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
           </div>
-        </mat-card>
+        </div>
         }
         }
 
@@ -51,7 +50,7 @@
           class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer"
           (click)="abrirDetalle(producto.id)">
           <div class="w-full h-40 bg-cover bg-center rounded-lg"
-            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3ORf-FnudDaA1NzV5UvdmmzQpCofGyUeOmYqp59ZNzqs1Q0RlfF8qKyHUGrT-qJ8sPqHw1W3pMc948xO59s3AY4HAcV0uzJTUGuRd0j4ryP79b2Ddxlj8QMyI-yz_19Owq5mFLjVy8uhsmLW5qKQagIIedD5UcDa7QxihO4CUOStI4iqITk6jTR1CEyAoZCDmve56S8lZEjHbWqF2N5A0LTTX4vZJSYO2s65GdC51X5_avEfz4KPExWa-wKb_VqxqS9-lC0GX8wn3');">
+            [style]="'background-image: url'+producto.imagenUrl">
           </div>
           <div class="flex flex-col grow">
             <p class="text-sm text-[#618972] dark:text-gray-400">{{producto.nombre}}</p>
@@ -70,17 +69,21 @@
           </div>
         </div>
         } @empty {
-          
+
         @if(!loading){
         <div class="col-span-full flex flex-col items-center justify-center py-20">
           <div class="w-32 h-32 mb-6 text-gray-300 dark:text-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-full h-full">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
             </svg>
           </div>
           <h3 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">No hay productos disponibles</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">Aún no hay productos escaneados. ¡Empieza a buscar alternativas sostenibles escaneando un producto!</p>
-          <button (click)="openModalEscaner()" class="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-[#111814] rounded-xl font-bold hover:bg-primary/90 transition-colors">
+          <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">Aún no hay productos escaneados. ¡Empieza a
+            buscar alternativas sostenibles escaneando un producto!</p>
+          <button (click)="openModalEscaner()"
+            class="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-[#111814] rounded-xl font-bold hover:bg-primary/90 transition-colors">
             <span class="material-symbols-outlined">qr_code_scanner</span>
             Escanear producto
           </button>
@@ -120,8 +123,6 @@
 
 <!-- Modal Filtros -->
 @if(modalFiltrosOpen){
-<app-modal-filtros 
-  (close)="closeModalFiltros()" 
-  (aplicarFiltros)="aplicarFiltrosHomg($event)">
+<app-modal-filtros (close)="closeModalFiltros()" (aplicarFiltros)="aplicarFiltrosHomg($event)" [paisSeleccionado]="filtroPais" [puntuacionSeleccionada]="filtroPuntuacion">
 </app-modal-filtros>
 }

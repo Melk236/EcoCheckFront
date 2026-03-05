@@ -48,8 +48,9 @@ export class AuthService {
       if (!payload || !payload.exp) {
         return false;
       }
-
+      
       const expirationDate = new Date(payload.exp * 1000);
+
       return expirationDate > new Date();
     } catch (error) {
       return false;

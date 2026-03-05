@@ -1,12 +1,6 @@
 .skeleton-element {
   background-color: #d1d5db;
   border-radius: 0.25rem;
-  transition: opacity 0.3s ease-out;
-}
-
-.skeleton-element.fade-out,
-tr.fade-out {
-  opacity: 0;
 }
 
 :global(.dark) .skeleton-element {

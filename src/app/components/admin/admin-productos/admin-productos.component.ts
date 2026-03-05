@@ -42,7 +42,6 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
   /*Loading skeleton*/
   loading: boolean = true;
   skeletonItems: number[] = Array.from({ length: 5 }, (_, i) => i + 1);
-  skeletonFadeOut: boolean = false;
 
   constructor(
     private productoService: ProductoService,
@@ -71,9 +70,9 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
 
   cargarMaterialesPorProducto(): void {
     let materialesCargados = 0;
-    //Para cuando no tengamos productos en la vase de datos
-    if(this.productos.length===0) this.loading=false;
 
+    if(this.productos.length===0) this.loading=false;
+    
     this.productos.forEach(producto => {
       if (producto.id) {
         this.materialService.getById(producto.id).pipe(takeUntil(this.destroy$)).subscribe({
@@ -82,10 +81,7 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
             materialesCargados++;
             if (materialesCargados === this.productos.length) {
               this.extraerMaterialesUnicos();
-              this.skeletonFadeOut = true;
-              setTimeout(() => {
-                this.loading = false;
-              }, 300);
+              this.loading = false;
             }
           },
           error: (err) => {
@@ -93,10 +89,7 @@ export class AdminProductosComponent implements OnInit, OnDestroy {
             materialesCargados++;
             if (materialesCargados === this.productos.length) {
               this.extraerMaterialesUnicos();
-              this.skeletonFadeOut = true;
-              setTimeout(() => {
-                this.loading = false;
-              }, 300);
+              this.loading = false;
             }
           }
         });

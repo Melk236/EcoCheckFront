@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,9 +11,9 @@ import { FormsModule } from '@angular/forms';
 export class ModalFiltrosComponent {
   @Output() close = new EventEmitter<void>();
   @Output() aplicarFiltros = new EventEmitter<{pais: string, puntuacion: string}>();
-
-  paisSeleccionado: string = '';
-  puntuacionSeleccionada: string = '';
+  @Input() paisSeleccionado:string='';
+  @Input() puntuacionSeleccionada:string='';
+  
 
   paises: string[] = [
     'España',

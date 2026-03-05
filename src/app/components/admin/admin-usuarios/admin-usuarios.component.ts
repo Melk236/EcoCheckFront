@@ -42,7 +42,6 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
   /*Loading skeleton*/
   loading: boolean = true;
   skeletonItems: number[] = Array.from({ length: 5 }, (_, i) => i + 1);
-  skeletonFadeOut: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -71,10 +70,7 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy {
         this.usuarios = data;
         this.usuariosFiltrados = [...this.usuarios];
         this.aplicarFiltros();
-        this.skeletonFadeOut = true;
-        setTimeout(() => {
-          this.loading = false;
-        }, 300);
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error al cargar usuarios:', err);

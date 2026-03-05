@@ -40,7 +40,6 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
   /*Loading skeleton*/
   loading: boolean = true;
   skeletonItems: number[] = Array.from({ length: 8 }, (_, i) => i + 1);
-  skeletonFadeOut: boolean = false;
 
   /*Para desuscribirnos de los observables al destruirse el componente*/
   destroy$ = new Subject<void>();
@@ -83,15 +82,18 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
 
           //Cuando todos los datos estén listos asociamos las empresas con sus certificaciones
           this.asociarCertificacionEmpresa();
-          this.skeletonFadeOut = true;
+
           setTimeout(() => {
-            this.loading = false;
-          }, 300);
+            this.loading = false;  
+          }, 1000);
+          
 
         },
         error: (error) => {
           console.log(error);
-          this.loading = false;
+          setTimeout(() => {
+            this.loading = false;  
+          }, 1000);
         }
       }
     );
