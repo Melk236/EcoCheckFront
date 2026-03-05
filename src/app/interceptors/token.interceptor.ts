@@ -78,7 +78,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 catchError(err => {
                     this.isRefreshing = false;
                     localStorage.clear();
-                    this.route.navigate(['/login']);
+                    this.route.createUrlTree(['/login']);
                     return throwError(() => err);
                 })
             );

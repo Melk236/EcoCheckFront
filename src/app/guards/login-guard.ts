@@ -8,8 +8,8 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (!authService.isTokenValid()) {
-    return router.createUrlTree(['/login']);
+  if (authService.isTokenValid()) {
+    return true;
   }
 
   return authService.refreshToken().pipe(

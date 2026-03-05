@@ -73,6 +73,19 @@ export class AuthService {
     }
   }
 
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    
+    const payload = this.decodeToken(token);
+    return payload?.role || payload?.roleName || null;
+  }
+
+  isAdmin(): boolean {
+    const role = this.getUserRole();
+    return role === 'Admin';
+  }
+
   refreshToken(): Observable<TokenResponse> {
     
     return this.http.post<TokenResponse>(this.url + 'Refresh', {},{
