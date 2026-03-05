@@ -74,6 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   codigoEscaneado: string = '';
   loading: boolean = true;
   skeletonItems: number[] = Array.from({ length: 8 }, (_, i) => i + 1);
+  skeletonFadeOut: boolean = false;
 
   // ==================== DATOS DEL PRODUCTO ====================
   // Información del producto escaneado y traducciones
@@ -174,9 +175,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.productos = data.productos;
         this.productosFiltrados = this.productos;
         this.certificaciones = data.certificaciones;
+        this.skeletonFadeOut = true;
         setTimeout(() => {
-          this.loading = false;  
-        }, 3000);
+          this.loading = false;
+        }, 300);
         
       },
       error: () => {

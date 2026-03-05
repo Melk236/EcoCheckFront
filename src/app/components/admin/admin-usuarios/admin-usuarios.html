@@ -71,27 +71,27 @@
           <!-- Skeleton Loading -->
           @if(loading){
           @for(item of skeletonItems; track item){
-          <tr>
+          <tr [class.fade-out]="skeletonFadeOut">
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full skeleton-element animate-pulse"></div>
+                <div class="w-10 h-10 rounded-full skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
                 <div class="flex flex-col gap-1">
-                  <div class="h-4 w-24 skeleton-element animate-pulse"></div>
-                  <div class="h-3 w-32 skeleton-element animate-pulse"></div>
+                  <div class="h-4 w-24 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
+                  <div class="h-3 w-32 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
                 </div>
               </div>
             </td>
             <td class="px-6 py-4">
-              <div class="h-6 w-20 skeleton-element animate-pulse rounded"></div>
+              <div class="h-6 w-20 skeleton-element animate-pulse rounded" [class.fade-out]="skeletonFadeOut"></div>
             </td>
             <td class="px-6 py-4">
-              <div class="h-4 w-24 skeleton-element animate-pulse"></div>
+              <div class="h-4 w-24 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
             </td>
             <td class="px-6 py-4">
-              <div class="h-4 w-16 skeleton-element animate-pulse"></div>
+              <div class="h-4 w-16 skeleton-element animate-pulse" [class.fade-out]="skeletonFadeOut"></div>
             </td>
             <td class="px-6 py-4 text-right">
-              <div class="h-8 w-8 skeleton-element animate-pulse ml-auto rounded"></div>
+              <div class="h-8 w-8 skeleton-element animate-pulse ml-auto rounded" [class.fade-out]="skeletonFadeOut"></div>
             </td>
           </tr>
           }

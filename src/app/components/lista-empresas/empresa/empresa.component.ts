@@ -50,6 +50,8 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   loadingProductos: boolean = false;
   skeletonItems: number[] = Array.from({ length: 4 }, (_, i) => i + 1);
+  skeletonFadeOut: boolean = false;
+  skeletonProductosFadeOut: boolean = false;
 
   constructor(private route: ActivatedRoute, private empresaService: EmpresaService, private certificacionesService: CertificacionesService, private empresaCertificacionService: EmpresaCertificacionService, private productoService: ProductoService, private ruta: Router) { }
 
@@ -75,7 +77,10 @@ export class EmpresaComponent implements OnInit, OnDestroy {
         this.empresaCertificacion = data.empresaCertificacion;
 
         this.asociarEmpresaCertificaciones();
-        this.loading = false;
+        this.skeletonFadeOut = true;
+        setTimeout(() => {
+          this.loading = false;
+        }, 300);
 
       },
       error: (error) => {
@@ -140,7 +145,10 @@ export class EmpresaComponent implements OnInit, OnDestroy {
           this.productos = data;
           //Cuando ya tengamos todos los productos filtramos los productos pertenecientes a la empresa correspondiente
           this.productosEmpresa = this.productos.filter(item => item.marcaId == this.empresa.id)
-          this.loadingProductos = false;
+          this.skeletonProductosFadeOut = true;
+          setTimeout(() => {
+            this.loadingProductos = false;
+          }, 300);
         },
         error: (error) => {
           console.log(error);
