@@ -1,19 +1,58 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../environment/environment';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = async (route, state) => {
 
   const authService = inject(AuthService);
   const router = inject(Router);
-  
-  if (!authService.isTokenValid()) {
-    return router.createUrlTree(['/login']);
+
+  if (authService.isTokenValid()) {
+    
+    if (authService.isAdmin()) {
+      
+      return true;
+    }
+    else{
+      return router.createUrlTree(['/home']);
+      
+    }
+
   }
 
-  if (authService.isAdmin()) {
-    return true;
+  // Si hay token pero está expirado, intenta refresh con fetch (sin pasar por interceptor)
+  if (authService.getToken()) {
+    try {
+      const response = await fetch(`${environment.apiUrl}Auth/Refresh`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        authService.setToken(data.token);
+
+        if (authService.isAdmin()) {
+          return true;
+        }
+
+      } else {
+        // Refresh falló (cookie expirada), redirige al login
+        authService.removeToken();
+        return router.createUrlTree(['/login']);
+      }
+    } catch (error) {
+      authService.removeToken();
+      return router.createUrlTree(['/login']);
+    }
   }
+
+
+
 
   return router.createUrlTree(['/login']);
 };

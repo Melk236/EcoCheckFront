@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../environment/environment';
 
-export const loginGuard: CanActivateFn = async (route, state) => {
+export const tokenGuard: CanActivateFn = async (route, state) => {
   
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -29,7 +29,7 @@ export const loginGuard: CanActivateFn = async (route, state) => {
         authService.setToken(data.token);
         return true;
       } else {
-        // Refresh falló, redirige al login
+        // Refresh falló (cookie expirada), redirige al login
         authService.removeToken();
         return router.createUrlTree(['/login']);
       }

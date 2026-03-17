@@ -78,11 +78,13 @@ export class AuthService {
     if (!token) return null;
     
     const payload = this.decodeToken(token);
-    return payload?.role || payload?.roleName || null;
+    
+    return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || null;
   }
 
   isAdmin(): boolean {
     const role = this.getUserRole();
+    
     return role === 'Admin';
   }
 
