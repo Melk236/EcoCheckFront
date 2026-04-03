@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Producto } from '../../../types/producto';
 import { EmpresaService } from '../../../services/empresa.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-modal-producto',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './modal-producto.html',
   styleUrl: './modal-producto.css',
 })
@@ -28,7 +29,7 @@ export class ModalProducto implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log('Hollaaaaaa mundoooooooooooooo')
+    
     this.empresaService.getById(this.producto.marcaId).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.nombreEmpresa = data.nombre;
@@ -39,6 +40,35 @@ export class ModalProducto implements OnInit, OnDestroy {
     });
   }
 
+  getColorClase(ecoScore: number): string {
+    if (ecoScore <= 40) {
+      return 'text-red-500 dark:text-red-400';
+    } else if (ecoScore < 80) {
+      return 'text-yellow-500 dark:text-yellow-400';
+    } else {
+      return 'text-green-500 dark:text-green-400';
+    }
+  }
+
+  getBgColorClase(ecoScore: number): string {
+    if (ecoScore <= 40) {
+      return 'bg-red-500';
+    } else if (ecoScore < 80) {
+      return 'bg-yellow-500';
+    } else {
+      return 'bg-green-500';
+    }
+  }
+
+  getLabelTexto(ecoScore: number): string {
+    if (ecoScore <= 40) {
+      return 'Low';
+    } else if (ecoScore < 80) {
+      return 'Medium';
+    } else {
+      return 'Excellent';
+    }
+  }
 
   /*Método que con el deocrador output eite un evento para que el componente padre lo capture
   y cierre el modal */

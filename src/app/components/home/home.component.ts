@@ -796,9 +796,9 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @param ecoScore - Puntuación original
    * @returns Puntuación formateada con un decimal
    */
-  formatNumber(ecoScore: number): string {
-    return (ecoScore / 10).toFixed(1);
-  }
+   formatNumber(ecoScore: number): string {
+     return ecoScore.toFixed(0);
+   }
 
   // ==================== CERTIFICACIONES ====================
 
