@@ -152,9 +152,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Inicia escaneo automático después de 5 segundos con código de prueba
     
-    /*setTimeout(() => {
+    setTimeout(() => {
       this.obtenerQr('8480000103826.json');
-    }, 5000);*/
+    }, 5000);
     //Nos traemos el perfil del usuario
     this.getUser();
     // Carga datos iniciales en paralelo
@@ -184,6 +184,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.empresas = data.empresas;
         this.productos = data.productos;
+        console.log(this.productos)
         this.productosFiltrados = this.productos;
         this.certificaciones = data.certificaciones;
         setTimeout(() => {

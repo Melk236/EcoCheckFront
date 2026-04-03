@@ -49,8 +49,14 @@
         <div
           class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer"
           (click)="abrirDetalle(producto.id)">
-          <div class="w-full h-40 bg-cover bg-center rounded-lg"
-            [style]="'background-image: url'+producto.imagenUrl">
+          <div class="w-full rounded-lg overflow-hidden relative" style="height: 200px;">
+            <!-- Fondo difuminado -->
+            <div class="absolute inset-0 bg-cover bg-center blur-sm scale-110"
+              [style.background-image]="'url(' + producto.imagenUrl + ')'">
+            </div>
+            <!-- Imagen principal encima -->
+            <img [src]="producto.imagenUrl" alt="{{ producto.nombre }}"
+              class="relative w-full h-full object-contain z-10">
           </div>
           <div class="flex flex-col grow">
             <p class="text-sm text-[#618972] dark:text-gray-400">{{producto.nombre}}</p>
@@ -123,6 +129,7 @@
 
 <!-- Modal Filtros -->
 @if(modalFiltrosOpen){
-<app-modal-filtros (close)="closeModalFiltros()" (aplicarFiltros)="aplicarFiltrosHomg($event)" [paisSeleccionado]="filtroPais" [puntuacionSeleccionada]="filtroPuntuacion">
+<app-modal-filtros (close)="closeModalFiltros()" (aplicarFiltros)="aplicarFiltrosHomg($event)"
+  [paisSeleccionado]="filtroPais" [puntuacionSeleccionada]="filtroPuntuacion">
 </app-modal-filtros>
 }

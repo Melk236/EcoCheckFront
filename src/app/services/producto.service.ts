@@ -41,7 +41,8 @@ export class ProductoService {
       descripcion: producto.descripcion,
       ingredientes: producto.ingredientes,
       ecoScore: producto.ecoScore,
-      imagenUrl: producto.imagenUrl
+      imagenUrl: producto.imagenUrl,
+      usuarioId:producto.usuarioId
     }
 
     return this.http.post<Producto>(this.url, body);
