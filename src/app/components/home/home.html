@@ -116,9 +116,12 @@
 }
 
 <!--Modal de exito o error-->
-@if(modalSucces){
+@if(modalError){
 <app-modal-informativo [messageError]="error" [success]="success"
   (closeModal)="closeModalSucces()"></app-modal-informativo>
+}
+@if(modalSucces){
+  <app-modal-producto [producto]="productoModal" (cerrar)="cerrarModalProducto()"></app-modal-producto>
 }
 
 <!-- Loading Modal  -->

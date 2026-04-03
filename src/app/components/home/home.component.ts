@@ -18,7 +18,7 @@ import { MatCardModule } from '@angular/material/card';
 
 // Componentes hijos del módulo
 import { ModalEscaner } from './modal-escaner/modal-escaner.component';
-import { ModalInformativo } from '../modales/modal-informativo/modal-informativo';
+import { ModalInformativo } from '../modales/modal-informativo/modal-informativo.component';
 import { LoadingModal } from '../modales/loading-modal/loading-modal';
 import { PaginacionComponent } from '../../shared/paginacion/paginacion.component';
 import { ModalFiltrosComponent } from '../modales/modal-filtros/modal-filtros.component';
@@ -52,6 +52,7 @@ import { CERTIFICATION_SCORES, DISPLAYABLE_CERTIFICATIONS, CERTIFICATION_MAPPING
 
 import { ProfileService } from '../../services/profile.service';
 import { User } from '../../types/user';
+import { ModalProducto } from "../modales/modal-producto/modal-producto.component";
 
 // Enum para tipos de traducción
 enum TranslationType {
@@ -61,7 +62,7 @@ enum TranslationType {
 
 @Component({
   selector: 'app-home',
-  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule, ModalFiltrosComponent, MatCardModule],
+  imports: [ModalEscaner, ModalInformativo, CommonModule, PaginacionComponent, LoadingModal, FormsModule, ModalFiltrosComponent, MatCardModule, ModalProducto],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -78,13 +79,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Variables de estado para modales y operaciones
   modalEscanerOpen: boolean = false;
   modalSucces: boolean = false;
+  modalError:boolean=false;
   loadingModal: boolean = false;
   success: boolean = false;
   error: string = '';
   codigoEscaneado: string = '';
   loading: boolean = true;
   skeletonItems: number[] = Array.from({ length: 8 }, (_, i) => i + 1);
-
+  productoModal:Producto={
+    id: 0,
+    marcaId: 0,
+    categoria: '',
+    descripcion: '',
+    ecoScore: 0,
+    usuarioId: 0,
+    fechaActualizacion: new Date()
+  }
   // ==================== DATOS DEL PRODUCTO ====================
   // Información del producto escaneado y traducciones
   producto: Product | undefined;
@@ -660,6 +670,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       fechaActualizacion: new Date()
     };
 
+    //Asignamos body al modal del producto
+    this.productoModal=body;
     this.ProductoService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.productos.push(data);
@@ -740,7 +752,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   crearMateriales(productoId: number) {
     // Si no hay materiales, crea directamente la puntuación
     if (this.materiales.length == 0) {
-      this.crearPuntuacion();
+      this.crearPuntuacion(productoId);
       return;
     }
 
@@ -755,7 +767,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.materialService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
-        this.crearPuntuacion();
+        this.crearPuntuacion(body[0].productoId);
       },
       error: (error) => {
         console.log(error);
@@ -852,10 +864,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   /**
    * Crea el registro final de puntuación del producto
    */
-  crearPuntuacion() {
+  crearPuntuacion(idProducto:number) {
     const body: Puntuacion = {
       id: 0,
-      productoId: this.productos[this.productos.length - 1].id,
+      productoId: idProducto,
       fecha: new Date(),
       valor: this.mediaScore,
       valorAmbiental: this.scoreAmbiental,
@@ -873,6 +885,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }, 1000);
       },
       error: (error) => {
+        this.modalError=false;
         console.log(error);
         this.showError('No se puedo procesar el código QR o hubo un problema con el producto');
       }
@@ -966,4 +979,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  /*Cerramos el modal del producto*/
+ cerrarModalProducto(){
+  this.modalSucces=false;
+ }
+
 }

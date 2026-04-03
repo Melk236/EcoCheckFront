@@ -1,0 +1,48 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full transform transition-all animate-in fade-in zoom-in duration-300 overflow-hidden">
+  <div class="px-8 pt-8 pb-4 flex justify-between items-start border-b border-gray-100 dark:border-gray-700">
+    <div>
+      <span class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color: #39E079;" class="dark:text-[#39E079]">Scan Success</span>
+      <h2 class="text-3xl font-black tracking-tight text-[#181211] dark:text-white">Producto Detectado</h2>
+    </div>
+    <button class="p-2 transition-colors" style="color: #b5aeab;" class="dark:text-gray-400" onmouseover="this.style.color = '#181211';" onmouseout="this.style.color = '#b5aeab';">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <div class="p-8">
+    <div class="relative group">
+      <div class="aspect-4/3 rounded-lg mb-6 shadow-inner" style="background-color: #f5f5f5;" class="dark:bg-gray-700">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Product" [src]="producto.imagenUrl" />
+      </div>
+      <div class="absolute -top-4 -right-4 w-24 h-24 bg-white dark:bg-gray-800 rounded-full p-1.5 shadow-lg flex items-center justify-center">
+        <div class="w-full h-full rounded-full flex flex-col items-center justify-center relative overflow-hidden" style="border: 6px solid rgba(57, 236, 121, 0.2);" class="dark:border-[rgba(57,236,121,0.3)]">
+          <div style="background-color: rgba(57, 236, 121, 0.1);" class="absolute inset-0 dark:bg-[rgba(57,236,121,0.05)]"></div>
+          <span class="text-2xl font-black leading-none" style="color: #39E079;" class="dark:text-[#39E079]">{{producto.ecoScore}}</span>
+          <span class="text-[10px] font-bold uppercase" style="color: rgba(57, 236, 121, 0.7);" class="dark:text-[rgba(57,236,121,0.6)]">Score</span>
+          <div class="absolute bottom-0 left-0 h-1.5 w-[85%]" style="background-color: #39E079;" class="dark:bg-[#39E079]"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-between items-end mb-8">
+      <div>
+        <h3 class="text-2xl font-black leading-tight text-[#181211] dark:text-white">Oasis Mineral Water</h3>
+        <p class="font-medium flex items-center gap-1.5 mt-1 text-[#896861] dark:text-gray-400">
+          <span class="material-symbols-outlined text-base">verified</span>
+          By EarthFirst Collective
+        </p>
+      </div>
+      <div class="flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold" style="background-color: rgba(57, 236, 121, 0.1); color: #39E079;" class="dark:bg-[rgba(57,236,121,0.15)] dark:text-[#39E079]">
+        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">eco</span>
+        Excellent
+      </div>
+    </div>
+  </div>
+  <div class="p-8 pt-0 flex gap-4">
+    <button class="flex-1 px-6 py-4 rounded-xl border-2 font-bold transition-all active:scale-95" style="border-color: #e6dddb; color: #896861;" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700" onmouseover="this.style.backgroundColor = '#f5f5f5';" onmouseout="this.style.backgroundColor = 'transparent';">
+      Cancelar
+    </button>
+    <button class="flex-2 px-6 py-4 rounded-xl font-black shadow-lg hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2" style="background-color: #39E079; color: #181211; box-shadow: 0 10px 15px -3px rgba(57, 236, 121, 0.2);" class="dark:bg-[#39E079] dark:text-gray-900 dark:shadow-lg dark:shadow-[rgba(57,236,121,0.3)]">
+      Ver Detalles Completos
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </button>
+  </div>
+</div>
