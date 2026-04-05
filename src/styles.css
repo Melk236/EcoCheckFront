@@ -150,6 +150,44 @@ html, body {
   padding: 0;
   margin: 0;
   font-family: manrope;
+  transition: background-color 0.3s ease;
+}
+
+/* Route transition animations */
+@keyframes routeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes routeFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Apply to router outlet */
+router-outlet + * {
+  animation: routeFadeIn 300ms ease-out;
+}
+
+/* Suavizar transición de modo oscuro */
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  background-color: #1f2937;
 }
 
 /* Skeleton Animation for Tailwind 4 */

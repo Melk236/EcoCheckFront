@@ -70,11 +70,7 @@ export class ModalProducto implements OnInit, OnDestroy {
     }
   }
 
-  /*Método que con el deocrador output eite un evento para que el componente padre lo capture
-  y cierre el modal */
-  cancelar() {
-    this.cerrar.emit();
-  }
+ 
 
   ngOnDestroy(): void {
     this.destroy$.next();
