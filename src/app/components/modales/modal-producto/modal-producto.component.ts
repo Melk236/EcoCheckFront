@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Producto } from '../../../types/producto';
 import { EmpresaService } from '../../../services/empresa.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-producto',
@@ -23,9 +24,9 @@ export class ModalProducto implements OnInit, OnDestroy {
   };
   nombreEmpresa:string='';
   @Output() cerrar = new EventEmitter();
-
+  @Output() irAldetalle=new EventEmitter<number>();
   destroy$ = new Subject<void>();
-  constructor(private empresaService: EmpresaService) { }
+  constructor(private empresaService: EmpresaService,private router:Router) { }
 
 
   ngOnInit(): void {
@@ -69,8 +70,11 @@ export class ModalProducto implements OnInit, OnDestroy {
       return 'Excellent';
     }
   }
-
- 
+  //Método para ir al detalle del producto en cuestión
+  irAdetalles(){
+    console.log(this.producto)
+   this.irAldetalle.emit(this.producto.id);
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

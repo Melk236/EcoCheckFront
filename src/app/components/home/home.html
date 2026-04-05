@@ -121,7 +121,7 @@
   (closeModal)="closeModalSucces()"></app-modal-informativo>
 }
 @if(modalSucces){
-  <app-modal-producto [producto]="productoModal" (cerrar)="cerrarModalProducto()"></app-modal-producto>
+  <app-modal-producto [producto]="productoModal" (cerrar)="cerrarModalProducto()" (irAldetalle)="abrirDetalle($event)"></app-modal-producto>
 }
 
 <!-- Loading Modal  -->

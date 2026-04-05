@@ -670,13 +670,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       fechaActualizacion: new Date()
     };
 
-    //Asignamos body al modal del producto
-    this.productoModal=body;
+    
+    
     this.ProductoService.post(body).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.productos.push(data);
         this.productosFiltrados=[...this.productosFiltrados];
         this.crearMateriales(data.id);
+
+        //Asignamos body al modal del producto
+        this.productoModal=data;
       },
       error: (error) => {
         console.log(error);
