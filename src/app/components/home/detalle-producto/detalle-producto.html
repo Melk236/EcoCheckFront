@@ -121,39 +121,47 @@
                 @for(alternativa of productos; track $index){
                   <div
                     class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 w-72 cursor-pointer " (click)="abrirDetalle(alternativa.id)">
-                  <div
-                    class="aspect-square w-full rounded-lg bg-center bg-cover bg-no-repeat bg-gray-200 dark:bg-gray-600"
-                    [style]="'background-image: url(' + alternativa.imagenUrl + ')'"></div>
-                  <div class="flex flex-col gap-1">
-                    <p class="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">
-                      {{alternativa.paisOrigen}}</p>
-                    <h3 class="font-bold text-gray-800 dark:text-white text-base">{{alternativa.nombre}}</h3>
-                  </div>
-                  <div
-                    class="flex items-center justify-between mt-auto pt-3 border-t border-green-600/10 dark:border-gray-600">
-                    <div class="flex flex-col">
-                      <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase">EcoScore</span>
-                      <span
-                        class="text-xl font-extrabold" [ngClass]="getColorClase(alternativa.ecoScore)">{{formatNumber(alternativa.ecoScore)}}/100</span>
+                    <div
+                      class="aspect-square w-full rounded-lg bg-center bg-cover bg-no-repeat bg-gray-200 dark:bg-gray-600"
+                      [style]="'background-image: url(' + alternativa.imagenUrl + ')'"></div>
+                    <div class="flex flex-col gap-1">
+                      <p class="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">
+                        {{alternativa.paisOrigen}}</p>
+                      <h3 class="font-bold text-gray-800 dark:text-white text-base">{{alternativa.nombre}}</h3>
                     </div>
-                    <div class="flex items-center gap-1">
-                      <span class="material-symbols-outlined font-bold" [ngClass]="getColorClase(alternativa.ecoScore)">trending_up</span>
-                      <span class="text-sm font-bold" [ngClass]="getColorClase(alternativa.ecoScore)">{{getPorcentajeAumento(alternativa.ecoScore)}}</span>
+                    <div
+                      class="flex items-center justify-between mt-auto pt-3 border-t border-green-600/10 dark:border-gray-600">
+                      <div class="flex flex-col">
+                        <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase">EcoScore</span>
+                        <span
+                          class="text-xl font-extrabold" [ngClass]="getColorClase(alternativa.ecoScore)">{{formatNumber(alternativa.ecoScore)}}/100</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="material-symbols-outlined font-bold" [ngClass]="getColorClase(alternativa.ecoScore)">trending_up</span>
+                        <span class="text-sm font-bold" [ngClass]="getColorClase(alternativa.ecoScore)">{{getPorcentajeAumento(alternativa.ecoScore)}}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                } @empty {
+                  <div class="col-span-full flex flex-col items-center justify-center py-12 text-center">
+                    <span class="material-symbols-outlined text-7xl text-gray-300 dark:text-gray-600 mb-4">info</span>
+                    <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 mb-2">No hay alternativas disponibles</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">Este producto ya es la mejor opción sostenible disponible en nuestra base de datos.</p>
+                  </div>
                 }
               </div>
             </div>
 
 
             <!-- Footer -->
+            @if(productos.length > 0){
             <div class="p-4 bg-gray-50 dark:bg-gray-800 text-center border-t border-gray-100 dark:border-gray-600">
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 <span class="font-medium text-gray-700 dark:text-gray-300">Tip:</span> Elegir alternativas con EcoScore
                 superior a 90 reduce el impacto ambiental en un 35%.
               </p>
             </div>
+            }
           </div>
 
           }

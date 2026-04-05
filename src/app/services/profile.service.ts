@@ -1,20 +1,22 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../environment/environment';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { User } from '../types/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileService {
+
+  private http=inject(HttpClient);
   private readonly url = environment.apiUrl + 'Profile';
 
-  constructor(private http: HttpClient) { }
+  private user$ = this.http.get<User>(this.url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
   getUser(): Observable<User> {
 
-    return this.http.get<User>(this.url);
+    return this.user$;
   }
 
   update(user: FormData): Observable<User> {
