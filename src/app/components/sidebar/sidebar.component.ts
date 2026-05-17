@@ -89,7 +89,8 @@ export class SidebarComponent implements OnInit,OnDestroy {
   /*Cierre de sesión del usuario */
   cerrarSesion(){
     this.authService.removeToken();
-
+    //Restauramos los datos del usuario a null
+    this.profileService.restoreUser();
     this.authService.logOut().pipe(takeUntil(this.destroy$)).subscribe({
       next:()=>{
         this.router.navigate(['login']);
@@ -97,7 +98,7 @@ export class SidebarComponent implements OnInit,OnDestroy {
       error:(error)=>{
         console.log(error.error.mensaje);
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {

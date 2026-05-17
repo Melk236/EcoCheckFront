@@ -1,0 +1,280 @@
+<div class="overflow-x-hidden bg-white dark:bg-gray-900">
+    <!-- Top Navigation -->
+    <nav
+        class="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 backdrop-blur-md border-b border-[#f0f4f2] dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-10">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 text-eco-dark dark:text-white">
+                    <div class="size-8" style="color: #39E079;">
+                        <svg class="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-eco-dark dark:text-white">EcoScan</span>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+                    <div class="flex gap-8">
+                        <a class="text-sm font-semibold text-eco-dark dark:text-gray-300 hover:text-eco-green dark:hover:text-eco-green transition-colors"
+                            href="#features">Características</a>
+                        <a class="text-sm font-semibold text-eco-dark dark:text-gray-300 hover:text-eco-green dark:hover:text-eco-green transition-colors"
+                            href="#how-it-works">Cómo Funciona</a>
+                        <a class="text-sm font-semibold text-eco-dark dark:text-gray-300 hover:text-eco-green dark:hover:text-eco-green transition-colors"
+                            href="#impact">Impacto</a>
+                    </div>
+                    @if (!isLoggedIn) {
+                        <div class="flex gap-3">
+                            <a routerLink="/login"
+                                class="px-5 py-2.5 rounded-lg text-sm font-bold border border-[#39E079] text-[#39E079] hover:bg-[#39E079] hover:text-[#111814] transition-all cursor-pointer">
+                                Iniciar Sesión
+                            </a>
+                            <a routerLink="/registro"
+                                class="px-5 py-2.5 rounded-lg text-sm font-bold bg-[#39E079] text-[#111814] hover:opacity-90 transition-all cursor-pointer">
+                                Registrarse
+                            </a>
+                        </div>
+                    } @else {
+                        <a routerLink="/perfil"
+                            class="px-5 py-2.5 rounded-lg text-sm font-bold bg-[#39E079] text-[#111814] hover:opacity-90 transition-all cursor-pointer">
+                            Perfil
+                        </a>
+                    }
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden text-eco-dark dark:text-white">
+                    <span class="material-symbols-outlined text-3xl">menu</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden bg-[#f6f8f7] dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-10">
+            <div class="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
+                <!-- Text Content -->
+                <div class="flex-1 flex flex-col items-start text-left gap-6 lg:gap-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                        style="background-color: rgba(57, 236, 121, 0.1); color: #39E079;">
+                        <span class="material-symbols-outlined text-sm">eco</span>
+                        Innovación Sostenible
+                    </div>
+                    <h1
+                        class="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight text-eco-dark dark:text-white">
+                        Escanea Productos, Conoce tu <span style="color: #39E079;">Impacto</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-xl leading-relaxed">
+                        Descubre el impacto ambiental y social de cada producto con un simple escaneo. Toma decisiones
+                        conscientes y contribuye a un futuro sostenible.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <a routerLink="/home"
+                            class="flex items-center justify-center gap-2 h-12 px-8 rounded-lg text-base font-bold shadow-lg text-eco-dark dark:text-gray-900 transition-all hover:opacity-90 cursor-pointer"
+                            style="background-color: #39E079; box-shadow: 0 10px 15px -3px rgba(57, 236, 121, 0.2);">
+                            Comenzar
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+
+                    </div>
+
+                </div>
+                <!-- Hero Image -->
+                <div class="flex-1 w-full relative group">
+                    <div class="absolute -inset-1 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"
+                        style="background: linear-gradient(to right, #39E079, #4ADE80);"></div>
+                    <div
+                        class="relative rounded-2xl overflow-hidden shadow-2xl aspect-4/3 lg:aspect-square bg-gray-100 dark:bg-gray-800">
+                        <img class="w-full h-full object-cover"
+                            src="https://images.unsplash.com/photo-1557821552-17105176677c?w=600&h=600&fit=crop"
+                            alt="Aplicación EcoScan" />
+                        <!-- Floating UI Elements Mockup -->
+                        <div
+                            class="absolute bottom-6 left-6 right-6 bg-white dark:bg-gray-800 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white dark:border-gray-600 hidden sm:block animate-pulse">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-eco-dark"
+                                    style="background-color: #39E079;">
+                                    <span class="material-symbols-outlined" style="color: #111814;">eco</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900 dark:text-white">Neutral en Carbono</p>
+                                    <p class="text-sm font-medium" style="color: #39E079;">100% Reciclable</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Features Section -->
+    <section class="py-20 md:py-32 bg-white dark:bg-gray-900" id="features">
+        <div class="max-w-7xl mx-auto px-4 sm:px-10">
+            <div class="flex flex-col md:flex-row gap-12 items-start justify-between mb-16">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl md:text-4xl font-black text-eco-dark dark:text-white mb-4 tracking-tight">
+                        Características Poderosas para Compras Inteligentes
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-400">
+                        Todo lo que necesitas para tomar decisiones de compra informadas y reducir tu impacto
+                        ambiental.
+                    </p>
+                </div>
+                <a routerLink="/home"
+                    class="hidden md:flex items-center text-eco-green dark:text-white font-bold hover:underline gap-1 cursor-pointer">
+                    Ver Todas las Características
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="flex flex-col gap-5 p-8 rounded-2xl bg-[#f6f8f7] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-eco-green dark:hover:border-eco-green transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-white dark:bg-gray-700 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform"
+                        style="color: #39E079;">
+                        <span class="material-symbols-outlined text-3xl">qr_code_scanner</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-eco-dark dark:text-white mb-2">Escaneo Instantáneo</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Simplemente apunta tu cámara al código de barras o QR de cualquier producto para acceder
+                            instantáneamente a datos de impacto completos.
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col gap-5 p-8 rounded-2xl bg-[#f6f8f7] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-eco-green dark:hover:border-eco-green transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-white dark:bg-gray-700 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform"
+                        style="color: #39E079;">
+                        <span class="material-symbols-outlined text-3xl">eco</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-eco-dark dark:text-white mb-2">Impacto Ambiental</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Obtén información detallada sobre huella de carbono, uso de agua y reciclabilidad de
+                            cada
+                            producto al instante.
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col gap-5 p-8 rounded-2xl bg-[#f6f8f7] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-eco-green dark:hover:border-eco-green transition-all group">
+                    <div class="w-14 h-14 rounded-xl bg-white dark:bg-gray-700 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform"
+                        style="color: #39E079;">
+                        <span class="material-symbols-outlined text-3xl">diversity_3</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-eco-dark dark:text-white mb-2">Impacto Social</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Aprende sobre prácticas de comercio justo, estándares laborales e impacto comunitario de
+                            marcas y fabricantes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 md:py-32 bg-[##f6f8f7] dark:bg-gray-900" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-4 sm:px-10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-primary dark:text-white font-bold text-sm uppercase tracking-wider mb-2 block">El Proceso</span>
+                <h2 class="text-3xl md:text-4xl font-black text-eco-dark dark:text-white mb-4">Cómo funciona Eco-Check
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400">Tres pasos simples para cambiar tus hábitos de consumo.</p>
+            </div>
+            <!-- Process Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <!-- Connecting Line (Desktop) -->
+                <div
+                    class="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gray-200 dark:bg-white/10 z-0">
+                </div>
+                <!-- Step 1 -->
+                <div class="relative z-10 flex flex-col items-center text-center group">
+                    <div
+                        class="w-24 h-24 rounded-2xl bg-white dark:bg-background-dark shadow-lg flex items-center justify-center mb-6 border-4 border-white dark:border-[#1e3a29] group-hover:border-primary transition-colors">
+                        <span
+                            class="material-symbols-outlined text-4xl text-eco-dark dark:text-black">center_focus_weak</span>
+                        <div
+                            class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-primary text-eco-dark dark:text-white flex items-center justify-center font-bold text-sm border-2 border-black dark:border-black">
+                            1</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-eco-dark dark:text-white mb-2">Escanea</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm max-w-[250px]">
+                        Apunta la cámara al código de barras de cualquier producto en la tienda.
+                    </p>
+                </div>
+                <!-- Step 2 -->
+                <div class="relative z-10 flex flex-col items-center text-center group">
+                    <div
+                        class="w-24 h-24 rounded-2xl bg-white dark:bg-background-dark shadow-lg flex items-center justify-center mb-6 border-4 border-white dark:border-[#1e3a29] group-hover:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-4xl text-eco-dark bg-white  dark:text-black">analytics</span>
+                        <div
+                            class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-primary  text-eco-dark dark:text-white flex items-center justify-center font-bold text-sm border-2 border-white dark:border-background-dark">
+                            2</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-eco-dark dark:text-white mb-2">Analiza</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm max-w-[250px]">
+                        Nuestra IA procesa los datos y te muestra el desglose de impacto ambiental al instante.
+                    </p>
+                </div>
+                <!-- Step 3 -->
+                <div class="relative z-10 flex flex-col items-center text-center group">
+                    <div
+                        class="w-24 h-24 rounded-2xl bg-white dark:bg-background-dark shadow-lg flex items-center justify-center mb-6 border-4 border-white dark:border-[#1e3a29] group-hover:border-primary transition-colors">
+                        <span
+                            class="material-symbols-outlined text-4xl text-eco-dark dark:text-black">check_circle</span>
+                        <div
+                            class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-primary text-eco-dark dark:text-white flex items-center justify-center font-bold text-sm border-2 border-white dark:border-background-dark">
+                            3</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-eco-dark dark:text-white mb-2">Elige</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm max-w-[250px]">
+                        Decide mejor o selecciona la opción más ecológica sugerida por la app.
+                    </p>
+                </div>
+            </div>
+            <!-- Visualization Image -->
+            <div class="mt-20 rounded-2xl overflow-hidden shadow-2xl relative max-w-4xl mx-auto">
+                <div class="aspect-video bg-gray-100 relative">
+                    <div class="absolute inset-0 bg-cover bg-center"
+                        data-alt="Panoramic view of a grocery store aisle with fresh organic produce, representing the environment where the app is used"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCMfjeUnY0syAOQinbfNiBWZvOB9rWDKHd7c2yBaAl9OQFHrqEfapbhRx7WCbuReqZyHxLxxRs7oKUCyVtk9jxCPKpby1cxjuYpuOG08cfYhNnAqMlqQ-6wCiSk3st1QKpG0pXkRyx0nbHUhBwA2pOoSQE2kkNKZHPIBrP6d4SLcS9Dbsy9MeTv1_fj2zLFsWwGyQZFiKO1tDRaLWFgUEac6jy_xPSVtsltY4LWqqEappuRKjJ0VShbkSPJVY2ywYLN2JlkQ2_OX04x');">
+                    </div>
+                    <div
+                        class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end justify-center pb-10">
+                        <div
+                            class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-xl max-w-md text-center">
+                            <p class="text-white font-medium text-lg">"Eco-Check ha cambiado completamente mi forma de
+                                hacer compras. Ahora sé exactamente qué estoy apoyando con mi dinero."</p>
+                            <p class="text-primary mt-2 font-bold">— Sofia M., Usuario Verificado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-24 bg-white dark:bg-gray-900 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-10 relative z-10 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-eco-dark dark:text-white mb-6 tracking-tight">
+                ¿Listo para Hacer la Diferencia?
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+                Descarga EcoScan hoy y comienza a tomar decisiones informadas que beneficien a ti y al planeta.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a routerLink="/home"
+                    class="inline-flex items-center justify-center gap-3 h-14 px-8 rounded-xl text-lg font-bold hover:opacity-90 transition-opacity text-white bg-gray-900 dark:bg-white dark:text-gray-900 cursor-pointer">
+                    <span class="material-symbols-outlined">qr_code_scanner</span>
+                    Escanear ahora
+                </a>
+               
+            </div>
+        </div>
+    </section>
+</div>

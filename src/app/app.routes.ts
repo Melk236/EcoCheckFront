@@ -10,6 +10,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { adminGuard} from './guards/admin-guard';
 import { tokenGuard } from './guards/token-guard';
 import { loginGuard } from './guards/login-guard-guard';
+import { LandingPage } from './components/landing-page/landing-page.component';
 export const routes: Routes = [
 
     {path:'',redirectTo:'login',pathMatch:'full'},
@@ -21,5 +22,6 @@ export const routes: Routes = [
     {path:'registro',component:RegistroComponent,canActivate:[loginGuard]},
     {path:'perfil', component:ProfileComponent,canActivate:[tokenGuard]},
     {path:'admin',component:AdminComponent,canActivate:[adminGuard]},
+    {path:'landing', component:LandingPage},
     {path:'**', redirectTo:'home'}
 ];

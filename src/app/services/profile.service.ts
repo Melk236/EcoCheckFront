@@ -12,11 +12,17 @@ export class ProfileService {
   private http=inject(HttpClient);
   private readonly url = environment.apiUrl + 'Profile';
 
-  private user$ = this.http.get<User>(this.url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  private user$:Observable<User> | null = this.http.get<User>(this.url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
   getUser(): Observable<User> {
-
+    if(this.user$!==null)
     return this.user$;
+
+    else {
+      this.user$ = this.http.get<User>(this.url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+
+      return this.user$;
+    }
   }
 
   update(user: FormData): Observable<User> {
@@ -32,5 +38,12 @@ export class ProfileService {
 
   delete(): Observable<void> {
     return this.http.delete<void>(`${this.url}`);
+  }
+
+  /*
+  Método para inicializar los datos a predeifinidos ya que se habra cerrado sesión y asi el sharreplay 
+  no mantiene los datos cacheados del anterior usuario*/
+  restoreUser(){
+    this.user$=null;
   }
 }

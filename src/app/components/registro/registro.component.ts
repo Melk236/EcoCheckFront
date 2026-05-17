@@ -4,12 +4,12 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthUser } from '../../types/auth-user';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AlertaComponent } from "../modales/alerta/alerta.component";
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule,CommonModule, AlertaComponent],
+  imports: [ReactiveFormsModule, CommonModule, AlertaComponent, RouterLink],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
