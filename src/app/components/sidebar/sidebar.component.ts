@@ -64,6 +64,7 @@ export class SidebarComponent implements OnInit,OnDestroy {
     return this.router.url.includes(route);
   }
 
+  
   cargarPerfil(){
 
     this.profileService.getUser().pipe(takeUntil(this.destroy$)).subscribe({

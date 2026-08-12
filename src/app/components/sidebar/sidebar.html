@@ -16,9 +16,9 @@
         </button>
 
         <!-- Logo -->
-        <a href="#" class="flex ml-2 md:mr-24">
-          <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
-          <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">EcoCheck</span>
+        <a href="#" class="flex items-center ml-2 md:mr-24">
+          <img src="logoEcoScan.png" class="h-11 md:h-14 w-auto mr-3" alt="EcoScan Logo" />
+          <span class="self-center text-xl md:text-2xl font-bold tracking-tight whitespace-nowrap dark:text-white">EcoCheck</span>
         </a>
       </div>
 
@@ -68,6 +68,9 @@
         <a routerLink="/home" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/home')}"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
           <span
+            [ngClass]="{'text-gray-900':isActive('/home'),
+              'dark:text-white':isActive('/home')
+            }"
             class="material-symbols-outlined text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-3xl"
             style="font-variation-settings: 'FILL' 1;">
             home
@@ -79,6 +82,9 @@
         <a routerLink="/empresas" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/empresas')}"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
           <span
+          [ngClass]="{'text-gray-900':isActive('/empresas'),
+              'dark:text-white':isActive('/empresas')
+            }"
             class="material-symbols-outlined text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-3xl"
             style="font-variation-settings: 'FILL' 1;">
             business
@@ -93,6 +99,9 @@
         <a routerLink="/admin" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/admin')}"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
           <span
+          [ngClass]="{'text-gray-900':isActive('/admin'),
+              'dark:text-white':isActive('/admin')
+            }"
             class="material-symbols-outlined text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-3xl"
             style="font-variation-settings: 'FILL' 1;">
             admin_panel_settings
