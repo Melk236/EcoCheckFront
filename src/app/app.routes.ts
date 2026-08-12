@@ -23,5 +23,5 @@ export const routes: Routes = [
     {path:'perfil', component:ProfileComponent,canActivate:[tokenGuard]},
     {path:'admin',component:AdminComponent,canActivate:[adminGuard]},
     {path:'landing', component:LandingPage},
-    {path:'**', redirectTo:'home'}
+    {path:'**', redirectTo:'landing'}
 ];

@@ -19,11 +19,11 @@
                 <div class="hidden md:flex flex-1 justify-end gap-8 items-center">
                     <div class="flex gap-8">
                         <a class="text-sm font-semibold text-eco-dark dark:text-gray-300 hover:text-eco-green dark:hover:text-eco-green transition-colors"
-                            href="#features">Características</a>
+                            href="#features" (click)="scrollTo('features', $event)">Características</a>
                         <a class="text-sm font-semibold text-eco-dark dark:text-gray-300 hover:text-eco-green dark:hover:text-eco-green transition-colors"
-                            href="#how-it-works">Cómo Funciona</a>
+                            href="#how-it-works" (click)="scrollTo('how-it-works', $event)">Cómo Funciona</a>
                         <a class="text-sm font-semibold text-eco-dark dark:text-gray-300 hover:text-eco-green dark:hover:text-eco-green transition-colors"
-                            href="#impact">Impacto</a>
+                            href="#impact" (click)="scrollTo('impact', $event)">Impacto</a>
                     </div>
                     @if (!isLoggedIn) {
                         <div class="flex gap-3">
@@ -242,7 +242,7 @@
     </section>
 
     <!-- Final CTA -->
-    <section class="py-24 bg-white dark:bg-gray-900 relative overflow-hidden">
+    <section class="py-24 bg-white dark:bg-gray-900 relative overflow-hidden" id="impact">
         <div class="max-w-7xl mx-auto px-4 sm:px-10 relative z-10 text-center">
             <h2 class="text-4xl md:text-5xl font-black text-eco-dark dark:text-white mb-6 tracking-tight">
                 ¿Listo para Hacer la Diferencia?

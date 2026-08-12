@@ -9,7 +9,7 @@ export const loginGuard: CanActivateFn = (route, state) => {
  if(!authService.isTokenValid()) return true;
 
  else{
-    return router.createUrlTree(['home']);
+    return router.createUrlTree(['landing']);
  }
 
 };

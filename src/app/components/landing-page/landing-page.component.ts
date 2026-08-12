@@ -14,4 +14,12 @@ export class LandingPage {
   get isLoggedIn(): boolean {
     return this.auth.isTokenValid();
   }
+
+  scrollTo(id: string, event: Event): void {
+    event.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }
