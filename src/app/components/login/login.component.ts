@@ -92,6 +92,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       })
   }
 
+  /*Método con el que obtenemos el modo de color del sistema */
+  darkMode(): boolean {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

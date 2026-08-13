@@ -22,4 +22,12 @@ export class LandingPage {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+  /*Método con el que obtenemos el modo de color del sistema */
+  darkMode():boolean{
+    const darkMode=window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if(darkMode) return true;
+
+    return false;
+  }
 }

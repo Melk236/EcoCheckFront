@@ -14,19 +14,19 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class SidebarComponent implements OnInit,OnDestroy {
+export class SidebarComponent implements OnInit, OnDestroy {
   dropdownOpen = false;
   isLargeScreen = false;
-  usuario:User={
+  usuario: User = {
     id: 0,
     userName: '',
     roleName: ''
   }
-  imagenUrl='https://lh3.googleusercontent.com/aida-public/AB6AXuBHLdsiS9dq6Rw-7AGCek6S_kGx5ORZjUUl6gYWpmcoQgQgJxf85gOXxdYeCuslnDUgMP0s4H9PzyX3JxwRctFgWEcqDbHZtG1VHsWvGK7PCZZI2l-Jcacl3vW03P45-mnhV7bTnXy_Y6X3ofgZtIf2QAHgmFTX3hVPrwWyV5IQhTsavrryAYPGkZgPy5etb2whyYj_d5jNEGm36qLqwG84mEjxTWFUFb4Y3HfQbflhBN_hguNpntKjmHZwTwnR-uNomyeASTx3VOmX';
+  imagenUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHLdsiS9dq6Rw-7AGCek6S_kGx5ORZjUUl6gYWpmcoQgQgJxf85gOXxdYeCuslnDUgMP0s4H9PzyX3JxwRctFgWEcqDbHZtG1VHsWvGK7PCZZI2l-Jcacl3vW03P45-mnhV7bTnXy_Y6X3ofgZtIf2QAHgmFTX3hVPrwWyV5IQhTsavrryAYPGkZgPy5etb2whyYj_d5jNEGm36qLqwG84mEjxTWFUFb4Y3HfQbflhBN_hguNpntKjmHZwTwnR-uNomyeASTx3VOmX';
 
-  destroy$=new Subject<void>();
-  constructor(private router: Router,private profileService:ProfileService,private sharedService:SharedService,private authService:AuthService) { }
-  
+  destroy$ = new Subject<void>();
+  constructor(private router: Router, private profileService: ProfileService, private sharedService: SharedService, private authService: AuthService) { }
+
 
   ngOnInit(): void {
     this.checkScreenSize();
@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit,OnDestroy {
     const target = event.target as HTMLElement;
     const userMenuButton = document.getElementById('user-menu-button');
     const userDropdown = document.getElementById('user-dropdown');
-    
+
     if (userMenuButton && userDropdown) {
       if (!userMenuButton.contains(target) && !userDropdown.contains(target)) {
         this.dropdownOpen = false;
@@ -64,39 +64,47 @@ export class SidebarComponent implements OnInit,OnDestroy {
     return this.router.url.includes(route);
   }
 
-  
-  cargarPerfil(){
+
+  cargarPerfil() {
 
     this.profileService.getUser().pipe(takeUntil(this.destroy$)).subscribe({
-      next:(data)=>{
-        this.usuario=data;
-        this.imagenUrl=environment.imagenUrl+this.usuario.urlImagen;
+      next: (data) => {
+        this.usuario = data;
+        this.imagenUrl = environment.imagenUrl + this.usuario.urlImagen;
       },
-      error:(error)=>{
+      error: (error) => {
         console.log(error);
       }
     });
   }
 
+  darkMode(): boolean {
+
+    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (darkMode) return true;
+    
+    return false;
+  }
   /*Método que se suscribe al observable de sharedService y cuando emita el observable 
   actualizamos el perfil*/
-  actualizarPerfil(){
+  actualizarPerfil() {
     this.sharedService.cambiarPerfil$.pipe(takeUntil(this.destroy$)).subscribe({
-      next:()=>{
+      next: () => {
         this.cargarPerfil();
       }
     });
   }
   /*Cierre de sesión del usuario */
-  cerrarSesion(){
+  cerrarSesion() {
     this.authService.removeToken();
     //Restauramos los datos del usuario a null
     this.profileService.restoreUser();
     this.authService.logOut().pipe(takeUntil(this.destroy$)).subscribe({
-      next:()=>{
+      next: () => {
         this.router.navigate(['login']);
       },
-      error:(error)=>{
+      error: (error) => {
         console.log(error.error.mensaje);
       }
     });

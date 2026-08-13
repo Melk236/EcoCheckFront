@@ -66,6 +66,11 @@ export class RegistroComponent implements OnDestroy {
     }, 3000);
   }
 
+  /*Método con el que obtenemos el modo de color del sistema */
+  darkMode(): boolean {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
