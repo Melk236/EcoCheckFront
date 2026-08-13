@@ -188,24 +188,27 @@ export class DetalleProductoComponent implements OnInit {
   }
 
   obetnerMejoresProductos() {
+
     if (this.cargaAlternativas) {
       this.mostrarAlternativas = !this.mostrarAlternativas;
       if (this.mostrarAlternativas) this.scroll('alternativas')
       return;
     }
-
+    
     const categoria = this.producto.categoria.split(',');
     
     this.productoService.getComparacion(categoria, this.producto.ecoScore).
       pipe(takeUntil(this.destroy$)).
       subscribe({
         next: (data) => {
+          
           this.productos = data;
           this.mostrarAlternativas = true;
           this.cargaAlternativas = true;
           this.scroll('alternativas');
         },
         error: (error) => {
+          
           console.log(error);
         }
       });
