@@ -85,6 +85,20 @@
         </a>
       </li>
       <li>
+        <a routerLink="/productos" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/productos')}"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+          <span
+            [ngClass]="{'text-gray-900':isActive('/productos'),
+              'dark:text-white':isActive('/productos')
+            }"
+            class="material-symbols-outlined text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white text-3xl"
+            style="font-variation-settings: 'FILL' 1;">
+            inventory_2
+          </span>
+          <span class="ml-3">Productos</span>
+        </a>
+      </li>
+      <li>
         <a routerLink="/empresas" [ngClass]="{'bg-gray-100 dark:bg-gray-700': isActive('/empresas')}"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
           <span

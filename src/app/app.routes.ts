@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { DetalleProductoComponent } from './components/home/detalle-producto/detalle-producto.component';
+import { ProductosComponent } from './components/productos/productos.component';
+import { DetalleProductoComponent } from './components/productos/detalle-producto/detalle-producto.component';
 import { EmpresaComponent } from './components/lista-empresas/empresa/empresa.component';
 import { ListaEmpresasComponent } from './components/lista-empresas/lista-empresas.component';
 import { LoginComponent } from './components/login/login.component';
@@ -11,11 +11,13 @@ import { adminGuard} from './guards/admin-guard';
 import { tokenGuard } from './guards/token-guard';
 import { loginGuard } from './guards/login-guard-guard';
 import { LandingPage } from './components/landing-page/landing-page.component';
+import { HomeComponent } from './components/home/home.component';
 export const routes: Routes = [
 
     {path:'',redirectTo:'login',pathMatch:'full'},
     {path:'home', component:HomeComponent,canActivate:[tokenGuard]},
-    {path:'home/detalle-producto/:id',component:DetalleProductoComponent,canActivate:[tokenGuard]},
+    {path:'productos', component:ProductosComponent,canActivate:[tokenGuard]},
+    {path:'productos/detalle-producto/:id',component:DetalleProductoComponent,canActivate:[tokenGuard]},
     {path:'empresas', component:ListaEmpresasComponent,canActivate:[tokenGuard]},
     {path:'empresas/empresa/:id',component:EmpresaComponent,canActivate:[tokenGuard]},
     {path:'login',component:LoginComponent,canActivate:[loginGuard]},

@@ -151,7 +151,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   /*Navegación al detalle del producto*/
   abrirDetalle(idProducto: number) {
-    const ruta = 'home/detalle-producto/';
+    const ruta = 'productos/detalle-producto/';
     this.ruta.navigate([ruta, idProducto]);
   }
 

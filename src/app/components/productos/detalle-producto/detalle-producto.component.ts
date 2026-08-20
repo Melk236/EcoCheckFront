@@ -216,7 +216,7 @@ export class DetalleProductoComponent implements OnInit {
 
   abrirDetalle(id: number) {
 
-    this.router.navigate(['home/detalle-producto', id]);
+    this.router.navigate(['productos/detalle-producto', id]);
 
   }
  

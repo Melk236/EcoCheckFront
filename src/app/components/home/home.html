@@ -1,138 +1,184 @@
-<div class="flex flex-col min-h-screen w-full  dark:bg-gray-800">
-  <!-- Main content - responsive padding for sidebar -->
-  <main
-    class="flex-1 w-full  sm:px-6 md:px-8 py-6 md:py-8 bg-[#f6f8f7] dark:bg-gray-800 h-screen md:h-auto overflow-y-auto">
-    <div class="w-full max-w-[1200px] mx-auto pt-15">
-      <div class="flex flex-col sm:flex-row gap-4 mb-8">
-        <div
-          class="grow flex items-stretch rounded-xl h-14 bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 focus-within:ring-2 focus-within:ring-[#39E079]/50 focus-within:border-[#39E079] transition-shadow overflow-hidden">
-          <div class="flex items-center justify-center pl-4 pr-2">
-            <span class="material-symbols-outlined text-gray-400 dark:text-gray-400 pointer-events-none">search</span>
-          </div>
-          <input [(ngModel)]="busqueda" (input)="buscar()"
-            class="flex w-full min-w-0 flex-1 bg-transparent text-[#111814] dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:outline-none border-0 border-none! outline-none ring-0 focus:ring-0 appearance-none px-2"
-            placeholder="Buscar productos por nombre, descripción o puntuación (ej. 80)..." type="text">
-        </div>
-        <button (click)="openModalFiltros()"
-          class="flex items-center justify-center gap-2 h-14 px-5 rounded-xl bg-white dark:bg-gray-700 border border-[#dbe6e0] dark:border-gray-600 text-[#111814] dark:text-white text-base font-semibold leading-normal hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
-          <span class="material-symbols-outlined">filter_list</span>
-          <span>Filtros</span>
-        </button>
-        <button (click)="openModalEscaner()" class="flex min-w-[84px] cursor-pointer items-center justify-center  rounded-xl h-14 px-5 bg-primary text-[#111814] gap-2 text-base font-bold leading-normal tracking-[0.015em] hover:b
-     g-primary transition-colors">
-          <span class="material-symbols-outlined">qr_code_scanner</span>
-          <span class="truncate">Escanear</span>
-        </button>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
-        <!-- Skeleton Loading with Angular Material -->
-        <!-- Skeleton Loading -->
-        @if(loading){
-        @for(item of skeletonItems; track item){
-        <div
-          class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 cursor-pointer">
-          <div class="w-full h-40 rounded-lg bg-gray-300 dark:bg-gray-600 animate-pulse"></div>
-          <div class="flex flex-col grow gap-2">
-            <div class="h-3 w-1/3 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
-            <div class="h-5 w-3/4 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <div class="h-3 w-16 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
-            <div class="h-6 w-12 bg-gray-300 dark:bg-gray-500 rounded animate-pulse"></div>
-          </div>
-        </div>
-        }
-        }
+<div class="flex min-h-screen bg-white dark:bg-gray-900 pt-20">
 
-        @for (producto of productosPaginados; track producto.id) {
-        <!-- Card con efecto hover suave -->
-        <div
-          class="cards flex flex-col gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl border border-[#dbe6e0] dark:border-gray-600 hover:shadow-xl hover:-translate-y-2 hover:border-[#39E079]/50 dark:hover:border-[#39E079]/50 transition-all duration-300 ease-out cursor-pointer"
-          (click)="abrirDetalle(producto.id)">
-          <div class="w-full rounded-lg overflow-hidden relative" style="height: 200px;">
-            <!-- Fondo difuminado -->
-            <div class="absolute inset-0 bg-cover bg-center blur-sm scale-110"
-              [style.background-image]="'url(' + producto.imagenUrl + ')'">
-            </div>
-            <!-- Imagen principal encima -->
-            <img [src]="producto.imagenUrl" alt="{{ producto.nombre }}"
-              class="relative w-full h-full object-contain z-10">
-          </div>
-          <div class="flex flex-col grow">
-            <p class="text-sm text-[#618972] dark:text-gray-400">{{producto.nombre}}</p>
-            <h3 class="font-bold text-[#111814] dark:text-white leading-tight">{{producto.descripcion}}</h3>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <p class="text-xs text-[#618972] dark:text-gray-400">EcoScore</p>
-            <div class="flex items-center gap-1 text-lg font-bold text-green-600 dark:text-green-400" [ngClass]="{'text-green-600 dark:text-green-400':producto.ecoScore>80,
-              'text-yellow-500 dark:text-yellow-400':producto.ecoScore>50,
-              'text-orange-500 dark:text-orange-400':producto.ecoScore>0
-            }">
-              <span class="material-symbols-outlined text-base"
-                style="font-variation-settings: 'FILL' 1, 'wght' 600;">eco</span>
-              <span>{{formatNumber(producto.ecoScore)}}</span>
-            </div>
-          </div>
-        </div>
-        } @empty {
+    <main class="flex-1 flex flex-col min-h-screen">
 
-        @if(!loading){
-        <div class="col-span-full flex flex-col items-center justify-center py-20">
-          <div class="w-32 h-32 mb-6 text-gray-300 dark:text-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-full h-full">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
-            </svg>
-          </div>
-          <h3 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">No hay productos disponibles</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">Aún no hay productos escaneados. ¡Empieza a
-            buscar alternativas sostenibles escaneando un producto!</p>
-          <button (click)="openModalEscaner()"
-            class="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-[#111814] rounded-xl font-bold hover:bg-primary/90 transition-colors">
+        <!-- Dashboard Content -->
+        <div class="p-6 md:p-8 max-w-7xl mx-auto w-full flex-1">
+            <!-- Welcoming Header -->
+            <div class="mb-12">
+                <h2 class="text-[2.25rem] font-black leading-tight tracking-tight text-[#111814] dark:text-white mb-2">
+                    Welcome back, Alex.</h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400">Here is your conscious consumption archive for this
+                    month.</p>
+            </div>
+            <!-- Impact Summary Bento Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- Environmental Score -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg dark:shadow-gray-900 flex flex-col justify-between border border-gray-100 dark:border-gray-700">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                Environmental Score</h3>
+                            <span class="material-symbols-outlined text-[#39E079]"
+                                style="font-variation-settings: 'FILL' 1;">eco</span>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">85</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-sm mb-1">/100</span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div class="bg-[#39E079] h-2 rounded-full" style="width: 85%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Top 15% of EcoCheck users</p>
+                    </div>
+                </div>
+                <!-- Scanned Products -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg dark:shadow-gray-900 flex flex-col justify-between border border-gray-100 dark:border-gray-700">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                Scanned
+                                Products</h3>
+                            <span class="material-symbols-outlined text-gray-600 dark:text-gray-400">qr_code_2</span>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">12</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-center gap-2 text-[#39E079] font-bold text-sm">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        <span>+3 from last month</span>
+                    </div>
+                </div>
+                <!-- Carbon Saved -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg dark:shadow-gray-900 flex flex-col justify-between border border-gray-100 dark:border-gray-700">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                Carbon
+                                Saved</h3>
+                            <span class="material-symbols-outlined text-gray-600 dark:text-gray-400">co2</span>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">4.2</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-sm mb-1">kg</span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Equivalent to driving 16 miles less.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Recent Scans Section -->
+                <div class="lg:col-span-2">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Product Card 1 -->
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg dark:shadow-gray-900 border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                            <div
+                                class="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                                <img class="w-full h-full object-cover"
+                                    alt="Botella de vidrio orgánica de leche de almendras sobre superficie de terrazo"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj0Uk3AKAVpL92wZOCM_ptt8x4spzYjs5X9G6KB9EUSKPO82EyPbITWgqluDyoK_hv2MxngpbBL1BY77eNm2t4kGAyPASlAOEvtmwSvzrbVUfsVX8ojaaz_IjjTrPppnQSawX0kuF1j3sZdpOOk8vPRMRoLgBD8iqzPktpYKVDpMBhCWmnDM-OaCtOhGEtXuveuA-OpvGhczI-ri-T7Zpo9bi2xVBFDkOiL-ivOPazbp31xbYIlNaxMw" />
+                                <div
+                                    class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                                    <span class="material-symbols-outlined text-[#39E079] text-sm"
+                                        style="font-variation-settings: 'FILL' 1;">eco</span>
+                                    <span class="font-bold text-[#111814] dark:text-white text-sm">9.2</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">BEVERAGES</p>
+                                <h4 class="font-bold text-lg text-[#111814] dark:text-white mb-2">Organic Almond Milk
+                                </h4>
+                                <a class="inline-flex items-center cursor-pointer gap-1  font-bold text-sm hover:text-green-600 transition-colors mt-auto pt-2"
+                                    style="color:#39E079 ;">
+                                    View Details
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Product Card 2 -->
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg dark:shadow-gray-900 border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                            <div
+                                class="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                                <img class="w-full h-full object-cover" alt="Cepillo de dientes de bambú sobre mármol"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbxDaLLwXXVP-2AdiebckPFo24noD2cEmw0PKvTgyjTQi3dI-AV55n6D4qHPlq1fRuh7Gqta7B65eg3u-oGD1N4_VbDXpbhiCuXkge3lGnybjv-ecQ1JeRXXJHRypmTyqgWVLt3O6j0Kh6now3JbktbLIZYtFQ0-kMYv6G3AicQOL9gNFWTORmRgu80FmY5be3lnasWNYjPlX7jAb1C_rp0B6fLubg3YpAAg-wPZqAhL5zRUtltgJTqg" />
+                                <div
+                                    class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                                    <span class="material-symbols-outlined text-[#39E079] text-sm"
+                                        style="font-variation-settings: 'FILL' 1;">eco</span>
+                                    <span class="font-bold text-[#111814] dark:text-white text-sm">8.8</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">PERSONAL CARE</p>
+                                <h4 class="font-bold text-lg text-[#111814] dark:text-white mb-2">Bamboo Toothbrush</h4>
+                                <a class="inline-flex items-center gap-1  font-bold text-sm hover:text-green-600 transition-colors mt-auto pt-2"
+                                    style="color:#39E079;">
+                                    View Details
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sustainability Insights -->
+                <div class="lg:col-span-1">
+                    <h3 class="font-bold text-2xl text-[#111814] dark:text-white tracking-tight mb-6">Insights</h3>
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 mb-6 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-gray-400/10 dark:text-gray-600/10">
+                            <span class="material-symbols-outlined text-8xl">lightbulb</span>
+                        </div>
+                        <h4 class="font-bold text-[#111814] dark:text-white mb-2 relative z-10">Packaging Swap</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10 mb-4">
+                            Switching to glass-bottled juices instead of plastic could improve your average score by 0.5
+                            points next month.
+                        </p>
+                        <button
+                            class="text-[#111814] dark:text-white font-bold text-sm border-b-2 border-[#39E079] pb-0.5 hover:text-[#39E079] transition-colors relative z-10">
+                            Explore Alternatives
+                        </button>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-gray-400/10 dark:text-gray-600/10">
+                            <span class="material-symbols-outlined text-8xl">local_shipping</span>
+                        </div>
+                        <h4 class="font-bold text-[#111814] dark:text-white mb-2 relative z-10">Local Sourcing</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10 mb-4">
+                            60% of your scanned items traveled over 500 miles. Look for local farm markers to reduce
+                            transport emissions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Mobile Navigation Bottom Bar (Simplified representation for constraints) -->
+    <div class="hidden">
+        <a class="flex flex-col items-center text-[#39E079]" href="#">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+        </a>
+        <a class="flex flex-col items-center text-gray-600 dark:text-gray-400" href="#">
+            <span class="material-symbols-outlined">history</span>
+        </a>
+        <button
+            class="w-12 h-12 bg-[#39E079] rounded-full flex items-center justify-center text-[#111814] shadow-lg -mt-6">
             <span class="material-symbols-outlined">qr_code_scanner</span>
-            Escanear producto
-          </button>
-        </div>
-        }
-        }
-
-
-      </div>
-      @if(!loading && productosFiltrados.length > 0){
-      <app-paginacion [lista]="productosFiltrados" (pagin)="paginar($event)"></app-paginacion>
-      }
+        </button>
+        <a class="flex flex-col items-center text-gray-600 dark:text-gray-400" href="#">
+            <span class="material-symbols-outlined">eco</span>
+        </a>
+        <a class="flex flex-col items-center text-gray-600 dark:text-gray-400" href="#">
+            <span class="material-symbols-outlined">account_circle</span>
+        </a>
     </div>
-  </main>
-
-
 </div>
-
-
-
-<!--Modal para el escáner-->
-@if(modalEscanerOpen){
-<app-modal-escaner (closeModal)="closeModalEscaner()" (qrScanned)="obtenerQr($event)"></app-modal-escaner>
-}
-
-<!--Modal de exito o error-->
-@if(modalError){
-<app-modal-informativo [messageError]="error" [success]="success"
-  (closeModal)="closeModalSucces()"></app-modal-informativo>
-}
-@if(modalSucces){
-  <app-modal-producto [producto]="productoModal" (cerrar)="cerrarModalProducto()" (irAldetalle)="abrirDetalle($event)"></app-modal-producto>
-}
-
-<!-- Loading Modal  -->
-@if(loadingModal){
-
-<app-loading-modal></app-loading-modal>
-}
-
-<!-- Modal Filtros -->
-@if(modalFiltrosOpen){
-<app-modal-filtros (close)="closeModalFiltros()" (aplicarFiltros)="aplicarFiltrosHomg($event)"
-  [paisSeleccionado]="filtroPais" [puntuacionSeleccionada]="filtroPuntuacion">
-</app-modal-filtros>
-}
