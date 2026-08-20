@@ -7,9 +7,8 @@
             <!-- Welcoming Header -->
             <div class="mb-12">
                 <h2 class="text-[2.25rem] font-black leading-tight tracking-tight text-[#111814] dark:text-white mb-2">
-                    Welcome back, Alex.</h2>
-                <p class="text-lg text-gray-500 dark:text-gray-400">Here is your conscious consumption archive for this
-                    month.</p>
+                    Bienvenido de nuevo, {{ usuario?.userName }}.</h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400">Este es tu archivo de consumo consciente de este mes.</p>
             </div>
             <!-- Impact Summary Bento Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -19,20 +18,20 @@
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <h3 class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                                Environmental Score</h3>
+                                Puntaje Ambiental</h3>
                             <span class="material-symbols-outlined text-[#39E079]"
                                 style="font-variation-settings: 'FILL' 1;">eco</span>
                         </div>
                         <div class="flex items-end gap-2">
-                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">85</span>
+                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">{{ mediaEcoScore }}</span>
                             <span class="text-gray-500 dark:text-gray-400 text-sm mb-1">/100</span>
                         </div>
                     </div>
                     <div class="mt-6">
                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-[#39E079] h-2 rounded-full" style="width: 85%"></div>
+                            <div class="bg-[#39E079] h-2 rounded-full" [style.width.%]="mediaEcoScore"></div>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Top 15% of EcoCheck users</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Top {{ porcentajeDelTotal }}% de los usuarios de EcoCheck</p>
                     </div>
                 </div>
                 <!-- Scanned Products -->
@@ -41,17 +40,25 @@
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <h3 class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                                Scanned
-                                Products</h3>
+                                Productos Escaneados</h3>
                             <span class="material-symbols-outlined text-gray-600 dark:text-gray-400">qr_code_2</span>
                         </div>
                         <div class="flex items-end gap-2">
-                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">12</span>
+                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">{{ productos.length }}</span>
                         </div>
                     </div>
-                    <div class="mt-6 flex items-center gap-2 text-[#39E079] font-bold text-sm">
-                        <span class="material-symbols-outlined text-sm">trending_up</span>
-                        <span>+3 from last month</span>
+                    <div class="mt-6 flex items-center gap-2 font-bold text-sm"
+                        [class.text-[#39E079]]="diferenciaEsteMes > 0"
+                        [class.text-red-500]="diferenciaEsteMes < 0"
+                        [class.text-gray-500]="diferenciaEsteMes === 0">
+                        <span class="material-symbols-outlined text-sm">
+                            {{ diferenciaEsteMes > 0 ? 'trending_up' : (diferenciaEsteMes < 0 ? 'trending_down' : 'horizontal_rule') }}
+                        </span>
+                        <span>
+                            @if (diferenciaEsteMes > 0) { +{{ diferenciaEsteMes }} escaneos nuevos vs el mes pasado }
+                            @else if (diferenciaEsteMes < 0) { {{ diferenciaEsteMes }} escaneos vs el mes pasado }
+                            @else { Mismo volumen que el mes pasado }
+                        </span>
                     </div>
                 </div>
                 <!-- Carbon Saved -->
@@ -60,102 +67,100 @@
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <h3 class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                                Carbon
-                                Saved</h3>
+                                CO₂ Ahorrado</h3>
                             <span class="material-symbols-outlined text-gray-600 dark:text-gray-400">co2</span>
                         </div>
                         <div class="flex items-end gap-2">
-                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">4.2</span>
+                            <span class="text-5xl font-black tracking-tight text-[#111814] dark:text-white">{{ co2AhorradoTotal }}</span>
                             <span class="text-gray-500 dark:text-gray-400 text-sm mb-1">kg</span>
                         </div>
                     </div>
                     <div class="mt-6">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Equivalent to driving 16 miles less.</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Equivale a no conducir {{ (co2AhorradoTotal * FACTOR_EQUIVALENCIA_KM_POR_KG_CO2) | number:'1.0-0' }} km en auto.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                 <!-- Recent Scans Section -->
                 <div class="lg:col-span-2">
-                    
+                    <h3 class="font-bold text-2xl text-[#111814] dark:text-white tracking-tight mb-6">Escaneos recientes</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <!-- Product Card 1 -->
-                        <div
-                            class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg dark:shadow-gray-900 border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                        @for (producto of productos; track producto.id) {
                             <div
-                                class="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                <img class="w-full h-full object-cover"
-                                    alt="Botella de vidrio orgánica de leche de almendras sobre superficie de terrazo"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj0Uk3AKAVpL92wZOCM_ptt8x4spzYjs5X9G6KB9EUSKPO82EyPbITWgqluDyoK_hv2MxngpbBL1BY77eNm2t4kGAyPASlAOEvtmwSvzrbVUfsVX8ojaaz_IjjTrPppnQSawX0kuF1j3sZdpOOk8vPRMRoLgBD8iqzPktpYKVDpMBhCWmnDM-OaCtOhGEtXuveuA-OpvGhczI-ri-T7Zpo9bi2xVBFDkOiL-ivOPazbp31xbYIlNaxMw" />
+                                class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg dark:shadow-gray-900 border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
                                 <div
-                                    class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                                    <span class="material-symbols-outlined text-[#39E079] text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">eco</span>
-                                    <span class="font-bold text-[#111814] dark:text-white text-sm">9.2</span>
+                                    class="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                                    @if (producto.imagenUrl) {
+                                        <img class="w-full h-full object-cover"
+                                            [alt]="producto.nombre || 'Producto escaneado'"
+                                            [src]="producto.imagenUrl" />
+                                    }
+                                    <div
+                                        class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                                        <span class="material-symbols-outlined text-[#39E079] text-sm"
+                                            style="font-variation-settings: 'FILL' 1;">eco</span>
+                                        <span class="font-bold text-[#111814] dark:text-white text-sm">{{ producto.ecoScore }}</span>
+                                    </div>
+                                </div>
+                                <div class="flex-1 flex flex-col">
+                                    
+                                    <h4 class="font-bold text-lg text-[#111814] dark:text-white mb-2">
+                                        {{ producto.nombre || 'Producto sin nombre' }}
+                                    </h4>
+                                    <a (click)="irADetalleProducto(producto.id)"
+                                        class="inline-flex items-center gap-1 font-bold text-sm hover:text-green-600 transition-colors mt-auto pt-2 cursor-pointer"
+                                        style="color:#39E079;">
+                                        Ver Detalles
+                                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="flex-1 flex flex-col">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">BEVERAGES</p>
-                                <h4 class="font-bold text-lg text-[#111814] dark:text-white mb-2">Organic Almond Milk
-                                </h4>
-                                <a class="inline-flex items-center cursor-pointer gap-1  font-bold text-sm hover:text-green-600 transition-colors mt-auto pt-2"
-                                    style="color:#39E079 ;">
-                                    View Details
-                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                                </a>
-                            </div>
-                        </div>
-                        <!-- Product Card 2 -->
-                        <div
-                            class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg dark:shadow-gray-900 border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                        } @empty {
                             <div
-                                class="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                <img class="w-full h-full object-cover" alt="Cepillo de dientes de bambú sobre mármol"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbxDaLLwXXVP-2AdiebckPFo24noD2cEmw0PKvTgyjTQi3dI-AV55n6D4qHPlq1fRuh7Gqta7B65eg3u-oGD1N4_VbDXpbhiCuXkge3lGnybjv-ecQ1JeRXXJHRypmTyqgWVLt3O6j0Kh6now3JbktbLIZYtFQ0-kMYv6G3AicQOL9gNFWTORmRgu80FmY5be3lnasWNYjPlX7jAb1C_rp0B6fLubg3YpAAg-wPZqAhL5zRUtltgJTqg" />
-                                <div
-                                    class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                                    <span class="material-symbols-outlined text-[#39E079] text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">eco</span>
-                                    <span class="font-bold text-[#111814] dark:text-white text-sm">8.8</span>
-                                </div>
+                                class="col-span-full bg-gray-100 dark:bg-gray-800 rounded-xl p-8 text-center border border-dashed border-gray-300 dark:border-gray-700">
+                                <span class="material-symbols-outlined text-5xl text-gray-400 dark:text-gray-500 mb-2">inbox</span>
+                                <p class="text-gray-600 dark:text-gray-400 font-bold mb-1">Aún no hay escaneos</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-500">Escanea tu primer producto para empezar tu archivo consciente.</p>
                             </div>
-                            <div class="flex-1 flex flex-col">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">PERSONAL CARE</p>
-                                <h4 class="font-bold text-lg text-[#111814] dark:text-white mb-2">Bamboo Toothbrush</h4>
-                                <a class="inline-flex items-center gap-1  font-bold text-sm hover:text-green-600 transition-colors mt-auto pt-2"
-                                    style="color:#39E079;">
-                                    View Details
-                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                                </a>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
-                <!-- Sustainability Insights -->
+                <!-- Guía Sustentable -->
                 <div class="lg:col-span-1">
-                    <h3 class="font-bold text-2xl text-[#111814] dark:text-white tracking-tight mb-6">Insights</h3>
+                    <h3 class="font-bold text-2xl text-[#111814] dark:text-white tracking-tight mb-6">Guía Sustentable</h3>
                     <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 mb-6 relative overflow-hidden">
                         <div class="absolute -right-4 -top-4 text-gray-400/10 dark:text-gray-600/10">
-                            <span class="material-symbols-outlined text-8xl">lightbulb</span>
+                            <span class="material-symbols-outlined text-8xl">recycling</span>
                         </div>
-                        <h4 class="font-bold text-[#111814] dark:text-white mb-2 relative z-10">Packaging Swap</h4>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10 mb-4">
-                            Switching to glass-bottled juices instead of plastic could improve your average score by 0.5
-                            points next month.
-                        </p>
-                        <button
-                            class="text-[#111814] dark:text-white font-bold text-sm border-b-2 border-[#39E079] pb-0.5 hover:text-[#39E079] transition-colors relative z-10">
-                            Explore Alternatives
-                        </button>
+                        <h4 class="font-bold text-[#111814] dark:text-white mb-3 relative z-10">Las 3 R</h4>
+                        <ul class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10 space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-[#39E079] text-lg">recycling</span>
+                                <span><strong class="text-[#111814] dark:text-white">Reducir:</strong> compra solo lo que necesitas.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-[#39E079] text-lg">settings_backup_restore</span>
+                                <span><strong class="text-[#111814] dark:text-white">Reutilizar:</strong> dale una segunda vida a tus envases.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-[#39E079] text-lg">delete</span>
+                                <span><strong class="text-[#111814] dark:text-white">Reciclar:</strong> separa y deposita correctamente.</span>
+                            </li>
+                        </ul>
                     </div>
                     <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 relative overflow-hidden">
                         <div class="absolute -right-4 -top-4 text-gray-400/10 dark:text-gray-600/10">
-                            <span class="material-symbols-outlined text-8xl">local_shipping</span>
+                            <span class="material-symbols-outlined text-8xl">lightbulb</span>
                         </div>
-                        <h4 class="font-bold text-[#111814] dark:text-white mb-2 relative z-10">Local Sourcing</h4>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10 mb-4">
-                            60% of your scanned items traveled over 500 miles. Look for local farm markers to reduce
-                            transport emissions.
+                        <h4 class="font-bold text-[#111814] dark:text-white mb-2 relative z-10">¿Sabías qué?</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10 mb-3">
+                            El plástico tarda hasta 450 años en biodegradarse. Elegir envases de vidrio, papel o bamboo
+                            reduce significativamente el impacto ambiental.
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed relative z-10">
+                            Cada kilogramo de CO₂ evitado equivale a no conducir 6 km en auto.
                         </p>
                     </div>
                 </div>
