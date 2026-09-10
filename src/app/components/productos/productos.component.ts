@@ -160,11 +160,7 @@ export class ProductosComponent implements OnInit, OnDestroy {
    * Inicializa el componente cargando datos y configurando escaneo automático
    */
   ngOnInit(): void {
-    // Inicia escaneo automático después de 5 segundos con código de prueba
     
-    setTimeout(() => {
-      this.obtenerQr('8480000103826.json');
-    }, 5000);
     //Nos traemos el perfil del usuario
     this.getUser();
     // Carga datos iniciales en paralelo
