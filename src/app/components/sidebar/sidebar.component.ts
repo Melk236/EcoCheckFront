@@ -5,7 +5,7 @@ import { User } from '../../types/user';
 import { ProfileService } from '../../services/profile.service';
 import { environment } from '../../environment/environment';
 import { SharedService } from '../../services/shared-service.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, switchMap, startWith } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -30,8 +30,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkScreenSize();
-    this.cargarPerfil();
-    this.actualizarPerfil();
+    this.suscribirCambiosPerfil();
   }
 
   @HostListener('window:resize')
@@ -65,9 +64,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
 
-  cargarPerfil() {
-
-    this.profileService.getUser().pipe(takeUntil(this.destroy$)).subscribe({
+  /*Carga el perfil al iniciar y se resuscribe ante cada emisión de cambiarPerfil$.
+    Se invalida la caché del ProfileService (restoreUser) para forzar una petición HTTP nueva,
+    ya que getUser() usa shareReplay y devolvería datos obsoletos*/
+  suscribirCambiosPerfil(): void {
+    this.sharedService.cambiarPerfil$.pipe(
+      startWith(null),
+      switchMap(() => {
+        this.profileService.restoreUser();
+        return this.profileService.getUser();
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (data) => {
         this.usuario = data;
         this.imagenUrl = environment.imagenUrl + this.usuario.urlImagen;
@@ -85,15 +93,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (darkMode) return true;
     
     return false;
-  }
-  /*Método que se suscribe al observable de sharedService y cuando emita el observable 
-  actualizamos el perfil*/
-  actualizarPerfil() {
-    this.sharedService.cambiarPerfil$.pipe(takeUntil(this.destroy$)).subscribe({
-      next: () => {
-        this.cargarPerfil();
-      }
-    });
   }
   /*Cierre de sesión del usuario */
   cerrarSesion() {

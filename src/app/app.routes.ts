@@ -14,7 +14,7 @@ import { LandingPage } from './components/landing-page/landing-page.component';
 import { HomeComponent } from './components/home/home.component';
 export const routes: Routes = [
 
-    {path:'',redirectTo:'login',pathMatch:'full'},
+    {path:'',redirectTo:'landing',pathMatch:'full'},
     {path:'home', component:HomeComponent,canActivate:[tokenGuard]},
     {path:'productos', component:ProductosComponent,canActivate:[tokenGuard]},
     {path:'productos/detalle-producto/:id',component:DetalleProductoComponent,canActivate:[tokenGuard]},

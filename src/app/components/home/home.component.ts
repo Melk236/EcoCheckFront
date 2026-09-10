@@ -31,6 +31,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   porcentajeDelTotal: number = 0;
   diferenciaEsteMes: number = 0;
   co2AhorradoTotal: number = 0;
+  loading: boolean = true;
+  skeletonResumen: number[] = [1, 2, 3];
+  skeletonProductos: number[] = [1, 2, 3, 4];
 
   private readonly destroy$ = new Subject<void>();
 
@@ -125,6 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private cargarCo2DeProductos(): void {
     if (!this.productos.length) {
       this.co2AhorradoTotal = 0;
+      this.loading = false;
       return;
     }
 
@@ -133,8 +137,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     forkJoin(peticiones).subscribe({
-      next: (resultados) => this.co2AhorradoTotal = this.calcularCo2Ahorrado(resultados),
-      error: (err) => console.error('Error al cargar impacto de carbono:', err),
+      next: (resultados) => {
+        this.co2AhorradoTotal = this.calcularCo2Ahorrado(resultados);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar impacto de carbono:', err);
+        this.loading = false;
+      },
     });
   }
 
