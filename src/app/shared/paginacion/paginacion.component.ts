@@ -30,7 +30,8 @@ export class PaginacionComponent implements OnChanges {
   }
   /*Métodos para manejar la navegación */
   entradaDatos() {
-
+    //Restablecemos la página actual en 1 ya que es la entrada de datos o filtros
+    this.pagActual=1;
 
     //Calculamos el numero total de paginas que va a tener nuestra paginación
     this.numPaginasTotal = Math.ceil(this.lista.length / this.numElementos);

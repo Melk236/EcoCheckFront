@@ -1,11 +1,11 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../types/user';
 import { ProfileService } from '../../services/profile.service';
 import { environment } from '../../environment/environment';
 import { SharedService } from '../../services/shared-service.service';
-import { Subject, takeUntil, switchMap, startWith } from 'rxjs';
+import { Subject, takeUntil, switchMap, startWith, filter } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,6 +17,7 @@ import { AuthService } from '../../services/auth.service';
 export class SidebarComponent implements OnInit, OnDestroy {
   dropdownOpen = false;
   isLargeScreen = false;
+  sidebarAbierto = false;
   usuario: User = {
     id: 0,
     userName: '',
@@ -31,6 +32,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.checkScreenSize();
     this.suscribirCambiosPerfil();
+    this.cerrarSidebarAlNavegar();
   }
 
   @HostListener('window:resize')
@@ -53,6 +55,25 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   checkScreenSize() {
     this.isLargeScreen = window.innerWidth >= 1024;
+    if (this.isLargeScreen) {
+      this.sidebarAbierto = false;
+    }
+  }
+
+  toggleSidebar(): void {
+    this.sidebarAbierto = !this.sidebarAbierto;
+  }
+
+  cerrarSidebar(): void {
+    this.sidebarAbierto = false;
+  }
+
+  /*Cierra el drawer móvil al navegar, replicando el auto-cierre de Flowbite*/
+  private cerrarSidebarAlNavegar(): void {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(() => this.cerrarSidebar());
   }
 
   mostrarSidebar(): boolean {

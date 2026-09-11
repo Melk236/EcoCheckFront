@@ -244,16 +244,16 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
 
   //Método para filtrar según filtros
   filtrar() {
-   
+
     switch (this.filtroPuntuacion) {
       case '80-100 (alta)':
         if(this.filtroCertificacion=='Todas las certificaciones') this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 80);
 
         else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 80 && item.certificacion.includes(this.filtroCertificacion) && 
         (
-          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+          item.nombre.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase())
         )
       );
         
@@ -263,9 +263,9 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
 
         else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 50 && item.puntuacionSocial < 80 && item.certificacion.includes(this.filtroCertificacion) && 
         (
-          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+          item.nombre.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase())
         ));
         
         break;
@@ -274,28 +274,30 @@ export class ListaEmpresasComponent implements OnInit, OnDestroy {
 
         else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.puntuacionSocial >= 0 && item.puntuacionSocial < 50 && item.certificacion.includes(this.filtroCertificacion) && 
         (
-          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+          item.nombre.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase())
         ));
         break;
       default:
 
       if(this.filtroCertificacion=='Todas las certificaciones') this.listaEmpresasFiltradas = this.listaEmpresas.filter(item =>
         (
-          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+          item.nombre.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase())
         ));
         
         else this.listaEmpresasFiltradas = this.listaEmpresas.filter(item => item.certificacion.includes(this.filtroCertificacion) && 
         (
-          item.nombre.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.toLowerCase()) ||
-          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.toLowerCase())
+          item.nombre.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.certificaciones?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase()) ||
+          item.empresaMatriz?.trim().toLowerCase().includes(this.busqueda.trim().toLowerCase())
         ));
     };
+
     if(this.listaEmpresasFiltradas.length==0) this.listaEmpresasPaginacion=this.listaEmpresasFiltradas;
+    
   }
   /*Desuscribirnos a los observables al destruirse los componentes*/
   ngOnDestroy(): void {

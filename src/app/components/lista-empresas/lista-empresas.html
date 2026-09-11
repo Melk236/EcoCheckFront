@@ -86,7 +86,7 @@
                 </button>
             </div>
             <!-- Active Filters -->
-            @if(tieneFiltrosActivos() && listaEmpresasFiltradas.length > 0){
+            @if(tieneFiltrosActivos()){
             <div class="flex gap-2 flex-wrap items-center mt-2 pl-2">
                 <span class="text-[#618972] dark:text-gray-400 text-xs font-medium">Filtros activos:</span>
                 @if(filtroPuntuacion){
@@ -157,7 +157,7 @@
             <!-- Card 1 -->
             <!-- Aplicada paleta gray en todas las cards -->
             @for(empresa of listaEmpresasPaginacion;track empresa.id){
-
+                
             <div
                 class="cards group flex flex-col bg-white dark:bg-gray-700 rounded-xl overflow-hidden border border-[#f0f4f2] dark:border-gray-600 hover:shadow-lg dark:hover:shadow-[#13ec6d]/10 transition-all duration-300">
                 <div class="relative h-40 bg-gray-200 dark:bg-gray-600 bg-cover bg-center bg-no-repeat"
