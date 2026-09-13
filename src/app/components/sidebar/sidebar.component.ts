@@ -99,7 +99,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (data) => {
         this.usuario = data;
-        this.imagenUrl = environment.imagenUrl + this.usuario.urlImagen;
+        this.imagenUrl =this.usuario.urlImagen ? environment.imagenUrl + this.usuario.urlImagen : this.imagenUrl;
       },
       error: (error) => {
         console.log(error);
