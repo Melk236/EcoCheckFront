@@ -4,7 +4,6 @@ import { ProfileService } from '../../services/profile.service';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from '../../types/user';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../services/user.service';
 import { AlertaComponent } from '../modales/alerta/alerta.component';
 import { environment } from '../../environment/environment';
 import { ModalConfirmarComponent } from '../modales/modal-confirmar/modal-confirmar.component';
@@ -99,7 +98,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     form.append('userName', this.usuario.userName);
     form.append('nombre', this.formulario.get('nombre')?.value);
     form.append('apellido', this.formulario.get('apellido')?.value.trim());
-    form.append('email', this.formulario.get('email')?.value.trim());
+    form.append('email', this.formulario.get('email')?.value);
     form.append('imagen', this.imagen!);
 
 
@@ -133,10 +132,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.formulario.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
-            email: data.email
+            email: data.email ?? ''
           });
 
-          this.imagePreview = this.urlImagen + data.urlImagen;
+          this.imagePreview =this.usuario.urlImagen ? this.urlImagen + data.urlImagen : this.imagePreview;
 
         },
         error: (error) => {
