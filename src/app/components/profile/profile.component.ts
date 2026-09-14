@@ -95,8 +95,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   actualizarDatosUser() {
     //FormData para actualizar los datos del usuario con la imagen
     const form = new FormData();
-    form.append('userName', this.usuario.userName);
-    form.append('nombre', this.formulario.get('nombre')?.value);
+    form.append('userName', this.usuario.userName.trim());
+    form.append('nombre', this.formulario.get('nombre')?.value.trim());
     form.append('apellido', this.formulario.get('apellido')?.value.trim());
     form.append('email', this.formulario.get('email')?.value);
     form.append('imagen', this.imagen!);
